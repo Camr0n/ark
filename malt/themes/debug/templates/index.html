@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if flags.is_dir_index %}
+        Directory Index
+    {% else %}
+        Tag Index
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h3>Records</h3>
+
+    <ul>
+        {% for record in records %}
+            <li>
+                <a href="{{ record.url }}">{{ record.title or "Untitled Record" }}</a>
+            </li>
+        {% empty %}
+            <li>No records to display.</li>
+        {% endfor %}
+    </ul>
+
+    {% if paging.is_paged %}
+        <hr>
+        <h3>Paging</h3>
+        <p>Page {{ paging.page }} of {{ paging.total }}</p>
+        <ul>
+            <li><a href="{{ paging.first_url }}">First</a></li>
+            {% if paging.prev_url %}
+                <li><a href="{{ paging.prev_url }}">Previous</a></li>
+            {% endif %}
+            {% if paging.next_url %}
+                <li><a href="{{ paging.next_url }}">Next</a></li>
+            {% endif %}
+            <li><a href="{{ paging.last_url }}">Last</a></li>
+        </ul>
+    {% endif %}
+{% endblock %}

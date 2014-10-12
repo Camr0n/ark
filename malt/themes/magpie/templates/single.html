@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ record.meta_title or record.title or record.content|firsth|striptags }}
+{% endblock %}
+
+{% block content %}
+
+    {% if record.title %}
+        <h1>{{ record.title }}</h1>
+    {% endif %}
+    
+    {{ record.content }}
+
+    {% if record.tags %}
+        <hr>
+        <p>Tagged: &nbsp;{{ record.tags|join:',&nbsp;&nbsp;' }}</p>
+    {% endif %}
+
+{% endblock %}

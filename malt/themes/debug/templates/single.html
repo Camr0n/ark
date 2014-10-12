@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Single Record{% endblock %}
+
+{% block content %}
+    <h3>Record</h3>
+    <pre>{{ record|pprint|escape }}</pre>
+    {% if record.tags %}
+        <p>Tags: {{ record.tags|join(', ') }}</p>
+    {% endif %}
+{% endblock %}

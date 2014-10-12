@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if flags.is_homepage %}
+        {{ site.title }}
+    {% else %}
+        {{ trail|join:": "|titlecase }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ trail|last|titlecase }}</h1>
+
+    <ul>
+    {% for record in records %}
+        <li>
+            {% if record.title or record.content|firsth %}
+                <h3>{{ record.title or record.content|firsth|striptags }}</h3>
+            {% endif %}
+
+            {{ record.content|firstp|wrap:'p' }}
+            
+            <p><a href="{{ record.url }}">Read more...</a></p>
+        </li>
+    {% endfor %}
+    </ul>
+
+    {% if paging.is_paged %}
+        <hr>
+        <p class="paging">
+
+            {% if paging.page > 1 %}
+                <a href="{{ paging.first_url }}">First</a> ~
+                <a href="{{ paging.prev_url }}">Prev</a> ~
+            {% endif %}
+
+            <span class="pagecount">
+                Page {{ paging.page }} of {{ paging.total }}
+            </span>
+
+            {% if paging.page < paging.total %}
+                ~ <a href="{{ paging.next_url }}">Next</a>
+                ~ <a href="{{ paging.last_url }}">Last</a>
+            {% endif %}
+
+        </p>
+    {% endif %}
+
+{% endblock %}
