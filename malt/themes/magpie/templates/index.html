@@ -12,19 +12,17 @@
 
     <h1>{{ trail|last|titlecase }}</h1>
 
-    <ul>
     {% for record in records %}
-        <li>
-            {% if record.title or record.content|firsth %}
-                <h3>{{ record.title or record.content|firsth|striptags }}</h3>
-            {% endif %}
+        {% if record.title or record.content|firsth %}
+            <h3>{{ record.title or record.content|firsth|striptags }}</h3>
+        {% endif %}
 
-            {{ record.content|firstp|wrap:'p' }}
-            
-            <p><a href="{{ record.url }}">Read more...</a></p>
-        </li>
+        {{ record.content|firstp|wrap:'p' }}
+
+        <p><a href="{{ record.url }}">Read more...</a></p>
+
+        {% if not loop.last %}<hr>{% endif %}
     {% endfor %}
-    </ul>
 
     {% if paging.is_paged %}
         <hr>

@@ -23,8 +23,7 @@
 
     {% if paging.is_paged %}
         <hr>
-        <h3>Paging</h3>
-        <p>Page {{ paging.page }} of {{ paging.total }}</p>
+        <h3>Paging ({{ paging.page }} of {{ paging.total }})</h3>
         <ul>
             <li><a href="{{ paging.first_url }}">First</a></li>
             {% if paging.prev_url %}
