@@ -1,0 +1,2 @@
+include license.txt readme.md
+recursive-include malt/themes *.*
