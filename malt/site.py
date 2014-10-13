@@ -6,6 +6,10 @@ This module loads, processes, and stores the site's configuration data.
 import os
 import importlib
 import time
+import re
+
+import markdown
+import yaml
 
 from . import utils
 
@@ -31,6 +35,9 @@ _stime = None
 # Stores a count of the number of pages rendered.
 _pcount = None
 
+# Stores an initialized markdown renderer.
+_markdown = None
+
 
 def init(srcdir, dstdir, themedir):
     """ Called to initialize the site model before building. """
@@ -54,6 +61,10 @@ def init(srcdir, dstdir, themedir):
     # Determine the urls of the main record-type index pages.
     for typeid in _config['types']:
         _config['types'][typeid]['index_url'] = index_url(typeid)
+
+    # Initialize a markdown renderer.
+    global _markdown
+    _markdown = markdown.Markdown(**_config.setdefault('markdown', {}))
 
     # Load ~include strings from the source directory.
     global _includes
@@ -185,6 +196,22 @@ def trail_from_src(srcdir):
     return trail
 
 
+def render(text, ext):
+    """ Renders `text` into html using either Syntex or Markdown. """
+    if ext.lstrip('.') in ('md', 'markdown'):
+        meta = {}
+        match = re.match(r"---\n(.*?\n)(---|...)\n", text, re.DOTALL)
+        if match:
+            text = text[match.end(0):]
+            if yaml:
+                yaml_meta = yaml.load(match.group(1))
+                if isinstance(yaml_meta, dict):
+                    meta = yaml_meta
+        return _markdown.reset().convert(text), meta
+    else:
+        return syntex.render(text)
+
+
 def _load_site_config(srcdir):
     """ Loads and normalizes the site's configuration data. """
 
@@ -254,7 +281,7 @@ def _load_includes(source):
     if os.path.isdir(src('~includes')):
         for finfo in utils.files(src('~includes')):
             content = open(finfo.path, encoding='utf-8').read()
-            includes[finfo.base], _ = syntex.render(content)
+            includes[finfo.base], _ = render(content, finfo.ext)
     return includes
 
 

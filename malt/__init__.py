@@ -9,21 +9,33 @@ License: This work has been placed in the public domain.
 
 """
 
-import argparse
-import os
+__version__ = '0.6.0'
+
+
 import sys
 
-from . import build
-from . import utils
+
+if sys.version_info < (3, 2):
+    sys.exit('Error: Malt requires Python >= 3.2.')
 
 
 try:
     import yaml
 except ImportError:
-    sys.exit('Error: Malt requires PyYAML.')
+    sys.exit('Error: Malt requires the PyYAML module.')
 
 
-__version__ = '0.5.0'
+try:
+    import markdown
+except ImportError:
+    sys.exit('Error: Malt requires the Markdown module.')
+
+
+import argparse
+import os
+
+from . import build
+from . import utils
 
 
 def parse_args():

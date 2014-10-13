@@ -10,7 +10,6 @@ import datetime
 from . import utils
 from . import site
 from . import tags
-from .lib import syntex
 
 
 # Stores an in-memory cache of record objects.
@@ -19,7 +18,7 @@ _cache = {}
 
 def record(filepath):
     """ Returns the Record object corresponding to the specified text file. """
-    if os.path.splitext(filepath)[1] in ('.txt', '.stx'):
+    if os.path.splitext(filepath)[1] in ('.txt', '.stx', '.md', '.markdown'):
         if not filepath in _cache:
             _cache[filepath] = Record(filepath)
         return _cache[filepath]
@@ -44,7 +43,7 @@ class Record(dict):
         text = open(filepath, encoding='utf-8').read()
 
         # Render the file's text content as html.
-        html, meta = syntex.render(text)
+        html, meta = site.render(text, ext)
         for key, value in meta.items():
             self[key.lower().replace(' ', '_')] = value
 
