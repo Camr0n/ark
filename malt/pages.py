@@ -9,6 +9,8 @@ import sys
 import math
 
 from . import site
+from . import hooks
+
 from .lib import flock
 
 
@@ -54,7 +56,8 @@ class Page(dict):
         # Determine the template to use.
         self._set_template()
 
-        # Now would be a good time to filter the page.
+        # Fire the 'render_page' event.
+        hooks.event('render_page', self)
 
         # Determine the output filepath. Directory-style URLs require
         # us to add an extra 'index' element to the path.

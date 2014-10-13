@@ -264,7 +264,7 @@ def _load_plugins():
     pnames = [
         os.path.splitext(name)[0]
             for name in os.listdir(pdir)
-                if not name.startswith('__')
+                if not name[0] in '_.'
     ]
     for pname in pnames:
         plugin = importlib.import_module('.plugins.' + pname, 'malt')

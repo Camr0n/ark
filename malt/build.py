@@ -10,6 +10,7 @@ from . import utils
 from . import pages
 from . import records
 from . import tags
+from . import hooks
 
 
 def build(srcdir, dstdir, themedir):
@@ -17,6 +18,9 @@ def build(srcdir, dstdir, themedir):
 
     # Initialize the site model.
     site.init(srcdir, dstdir, themedir)
+
+    # Fire the 'init' event.
+    hooks.event('init')
 
     # Copy the site's resource files to the destination directory.
     utils.copy_contents(srcdir, dstdir)
@@ -35,8 +39,8 @@ def build(srcdir, dstdir, themedir):
     # Build the tag index pages.
     build_tag_indexes()
 
-    # Print a status report.
-    status_report()
+    # Fire the 'exit' event.
+    hooks.event('exit')
 
 
 def build_record_pages(dirpath):
@@ -112,12 +116,3 @@ def build_tag_indexes():
             page['flags']['is_tag_index'] = True
             page['trail'] = [site.type(typeid)['name'], page['tag']]
             page.render()
-
-
-def status_report():
-    """ Prints a status report with stats on the build. """
-    pcount = site.page_count()
-    btime = site.build_time()
-    average = btime / (pcount or 1)
-    status = "%s pages rendered in %.2f seconds. %.4f seconds per page."
-    print(status % (pcount, btime, average))
