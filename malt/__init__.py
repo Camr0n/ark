@@ -9,7 +9,7 @@ License: This work has been placed in the public domain.
 
 """
 
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 
 
 import sys

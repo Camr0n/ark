@@ -280,8 +280,9 @@ def _load_includes(source):
     includes = {}
     if os.path.isdir(src('~includes')):
         for finfo in utils.files(src('~includes')):
-            content = open(finfo.path, encoding='utf-8').read()
-            includes[finfo.base], _ = render(content, finfo.ext)
+            if not finfo.name[0] in '.':
+                content = open(finfo.path, encoding='utf-8').read()
+                includes[finfo.base], _ = render(content, finfo.ext)
     return includes
 
 
