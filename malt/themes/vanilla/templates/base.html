@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="@root/css/reset.css">
-        <link rel="stylesheet" href="@root/css/magpie.css">
+        <link rel="stylesheet" href="@root/css/vanilla.css">
         <link rel="stylesheet" href="@root/css/pygments.css">
     </head>
     <body class="{{classes}}">
@@ -12,7 +12,7 @@
         <div class="header meta">
             {{ includes.menu }}
         </div>
-        
+
         <div class="content">
             {% block content %}{% endblock %}
         </div>

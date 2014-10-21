@@ -18,7 +18,7 @@ import io
 from setuptools import setup, find_packages
 
 
-filepath = os.path.join(os.path.dirname(__file__), 'malt', '__init__.py')
+filepath = os.path.join(os.path.dirname(__file__), 'malt', 'meta.py')
 with io.open(filepath, encoding='utf-8') as metafile:
     regex = r'''^__([a-z]+)__ = ["'](.*)["']'''
     meta = dict(re.findall(regex, metafile.read(), flags=re.MULTILINE))
@@ -31,13 +31,15 @@ setup(
     include_package_data = True,
     entry_points = {
         'console_scripts': [
-            'malt = malt:main',
+            'malt = malt.cli:cli',
         ],
     },
     install_requires = [
+        'Click',
         'Markdown',
         'Pygments',
         'PyYAML',
+        'syntex',
     ],
     author = 'Darren Mulholland',
     license = 'Public Domain',

@@ -1,7 +1,5 @@
-"""
-Utility functions.
 
-"""
+""" Utility functions. """
 
 import collections
 import os
@@ -36,6 +34,12 @@ def files(directory):
     return files
 
 
+def textfiles(directory):
+    """ Returns a list of text files in the specified directory. """
+    extensions = ('.txt', '.stx', '.md', '.markdown')
+    return [fi for fi in files(directory) if fi.ext in extensions]
+
+
 def slugify(s):
     """ Slug preparation function. Used to sanitize url components, etc. """
     s = unicodedata.normalize('NFKD', s)
@@ -55,8 +59,8 @@ def titlecase(s):
     )
 
 
-def copy_contents(srcdir, dstdir, root=True):
-    """ Copies the contents of `srcdir` to `dstdir`. """
+def copydir(srcdir, dstdir, skip=True):
+    """ Copies `srcdir` to `dstdir`, creating `dstdir` if necessary. """
 
     if not os.path.exists(dstdir):
         os.makedirs(dstdir)
@@ -65,7 +69,7 @@ def copy_contents(srcdir, dstdir, root=True):
         src = os.path.join(srcdir, name)
         dst = os.path.join(dstdir, name)
 
-        if root and (name == 'config.py' or name[0] in '@~'):
+        if skip and name.startswith('@'):
             continue
 
         if os.path.isfile(src):
@@ -84,6 +88,15 @@ def clear_directory(dirpath):
                 os.remove(path)
             elif os.path.isdir(path):
                 shutil.rmtree(path)
+
+
+def writefile(filepath, content):
+    """ Writes a string to a file. """
+    if not os.path.isdir(os.path.dirname(filepath)):
+        os.makedirs(os.path.dirname(filepath))
+
+    with open(filepath, 'w', encoding='utf-8') as file:
+        file.write(content)
 
 
 def make_redirect(filepath, url):

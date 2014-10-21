@@ -1,7 +1,5 @@
-"""
-This module handles the creation and caching of Record objects.
 
-"""
+""" Handles the creation and caching of Record objects. """
 
 import os
 import re
@@ -18,12 +16,9 @@ _cache = {}
 
 def record(filepath):
     """ Returns the Record object corresponding to the specified text file. """
-    if os.path.splitext(filepath)[1] in ('.txt', '.stx', '.md', '.markdown'):
-        if not filepath in _cache:
-            _cache[filepath] = Record(filepath)
-        return _cache[filepath]
-    else:
-        return None
+    if not filepath in _cache:
+        _cache[filepath] = Record(filepath)
+    return _cache[filepath]
 
 
 class Record(dict):

@@ -2,4 +2,4 @@
 
 import malt
 
-malt.main()
+malt.cli.cli()

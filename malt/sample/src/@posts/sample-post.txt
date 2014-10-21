@@ -1,0 +1,6 @@
+---
+title: My Sample Post
+author: John Doe
+date: 20014-10-19
+...
+

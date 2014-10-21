@@ -1,7 +1,5 @@
-"""
-This module handles all tagging functionality.
 
-"""
+""" Handles all tagging functionality. """
 
 from . import site
 from .utils import slugify

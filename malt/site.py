@@ -1,29 +1,33 @@
-"""
-This module loads, processes, and stores the site's configuration data.
 
-"""
+""" Loads, processes, and stores the site's configuration data. """
 
 import os
 import importlib
 import time
 import re
+import sys
 
 import markdown
 import yaml
+import syntex
+import flock
 
 from . import utils
 
-from .lib import syntex
-from .lib import flock
 
+# Stores the path to the site's home directory.
+_homedir = None
 
-# Stores the site's input and output directories.
-_dirs = None
+# Stores the path to the site's output directory.
+_outdir = None
+
+# Stores the path to the site's theme directory.
+_themedir = None
 
 # Stores the site's configuration data.
 _config = None
 
-# Stores include strings loaded from the source directory.
+# Stores include strings loaded from the inc directory.
 _includes = None
 
 # Stores a list of available template names.
@@ -39,7 +43,7 @@ _pcount = None
 _markdown = None
 
 
-def init(srcdir, dstdir, themedir):
+def init(options):
     """ Called to initialize the site model before building. """
 
     # Store the start time.
@@ -50,13 +54,21 @@ def init(srcdir, dstdir, themedir):
     global _pcount
     _pcount = 0
 
-    # Store the input and output directories for future lookups.
-    global _dirs
-    _dirs = (srcdir, dstdir, themedir)
+    # Store the site's home directory.
+    global _homedir
+    _homedir = options['home']
 
-    # Load the site's configuration.
+    # Load the site's configuration data.
     global _config
-    _config = _load_site_config(srcdir)
+    _config = _load_site_config()
+
+    # Determine the theme directory.
+    global _themedir
+    _themedir = _set_theme_dir(options)
+
+    # Determine the output directory.
+    global _outdir
+    _outdir = options.get('out') or home('out')
 
     # Determine the urls of the main record-type index pages.
     for typeid in _config['types']:
@@ -66,9 +78,9 @@ def init(srcdir, dstdir, themedir):
     global _markdown
     _markdown = markdown.Markdown(**_config.setdefault('markdown', {}))
 
-    # Load ~include strings from the source directory.
+    # Load and render include strings from the home/inc directory.
     global _includes
-    _includes = _load_includes(srcdir)
+    _includes = _load_includes()
 
     # Assemble a list of available templates.
     global _templates
@@ -77,23 +89,32 @@ def init(srcdir, dstdir, themedir):
     # Initialize the template loader.
     flock.config.loader = flock.loaders.FileLoader(theme('templates'))
 
-    # Load plugins from the plugins directory.
-    _load_plugins()
+    # Load any extensions we can find.
+    _load_extensions()
+
+    # Clear the output directory.
+    if options.get('clear'):
+        utils.clear_directory(out())
+
+
+def home(*append):
+    """ Returns the path to the home directory. """
+    return os.path.join(_homedir, *append)
 
 
 def src(*append):
-    """ Returns the path to the source directory. """
-    return os.path.join(_dirs[0], *append)
+    """ Returns the path to the home/src directory. """
+    return home('src', *append)
 
 
-def dst(*append):
-    """ Returns the path to the destination directory. """
-    return os.path.join(_dirs[1], *append)
+def out(*append):
+    """ Returns the path to the home/out directory. """
+    return os.path.join(_outdir, *append)
 
 
 def theme(*append):
     """ Returns the path to the theme directory. """
-    return os.path.join(_dirs[2], *append)
+    return os.path.join(_themedir, *append)
 
 
 def templates():
@@ -212,17 +233,14 @@ def render(text, ext):
         return syntex.render(text)
 
 
-def _load_site_config(srcdir):
+def _load_site_config():
     """ Loads and normalizes the site's configuration data. """
 
     data, configstr = {}, ''
 
-    # Look for a config.py file in the source directory.
-    # Also check one directory level up.
-    if os.path.isfile(src('config.py')):
-        configstr = open(src('config.py'), encoding='utf-8').read()
-    elif os.path.isfile(src('../config.py')):
-        configstr = open(src('../config.py'), encoding='utf-8').read()
+    # Look for a config.py file in the home directory.
+    if os.path.isfile(home('config.py')):
+        configstr = open(home('config.py'), encoding='utf-8').read()
 
     # Evaluate the file contents as a string of Python code.
     if configstr:
@@ -246,7 +264,7 @@ def _load_site_config(srcdir):
     # Get a list of the types this site is using.
     types = [
         di.name.lstrip('@')
-            for di in utils.subdirs(srcdir)
+            for di in utils.subdirs(src())
                 if di.name.startswith('@')
     ]
 
@@ -275,26 +293,41 @@ def _load_site_config(srcdir):
     return data
 
 
-def _load_includes(source):
-    """ Process any files in the ~includes directory. """
+def _load_includes():
+    """ Process any text files in the home/inc directory. """
     includes = {}
-    if os.path.isdir(src('~includes')):
-        for finfo in utils.files(src('~includes')):
-            if not finfo.name[0] in '.':
-                content = open(finfo.path, encoding='utf-8').read()
-                includes[finfo.base], _ = render(content, finfo.ext)
+    if os.path.isdir(home('inc')):
+        for finfo in utils.textfiles(home('inc')):
+            content = open(finfo.path, encoding='utf-8').read()
+            includes[finfo.base], _ = render(content, finfo.ext)
     return includes
 
 
-def _load_plugins():
-    """ Load any plugins found in the plugins directory. """
-    pdir = os.path.join(os.path.dirname(__file__), 'plugins')
-    pnames = [
-        os.path.splitext(name)[0]
-            for name in os.listdir(pdir)
-                if not name[0] in '_.'
-    ]
-    for pname in pnames:
-        plugin = importlib.import_module('.plugins.' + pname, 'malt')
-        if hasattr(plugin, 'init'):
-            plugin.init()
+def _load_extensions():
+    """ Load any Python modules found in the extensions directories. """
+    dirpaths = [os.path.join(os.path.dirname(__file__), 'extensions')]
+    if os.path.isdir(home('ext')):
+        dirpaths.append(home('ext'))
+    for dirpath in dirpaths:
+        sys.path.insert(0, dirpath)
+        names = [
+            os.path.splitext(name)[0]
+                for name in os.listdir(dirpath)
+                    if not name[0] in '_.'
+        ]
+        for name in names:
+            extension = importlib.import_module(name)
+            if hasattr(extension, 'init'):
+                extension.init()
+        sys.path.pop(0)
+
+
+def _set_theme_dir(options):
+    """ Determines the theme directory to use for the build. """
+    theme = options.get('theme') or config('theme') or 'vanilla'
+    if os.path.isdir(home('lib')) and theme in os.listdir(home('lib')):
+        return home('lib', theme)
+    elif theme in os.listdir(os.path.join(os.path.dirname(__file__), 'themes')):
+        return os.path.join(os.path.dirname(__file__), 'themes', theme)
+    else:
+        sys.exit('Error: cannot locate theme directory "%s".' % theme)

@@ -1,17 +1,16 @@
-"""
-This module handles the creation and rendering of Page objects.
 
-"""
+""" Handles the creation and rendering of Page objects. """
 
 import os
 import re
 import sys
 import math
 
+import flock
+
 from . import site
 from . import hooks
-
-from .lib import flock
+from . import utils
 
 
 class Page(dict):
@@ -69,7 +68,7 @@ class Page(dict):
                 slugs.append('index.html')
         else:
             slugs[-1] = slugs[-1] + site.config('extension')
-        filepath = site.dst(*slugs)
+        filepath = site.out(*slugs)
 
         if os.path.isfile(os.path.dirname(filepath)):
             msg =  'Filename conflict. '
@@ -113,12 +112,7 @@ class Page(dict):
         html = self._rewrite_urls(html, len(slugs))
 
         # Write the output file.
-        if not os.path.isdir(os.path.dirname(filepath)):
-            os.makedirs(os.path.dirname(filepath))
-
-        with open(filepath, 'w', encoding='utf-8') as file:
-            file.write(html)
-
+        utils.writefile(filepath, html)
         site.increment_page_count()
 
     def _rewrite_urls(self, html, depth):

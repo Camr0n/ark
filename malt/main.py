@@ -1,7 +1,5 @@
-"""
-This module handles the main site building process.
 
-"""
+""" Handles the main site building process. """
 
 import os
 
@@ -13,24 +11,24 @@ from . import tags
 from . import hooks
 
 
-def build(srcdir, dstdir, themedir):
-    """ Builds the site. Arguments are directory paths. """
+def build(options):
+    """ Builds the site. Argument is a dictionary of command line options. """
 
     # Initialize the site model.
-    site.init(srcdir, dstdir, themedir)
+    site.init(options)
 
     # Fire the 'init' event.
     hooks.event('init')
 
-    # Copy the site's resource files to the destination directory.
-    utils.copy_contents(srcdir, dstdir)
+    # Copy the site's resource files to the output directory.
+    utils.copydir(site.src(), site.out())
 
-    # Copy the theme's resource files to the destination directory.
+    # Copy the theme's resource files to the output directory.
     if os.path.exists(site.theme('resources')):
-        utils.copy_contents(site.theme('resources'), dstdir)
+        utils.copydir(site.theme('resources'), site.out())
 
     # Build the individual record pages and directory indexes.
-    for dirname, dirpath in utils.subdirs(srcdir):
+    for dirname, dirpath in utils.subdirs(site.src()):
         if dirname.startswith('@'):
             build_record_pages(dirpath)
             if site.type(dirname)['indexed']:
@@ -46,11 +44,10 @@ def build(srcdir, dstdir, themedir):
 def build_record_pages(dirpath):
     """ Creates an HTML page for each record in the source directory. """
 
-    for fileinfo in utils.files(dirpath):
+    for fileinfo in utils.textfiles(dirpath):
         record = records.record(fileinfo.path)
-        if record:
-            page = pages.RecordPage(record)
-            page.render()
+        page = pages.RecordPage(record)
+        page.render()
 
     for dirinfo in utils.subdirs(dirpath):
         build_record_pages(dirinfo.path)
@@ -70,9 +67,9 @@ def build_directory_indexes(dirpath, recursing=False):
         index.extend(build_directory_indexes(dirinfo.path, True))
 
     # Add any records in this directory to the index.
-    for fileinfo in utils.files(dirpath):
+    for fileinfo in utils.textfiles(dirpath):
         record = records.record(fileinfo.path)
-        if record and site.type(typeid)['order_by'] in record:
+        if site.type(typeid)['order_by'] in record:
             index.append(record)
 
     # Are we displaying this index on the homepage?

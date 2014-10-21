@@ -3,8 +3,7 @@ This sample plugin prints a simple status report at the end of each build.
 
 """
 
-from .. import hooks
-from .. import site
+from malt import hooks, site
 
 
 @hooks.register('exit')

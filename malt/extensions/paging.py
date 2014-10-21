@@ -7,8 +7,7 @@ The links can be accessed in templates as:
 
 """
 
-from .. import hooks
-from .. import site
+from malt import hooks, site
 
 
 @hooks.register('render_page')
