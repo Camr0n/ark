@@ -7,7 +7,7 @@ The links can be accessed in templates as:
 
 """
 
-from malt import hooks, site
+from ark import hooks, site
 
 
 @hooks.register('render_page')

@@ -6,7 +6,7 @@ import re
 import sys
 import math
 
-import flock
+import ibis
 
 from . import site
 from . import hooks
@@ -84,8 +84,8 @@ class Page(dict):
 
         # Load the template.
         try:
-            template = flock.config.loader(self['template'])
-        except flock.errors.TemplateError as e:
+            template = ibis.config.loader(self['template'])
+        except ibis.errors.TemplateError as e:
             msg =  'Error loading template file:\n'
             msg += '  %s\n\n' % self['template']
             msg += '  %s: %s' % (e.__class__.__name__, e)
@@ -98,7 +98,7 @@ class Page(dict):
         # Render the page into html.
         try:
             html = template.render(self)
-        except flock.errors.TemplateError as e:
+        except ibis.errors.TemplateError as e:
             msg =  'Template error rendering file:\n'
             msg += '  %s\n\n' % filepath
             msg += '  %s: %s' % (e.__class__.__name__, e)

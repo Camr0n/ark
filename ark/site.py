@@ -10,7 +10,7 @@ import sys
 import markdown
 import yaml
 import syntex
-import flock
+import ibis
 
 from . import utils
 
@@ -87,14 +87,14 @@ def init(options):
     _templates = [finfo.base for finfo in utils.files(theme('templates'))]
 
     # Initialize the template loader.
-    flock.config.loader = flock.loaders.FileLoader(theme('templates'))
+    ibis.config.loader = ibis.loaders.FileLoader(theme('templates'))
 
     # Load any extensions we can find.
     _load_extensions()
 
     # Clear the output directory.
     if options.get('clear'):
-        utils.clear_directory(out())
+        utils.cleardir(out())
 
 
 def home(*append):

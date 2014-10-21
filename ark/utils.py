@@ -76,10 +76,10 @@ def copydir(srcdir, dstdir, skip=True):
             shutil.copy2(src, dst)
 
         elif os.path.isdir(src):
-            copy_contents(src, dst, False)
+            copydir(src, dst, False)
 
 
-def clear_directory(dirpath):
+def cleardir(dirpath):
     """ Clears the contents of a directory. """
     if os.path.isdir(dirpath):
         for name in os.listdir(dirpath):

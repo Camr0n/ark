@@ -3,7 +3,7 @@ This sample plugin prints a simple status report at the end of each build.
 
 """
 
-from malt import hooks, site
+from ark import hooks, site
 
 
 @hooks.register('exit')

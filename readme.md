@@ -1,17 +1,21 @@
 
-Malt
-====
+Ark
+===
 
-Malt is a static website generator in Python 3. It transforms a directory of text files written in [Syntex][] or [Markdown][] into a self-contained website that can be viewed locally or served remotely.
+Ark is a static website generator in Python 3. It transforms a directory of text files written in [Syntex][] or [Markdown][] into a self-contained website that can be viewed locally or served remotely.
 
 [Syntex]: https://github.com/dmulholland/syntex
 [Markdown]: http://daringfireball.net/projects/markdown/
 
-Basic usage:
+Initialize a new site:
 
-    $ malt <src-dir> <dst-dir> <theme-dir>
+    $ ark init <site-name>
 
-Malt is under active development and is not yet ready for production use.
+Build a site:
+
+    $ ark build
+
+Ark is under active development and is not yet ready for production use.
 
 
 Installation
@@ -19,17 +23,29 @@ Installation
 
 Install directly from the Python Package Index using `pip`:
 
-    $ pip install malt
+    $ pip install ark
+
+Ark requires Python 3.2 or later.
 
 
-Requirements
+Dependencies
 ------------
 
-Requires Python 3. Also requires the [Markdown][MDMod], [PyYAML][], and [Pygments][] modules.
+The following dependencies are installed automatically by `pip`:
 
-[MDMod]: https://pythonhosted.org/Markdown/
+* [Click][]
+* [Ibis][]
+* [Markdown][MD]
+* [Pygments][]
+* [PyYAML][]
+* [Syntex][]
+
+[MD]: https://pythonhosted.org/Markdown/
 [PyYAML]: http://pyyaml.org/
 [Pygments]: http://pygments.org/
+[Syntex]: http://github.com/dmulholland/syntex
+[Ibis]: http://github.com/dmulholland/ibis
+[Click]: http://click.pocoo.org/
 
 
 License

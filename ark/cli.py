@@ -79,7 +79,7 @@ def init(name):
     os.makedirs(os.path.join(name, 'src'))
 
     utils.copydir(
-        os.path.join(os.path.dirname(__file__), 'sample'),
+        os.path.join(os.path.dirname(__file__), 'skeleton'),
         name
     )
 
