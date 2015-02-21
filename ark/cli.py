@@ -67,23 +67,18 @@ def build(theme, out, clear, ):
 @cli.command()
 @click.argument('name')
 def init(name):
-    """ Create new site. """
-    if os.path.exists(name):
-        sys.exit('Error: "%s" already exists.' % os.path.abspath(name))
-
-    os.makedirs(name)
-    os.makedirs(os.path.join(name, 'ext'))
-    os.makedirs(os.path.join(name, 'inc'))
-    os.makedirs(os.path.join(name, 'lib'))
-    os.makedirs(os.path.join(name, 'out'))
-    os.makedirs(os.path.join(name, 'src'))
+    """ Initialize a new site directory. """
+    os.makedirs('ext')
+    os.makedirs('inc')
+    os.makedirs('lib')
+    os.makedirs('out')
+    os.makedirs('src')
 
     utils.copydir(
         os.path.join(os.path.dirname(__file__), 'skeleton'),
-        name
+        '.'
     )
-
     utils.copydir(
         os.path.join(os.path.dirname(__file__), 'themes', 'vanilla'),
-        os.path.join(name, 'lib', 'vanilla')
+        os.path.join('lib', 'vanilla')
     )
