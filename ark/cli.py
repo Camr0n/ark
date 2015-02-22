@@ -15,7 +15,7 @@ from . import utils
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing:
         return
-    click.echo('Version %s' % meta.__version__)
+    click.echo(meta.__version__)
     ctx.exit()
 
 
@@ -76,7 +76,7 @@ def init():
     os.makedirs('src')
 
     utils.copydir(
-        os.path.join(os.path.dirname(__file__), 'skeleton'),
+        os.path.join(os.path.dirname(__file__), 'init'),
         '.'
     )
     utils.copydir(
