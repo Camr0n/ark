@@ -2,20 +2,12 @@
 Ark
 ===
 
-Ark is a static website generator in Python 3. It transforms a directory of text files written in [Syntex][] or [Markdown][] into a self-contained website that can be viewed locally or served remotely.
+Ark is a static website generator in Python. It transforms a directory of text files written in [Syntex][] or [Markdown][] into a self-contained website that can be viewed locally or served remotely.
 
 [Syntex]: https://github.com/dmulholland/syntex
 [Markdown]: http://daringfireball.net/projects/markdown/
 
-Initialize a new site:
-
-    $ ark init <site-name>
-
-Build a site:
-
-    $ ark build
-
-Ark is under active development and is not yet ready for production use.
+See the project's [documentation](http://pythonhosted.org/ark) for further details.
 
 
 Installation
@@ -31,7 +23,7 @@ Ark requires Python 3.2 or later.
 Dependencies
 ------------
 
-The following dependencies are installed automatically by `pip`:
+Installing Ark automatically installs the following dependencies:
 
 * [Click][]
 * [Ibis][]
@@ -40,12 +32,12 @@ The following dependencies are installed automatically by `pip`:
 * [PyYAML][]
 * [Syntex][]
 
-[MD]: https://pythonhosted.org/Markdown/
-[PyYAML]: http://pyyaml.org/
-[Pygments]: http://pygments.org/
-[Syntex]: http://github.com/dmulholland/syntex
-[Ibis]: http://github.com/dmulholland/ibis
 [Click]: http://click.pocoo.org/
+[Ibis]: http://github.com/dmulholland/ibis
+[MD]: https://pythonhosted.org/Markdown/
+[Pygments]: http://pygments.org/
+[PyYAML]: http://pyyaml.org/
+[Syntex]: http://github.com/dmulholland/syntex
 
 
 License
