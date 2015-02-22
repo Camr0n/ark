@@ -1,6 +1,8 @@
 """
 This sample plugin prints a simple status report at the end of each build.
 
+License: Public Domain.
+
 """
 
 from ark import hooks, site
