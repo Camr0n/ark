@@ -6,18 +6,20 @@
         <link rel="stylesheet" href="@root/css/reset.css">
         <link rel="stylesheet" href="@root/css/vanilla.css">
         <link rel="stylesheet" href="@root/css/pygments.css">
+        <script src="@root/js/jquery-1.11.2.min.js"></script>
+        <script src="@root/js/vanilla.js"></script>
     </head>
     <body class="{{classes}}">
 
-        <div class="header meta">
+        <div id="header" class="header meta">
             {{ includes.menu }}
         </div>
 
-        <div class="content">
+        <div id="content" class="content">
             {% block content %}{% endblock %}
         </div>
 
-        <div class="footer meta">
+        <div id="footer" class="footer meta">
             {{ includes.menu }}
         </div>
 
