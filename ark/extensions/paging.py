@@ -1,16 +1,29 @@
 """
-This plugin adds a string of page navigation links to index pages.
+This plugin adds a string of page navigation links to index page objects.
 
-The links can be accessed in templates as:
+The links can be accessed in templates via:
 
     {{ paging.links }}
+
+Default settings can be overridden by including a 'paging' dictionary in
+the site's config.py file containing one or more of the following options:
+
+    paging = {
+        'first': 'First',       # text for link to first page
+        'last': 'Last',         # text for link to last page
+        'prev': 'Prev',         # text for link to previous page
+        'next': 'Next',         # text for link to next page
+        'delta': 2,             # number of neighbouring pages to include
+        'multiples': 2,         # number of larger/smaller multiples to include
+        'multiple': 10,         # link to page numbers in multiples of...
+    }
 
 """
 
 from ark import hooks, site
 
 
-@hooks.register('render_page')
+@hooks.register('rendering_page')
 def add_paging_links(page):
     """ Adds a string of page navigation links to the Page object. """
 

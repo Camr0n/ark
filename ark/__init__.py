@@ -1,10 +1,8 @@
 """
 Ark: a static website generator in Python 3.
 
-Usage:
-
-    $ ark init <site-name>
-    $ ark build
+Ark transforms a directory of text files in Syntex or Markdown format into
+a static website that can be viewed locally or served remotely.
 
 License: This work has been placed in the public domain.
 

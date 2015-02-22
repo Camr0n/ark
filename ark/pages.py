@@ -56,7 +56,7 @@ class Page(dict):
         self._set_template()
 
         # Fire the 'render_page' event.
-        hooks.event('render_page', self)
+        hooks.event('rendering_page', self)
 
         # Determine the output filepath. Directory-style URLs require
         # us to add an extra 'index' element to the path.
