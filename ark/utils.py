@@ -72,6 +72,9 @@ def copydir(srcdir, dstdir, skip=True):
         if skip and name.startswith('@'):
             continue
 
+        if name == '__pycache__':
+            continue
+
         if os.path.isfile(src):
             shutil.copy2(src, dst)
 
