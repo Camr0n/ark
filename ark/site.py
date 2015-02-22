@@ -92,10 +92,6 @@ def init(options):
     # Load any extensions we can find.
     _load_extensions()
 
-    # Clear the output directory.
-    if options.get('clear'):
-        utils.cleardir(out())
-
 
 def home(*append):
     """ Returns the path to the home directory. """

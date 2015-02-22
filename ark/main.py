@@ -20,6 +20,10 @@ def build(options):
     # Fire the 'init' event.
     hooks.event('init')
 
+    # Clear the output directory.
+    if options.get('clear'):
+        utils.cleardir(site.out())
+
     # Copy the site's resource files to the output directory.
     utils.copydir(site.src(), site.out())
 

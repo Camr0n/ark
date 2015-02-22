@@ -44,9 +44,7 @@ setup(
     ],
     author = 'Darren Mulholland',
     license = 'Public Domain',
-    description = (
-        'Static website generator.'
-    ),
+    description = 'Static website generator.',
     long_description = __doc__,
     classifiers = [
         'Development Status :: 3 - Alpha',

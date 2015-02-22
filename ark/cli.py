@@ -47,7 +47,8 @@ def cli():
 @click.option('--clear', is_flag=True, default=False,
     help='Clear the output directory before building.')
 def build(theme, out, clear, ):
-    """ Build site. """
+    """ Build the current site. """
+
     options = {
         'home': locate_home_directory()
     }
@@ -65,9 +66,9 @@ def build(theme, out, clear, ):
 
 
 @cli.command()
-@click.argument('name')
-def init(name):
+def init():
     """ Initialize a new site directory. """
+
     os.makedirs('ext')
     os.makedirs('inc')
     os.makedirs('lib')
