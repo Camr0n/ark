@@ -12,7 +12,7 @@ body {
 .content {
     max-width: 650px;
     margin: 0 auto;
-    padding: 40px 45px;
+    padding: 40px 45px 50px;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px #ddd;
 }

@@ -191,10 +191,10 @@ class Page(dict):
         if self['flags']['is_single']:
             if self['record'].get('template') in templates:
                 template = self['record'].get('template')
-            elif 'single-' + typeid in templates:
-                template = 'single-' + typeid
+            elif 'record-' + typeid in templates:
+                template = 'record-' + typeid
             else:
-                template = 'single'
+                template = 'record'
 
         # Tag index page.
         elif self['flags']['is_tag_index']:
