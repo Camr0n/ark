@@ -7,7 +7,8 @@ Ark is a static website generator in Python 3. It transforms a directory
 of text files written in Syntex or Markdown into a self-contained website
 that can be viewed locally or served remotely.
 
-Ark is under active development and is not yet ready for production use.
+See the package documentation (http://pythonhosted.org/ark/) or the project's
+Github homepage (https://github.com/dmulholland/ark) for further details.
 
 """
 
@@ -43,11 +44,12 @@ setup(
         'ibis',
     ],
     author = 'Darren Mulholland',
+    url='https://github.com/dmulholland/ark',
     license = 'Public Domain',
     description = 'Static website generator.',
     long_description = __doc__,
     classifiers = [
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
         'License :: Public Domain',
