@@ -7,7 +7,7 @@ Ark is a static website generator in Python. It transforms a directory of text f
 [Syntex]: https://github.com/dmulholland/syntex
 [Markdown]: http://daringfireball.net/projects/markdown/
 
-See the project's [documentation](http://pythonhosted.org/ark) for further details.
+See the project's [documentation](http://pythonhosted.org/ark/) for further details.
 
 
 Installation
@@ -25,19 +25,12 @@ Dependencies
 
 Installing Ark automatically installs the following dependencies:
 
-* [Click][]
-* [Ibis][]
-* [Markdown][MD]
-* [Pygments][]
-* [PyYAML][]
-* [Syntex][]
-
-[Click]: http://click.pocoo.org/
-[Ibis]: http://github.com/dmulholland/ibis
-[MD]: https://pythonhosted.org/Markdown/
-[Pygments]: http://pygments.org/
-[PyYAML]: http://pyyaml.org/
-[Syntex]: http://github.com/dmulholland/syntex
+* [Click](http://click.pocoo.org/)
+* [Ibis](http://github.com/dmulholland/ibis)
+* [Markdown](https://pythonhosted.org/Markdown/)
+* [Pygments](http://pygments.org/)
+* [PyYAML](http://pyyaml.org/)
+* [Syntex](http://github.com/dmulholland/syntex)
 
 
 License
