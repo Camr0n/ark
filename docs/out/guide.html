@@ -95,7 +95,7 @@ src/
 <pre>
 src/
     @sonnets/
-        sonnet-one.txt  # this record is a sonnet
+        my-sonnet.txt   # this record is a sonnet
 </pre>
 <p>New custom types behave, by default, like the builtin post type. We can alter this behaviour by adding a <code>types</code> dictionary to our <code>config.py</code> file:</p>
 <pre class="lang-python stx-pygments" data-lang="python">
@@ -109,7 +109,7 @@ src/
         <span class="s">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>        <span class="c"># display index entries in reverse order?</span>
         <span class="s">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>        <span class="c"># number of entries per index page</span>
         <span class="s">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>    <span class="c"># number of entries per tag index page</span>
-        <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>      <span class="c"># use this type&#39;s index as the site homepage</span>
+        <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>      <span class="c"># use this type&#39;s index as the site homepage?</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre>
@@ -131,9 +131,9 @@ tags: foo, bar, baz
 </pre>
 <p>Second, you can specify a file extension in your <code>config.py</code> file. You can choose an arbitrary file extension, e.g. <code>".html"</code>, or pass an empty string, <code>""</code>, to use no file extension at all. If you specify a single forward slash, <code>"/"</code>, Ark will generate directory-style URLs.</p>
 <pre class="lang-python stx-pygments" data-lang="python">
-<span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;.php&quot;</span>
+<span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;.html&quot;</span>
 </pre>
-<p>To link to files within your site use site-relative URLs prefixed by <code>@root/</code>, e.g.</p>
+<p>To link to files within your site from records or templates use site-relative URLs prefixed by <code>@root/</code>, e.g.</p>
 <pre>
 @root/scripts/jquery.js
 </pre>
@@ -160,7 +160,15 @@ tags: foo, bar, baz
 <p>If the menu above was contained in a file named <code>menu.txt</code> then the rendered HTML would be available to themes via the <code>includes.menu</code> attribute.</p>
 <h2 id="extensions">Extensions</h2>
 <p>The extensions directory, <code>ext</code>, is intended for plugins that extend or enhance Ark's functionality. Python modules placed in this directory will be loaded automatically and can make use of Ark's system of event and filter hooks to inject their own code into the build process.</p>
-<p>See the sample plugins bundled with the skeleton site for examples of extensions in action.</p>
+<p>As a simple example, the code below registers a handler on the <code>exit</code> event hook to report the number of HTML pages Ark has generated:</p>
+<pre class="lang-python stx-pygments" data-lang="python">
+<span class="kn">from</span> <span class="nn">ark</span> <span class="kn">import</span> <span class="n">hooks</span><span class="p">,</span> <span class="n">site</span>
+
+<span class="nd">@hooks.register</span><span class="p">(</span><span class="s">&#39;exit&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">print_page_count</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Page count:&#39;</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">page_count</span><span class="p">())</span>
+</pre>
+<p>See the sample plugins bundled with the skeleton site for more examples of extensions in action.</p>
 
     
 

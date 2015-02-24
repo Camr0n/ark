@@ -36,7 +36,7 @@ Links
 
 * [Github Homepage](https://github.com/dmulholland/ark)
 * [Python Package Index](https://pypi.python.org/pypi/ark/)
-* [Online Documentation](https://pythonhosted.org/ark)
+* [Online Documentation](https://pythonhosted.org/ark/)
 
 
 License
