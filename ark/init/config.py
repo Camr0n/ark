@@ -16,8 +16,8 @@ theme = "vanilla"
 # Root URL
 # -----------------------------------------------------------------------------
 
-# Your root url can be a full url ("http://example.com/) for absolute urls,
-# a single forward slash ("/") for site-relative urls, or an empty string
+# Your root url can be an explicit domain ("http://example.com/) for absolute
+# urls, a single forward slash ("/") for site-relative urls, or an empty string
 # (the default) for page-relative urls.
 
 root = ""
