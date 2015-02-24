@@ -11,6 +11,7 @@ def register(hook):
 
     def callback(func):
         _handlers.setdefault(hook, []).append(func)
+        return func
 
     return callback
 
