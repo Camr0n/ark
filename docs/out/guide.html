@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+    Guide
+</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/vanilla.css">
+        <link rel="stylesheet" href="css/pygments.css">
+        <script src="js/jquery-1.11.2.min.js"></script>
+        <script src="js/vanilla.js"></script>
+    </head>
+    <body class="pages single">
+
+        <div id="header" class="header meta">
+            <ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="quickstart.html">Quickstart</a></li>
+<li><a href="guide.html">Guide</a></li>
+<li><a href="themes.html">Themes</a></li>
+</ul>
+        </div>
+
+        <div id="content" class="content">
+            
+
+    
+    
+    <h1 id="guide">Guide</h1>
+<p>Ark transforms a source directory of text files written in <a href="https://github.com/dmulholland/syntex">Syntex</a> or <a href="http://daringfireball.net/projects/markdown/">Markdown</a> into a static website that can be viewed locally or served remotely.</p>
+<ul class="stx-toc">
+<li><a href="#command-line-interface">Command Line Interface</a></li>
+<li><a href="#site-structure">Site Structure</a></li>
+<li><a href="#records">Records</a></li>
+<li><a href="#tags">Tags</a></li>
+<li><a href="#links">Links</a></li>
+<li><a href="#includes">Includes</a></li>
+<li><a href="#extensions">Extensions</a></li>
+</ul>
+<h2 id="command-line-interface">Command Line Interface</h2>
+<p>To initialize a new site, create a site directory, <code>cd</code> into it, and run the <code>init</code> command:</p>
+<pre>
+$ ark init
+</pre>
+<p>To build an existing site, run the <code>build</code> command from the site directory or any of its subdirectories:</p>
+<pre>
+$ ark build
+</pre>
+<p>The build command takes a number of optional arguments:</p>
+<pre>
+--theme &lt;name&gt;  Override the theme specififed in the site's config file.
+--out &lt;path&gt;    Redirect output to the specified directory.
+--clear         Clear the output directory before building.
+</pre>
+<h2 id="site-structure">Site Structure</h2>
+<p>Initializing a new site creates the following directory structure:</p>
+<pre>
+site/
+    config.py       # site configuration file
+    ext/            # extensions directory for plugins
+    inc/            # includes directory for menus, etc.
+    lib/            # library directory for themes
+    out/            # output directory for html files
+    src/            # source directory for text files
+</pre>
+<h2 id="records">Records</h2>
+<p>A record is a text file written in <a href="https://github.com/dmulholland/syntex">Syntex</a> (using the extension <code>.txt</code> or <code>.stx</code>) or <a href="http://daringfireball.net/projects/markdown/">Markdown</a> (using the extension <code>.md</code> or <code>.markdown</code>). Ark searches the <code>src</code> directory for record files and generates an HTML page in the <code>out</code> directory for each one it finds. It can also generate a set of index pages for each directory of records, depending on their type.</p>
+<p>A record file can begin with a <a href="http://en.wikipedia.org/wiki/YAML">YAML</a> header specifying metadata for the record:</p>
+<pre>
+---
+title: My Important Document
+author: John Doe
+date: 2014-07-21
+...
+
+Record content begins here.
+</pre>
+<p>By default, a record's URL slug is generated from its filename, but you can specify a custom slug in the header:</p>
+<pre>
+---
+slug: my-custom-slug
+...
+</pre>
+<p>Every record has a <em>type</em>, determined by its parent <code>@type</code> directory in the site's <code>src</code> directory:</p>
+<pre>
+src/
+    @pages/
+        my-page.txt     # this record is a page
+    @posts/
+        my-post.txt     # this record is a post
+</pre>
+<p>Ark has two builtin record types - <em>pages</em> and <em>posts</em> - but you can add as many custom types as you like simply by creating new <code>@type</code> directories. Every type can have its own individual set of index and tag index pages.</p>
+<p>You can determine the behaviour of your custom types (or alter the behaviour of the builtin types) in your site's <code>config.py</code> file. Assuming we'll be devoting a section of our site to sonnets, we may wish to create a custom type just for them. We can do this by adding an <code>@sonnets</code> directory to our site's <code>src</code> directory.</p>
+<pre>
+src/
+    @sonnets/
+        sonnet-one.txt  # this record is a sonnet
+</pre>
+<p>New custom types behave, by default, like the builtin post type. We can alter this behaviour by adding a <code>types</code> dictionary to our <code>config.py</code> file:</p>
+<pre class="lang-python stx-pygments" data-lang="python">
+<span class="n">types</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;sonnets&quot;</span><span class="p">:</span> <span class="p">{</span>                <span class="c"># type id corresponding to the @type directory</span>
+        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>      <span class="c"># defaults to the titlecased type id</span>
+        <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>      <span class="c"># defaults to the slugified type id</span>
+        <span class="s">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">,</span>     <span class="c"># defaults to &quot;tags&quot;</span>
+        <span class="s">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>        <span class="c"># build directory indexes for this type?</span>
+        <span class="s">&quot;order_by&quot;</span><span class="p">:</span> <span class="s">&quot;datetime&quot;</span><span class="p">,</span> <span class="c"># order index entries by this attribute</span>
+        <span class="s">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>        <span class="c"># display index entries in reverse order?</span>
+        <span class="s">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>        <span class="c"># number of entries per index page</span>
+        <span class="s">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>    <span class="c"># number of entries per tag index page</span>
+        <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>      <span class="c"># use this type&#39;s index as the site homepage</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre>
+<p>All the settings above are in fact defaults, and in practice we would only need to include those we wished to change.</p>
+<p>Within an <code>@type</code> directory, Ark will preserve any directory structure it finds, so you can use subdirectories to organise your record files by category or date. If the record type is indexed, Ark will generate an individual set of index pages for each subdirectory in the tree.</p>
+<p>Note that you can store other files and directories in your site's <code>src</code> directory and Ark will copy these files untouched to the <code>out</code> directory when it builds your site. Ark only searches directories beginning with an <code>@</code> symbol for record files so you can safely store, for example, a <code>robots.txt</code> file or a directory of images in your <code>src</code> directory.</p>
+<h2 id="tags">Tags</h2>
+<p>Any record can be tagged and every record type supports its own individual set of tag index pages. To tag a record, simply add a <code>tags</code> attribute to its header followed by a comma-separated list of tags:</p>
+<pre>
+---
+tags: foo, bar, baz
+...
+</pre>
+<h2 id="links">Links</h2>
+<p>Ark generates page-relative URLs and files with a <code>.html</code> extension by default, but you can customize this behaviour to suit your needs.</p>
+<p>First, you can specify a root URL in your <code>config.py</code> file. Use an explicit domain, e.g. <code>"http://example.com/"</code>, for absolute URLs, or a single forward slash, <code>"/"</code>, for site-relative URLs.</p>
+<pre class="lang-python stx-pygments" data-lang="python">
+<span class="n">root</span> <span class="o">=</span> <span class="s">&quot;http://example.com/&quot;</span>
+</pre>
+<p>Second, you can specify a file extension in your <code>config.py</code> file. You can choose an arbitrary file extension, e.g. <code>".html"</code>, or pass an empty string, <code>""</code>, to use no file extension at all. If you specify a single forward slash, <code>"/"</code>, Ark will generate directory-style URLs.</p>
+<pre class="lang-python stx-pygments" data-lang="python">
+<span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;.php&quot;</span>
+</pre>
+<p>To link to files within your site use site-relative URLs prefixed by <code>@root/</code>, e.g.</p>
+<pre>
+@root/scripts/jquery.js
+</pre>
+<p>Ark will automatically rewrite these URLs in the appropriate format.</p>
+<p>Use two trailing slashes when linking to files generated by Ark itself - this tells Ark to rewrite the ending to suit your extension settings.</p>
+<pre>
+@root/posts/my-post//
+</pre>
+<p>Note that you should include the <code>index</code> slug when linking to directory or tag indexes:</p>
+<pre>
+@root/posts/index//
+</pre>
+<p>Linking to the homepage is a special case: a simple <code>@root/</code> will always suffice.</p>
+<h2 id="includes">Includes</h2>
+<p>The includes directory, <code>inc</code>, is intended for snippets of HTML that can be reused on multiple pages throughout your site, e.g. menus or footer links. Text files placed in this folder will be parsed as Syntex or Markdown depending on their extension and the resulting HTML made available for inclusion in theme files via the <code>includes.&lt;filename&gt;</code> attribute.</p>
+<p>For example, a simple menu can be constructed in either Syntex or Markdown using nested lists:</p>
+<pre>
+* [Home](@root/)
+* [About](@root/about//)
+* [Posts](@root/posts/index//)
+    * [2015](@root/posts/2015/index//)
+    * [2014](@root/posts/2014/index//)
+</pre>
+<p>If the menu above was contained in a file named <code>menu.txt</code> then the rendered HTML would be available to themes via the <code>includes.menu</code> attribute.</p>
+<h2 id="extensions">Extensions</h2>
+<p>The extensions directory, <code>ext</code>, is intended for plugins that extend or enhance Ark's functionality. Python modules placed in this directory will be loaded automatically and can make use of Ark's system of event and filter hooks to inject their own code into the build process.</p>
+<p>See the sample plugins bundled with the skeleton site for examples of extensions in action.</p>
+
+    
+
+
+        </div>
+
+        <div id="footer" class="footer meta">
+            <ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="quickstart.html">Quickstart</a></li>
+<li><a href="guide.html">Guide</a></li>
+<li><a href="themes.html">Themes</a></li>
+</ul>
+        </div>
+
+    </body>
+</html>
+
+
+
+

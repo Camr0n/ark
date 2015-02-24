@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+    Themes
+</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/vanilla.css">
+        <link rel="stylesheet" href="css/pygments.css">
+        <script src="js/jquery-1.11.2.min.js"></script>
+        <script src="js/vanilla.js"></script>
+    </head>
+    <body class="pages single">
+
+        <div id="header" class="header meta">
+            <ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="quickstart.html">Quickstart</a></li>
+<li><a href="guide.html">Guide</a></li>
+<li><a href="themes.html">Themes</a></li>
+</ul>
+        </div>
+
+        <div id="content" class="content">
+            
+
+    
+    
+    <h1 id="themes">Themes</h1>
+<p>A theme is a collection of templates, styles, and scripts that together provide the look and feel for a site. Themes should be placed in the site's <code>lib</code> folder, and the name of the active theme directory specified in the <code>config.py</code> file.</p>
+<pre class="lang-python stx-pygments" data-lang="python">
+<span class="n">theme</span> <span class="o">=</span> <span class="s">&quot;vanilla&quot;</span>
+</pre>
+<p>Ark ships with two builtin themes: <code>vanilla</code>, a simple default theme, and <code>debug</code>, a diagnostic tool useful when designing themes or debugging sites.</p>
+<p>Note that you can override the currently active theme with the <code>build</code> command's <code>--theme</code> flag:</p>
+<pre>
+$ ark build --theme debug
+</pre>
+<p>A theme directory should contain two subdirectories, <code>resources</code> and <code>templates</code>. The content of the <code>resources</code> directory is copied directly to the site's output directory during building. The <code>templates</code> directory contains the theme's template files written in the <a href="https://github.com/dmulholland/ibis">Ibis</a> templating language.</p>
+<p>When Ark generates an HTML page it searches for the appropriate template file in the following order, where <code>&lt;type&gt;</code> indicates the record type in question, e.g. <code>posts</code>:</p>
+<p><em>Record page</em></p>
+<pre>
+1) record-&lt;type&gt;.html
+2) record.html
+</pre>
+<p><em>Directory index page</em></p>
+<pre>
+1) dir-index-&lt;type&gt;.html
+2) dir-index.html
+3) index.html
+</pre>
+<p><em>Tag index page</em></p>
+<pre>
+1) tag-index-&lt;type&gt;.html
+2) tag-index.html
+3) index.html
+</pre>
+<p>A record can specify a custom template file to use in its header:</p>
+<pre>
+---
+template: my-custom-template
+...
+</pre>
+<p>Note that the <code>.html</code> extension should be omitted from the filename.</p>
+
+    
+
+
+        </div>
+
+        <div id="footer" class="footer meta">
+            <ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="quickstart.html">Quickstart</a></li>
+<li><a href="guide.html">Guide</a></li>
+<li><a href="themes.html">Themes</a></li>
+</ul>
+        </div>
+
+    </body>
+</html>
+
+
+
+

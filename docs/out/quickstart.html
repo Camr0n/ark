@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+    Quickstart
+</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/vanilla.css">
+        <link rel="stylesheet" href="css/pygments.css">
+        <script src="js/jquery-1.11.2.min.js"></script>
+        <script src="js/vanilla.js"></script>
+    </head>
+    <body class="pages single">
+
+        <div id="header" class="header meta">
+            <ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="quickstart.html">Quickstart</a></li>
+<li><a href="guide.html">Guide</a></li>
+<li><a href="themes.html">Themes</a></li>
+</ul>
+        </div>
+
+        <div id="content" class="content">
+            
+
+    
+    
+    <h1 id="quickstart">Quickstart</h1>
+<p>Install Ark from the Python Package Index using <code>pip</code>:</p>
+<pre>
+$ pip install ark
+</pre>
+<p>Create a new directory for your site and <code>cd</code> into it:</p>
+<pre>
+$ mkdir mysite
+$ cd mysite
+</pre>
+<p>Initialize the site directory using the <code>init</code> command:</p>
+<pre>
+$ ark init
+</pre>
+<p>Ark will create the following directory structure for your site:</p>
+<pre>
+mysite/
+    config.py       # site configuration file
+    ext/            # extensions directory for plugins
+    inc/            # includes directory for menus, etc.
+    lib/            # library directory for themes
+    out/            # output directory for html files
+    src/            # source directory for text files
+</pre>
+<p>Ark initializes your <code>src</code> directory with a simple skeleton site which you can build immediately using the <code>build</code> command:</p>
+<pre>
+$ ark build
+</pre>
+<p>You can run this <code>build</code> command from the site directory itself or from any of its subdirectories. It tells Ark to render the text files in the <code>src</code> directory into HTML and place the output in the <code>out</code> directory.</p>
+<p>Run the <code>build</code> command and take a look at the output - congratulations, you've just built your first website using Ark. It may not be a very interesting site yet, but you can fix that once you've <a href="guide.html">learned more</a>.</p>
+
+    
+
+
+        </div>
+
+        <div id="footer" class="footer meta">
+            <ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="quickstart.html">Quickstart</a></li>
+<li><a href="guide.html">Guide</a></li>
+<li><a href="themes.html">Themes</a></li>
+</ul>
+        </div>
+
+    </body>
+</html>
+
+
+
+
