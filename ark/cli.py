@@ -69,11 +69,9 @@ def build(theme, out, clear, ):
 def init():
     """ Initialize a new site directory. """
 
-    os.makedirs('ext')
-    os.makedirs('inc')
-    os.makedirs('lib')
-    os.makedirs('out')
-    os.makedirs('src')
+    for name in ('ext', 'inc', 'lib', 'out', 'src'):
+        if not os.path.exists(name):
+            os.makedirs(name)
 
     utils.copydir(
         os.path.join(os.path.dirname(__file__), 'init'),
