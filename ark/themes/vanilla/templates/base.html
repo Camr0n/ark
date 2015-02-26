@@ -2,26 +2,28 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" href="@root/css/reset.css">
+        <title>{% trim %}{% block title %}{% endblock %}{% endtrim %}</title>
         <link rel="stylesheet" href="@root/css/vanilla.css">
         <link rel="stylesheet" href="@root/css/pygments.css">
+        <!--[if lt IE 9]>
+            <script src="@root/js/html5shiv.min.js"></script>
+        <![endif]-->
         <script src="@root/js/jquery-1.11.2.min.js"></script>
         <script src="@root/js/vanilla.js"></script>
     </head>
     <body class="{{classes}}">
 
-        <div id="header" class="header meta">
+        <header id="header" class="header meta">
             {{ includes.menu }}
-        </div>
+        </header>
 
-        <div id="content" class="content">
+        <article id="content" class="content">
             {% block content %}{% endblock %}
-        </div>
+        </article>
 
-        <div id="footer" class="footer meta">
+        <footer id="footer" class="footer meta">
             {{ includes.menu }}
-        </div>
+        </footer>
 
     </body>
 </html>
