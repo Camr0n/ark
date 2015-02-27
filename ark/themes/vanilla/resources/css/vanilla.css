@@ -7,7 +7,7 @@ html {
 }
 body {
     margin: 0;
-    padding: 0 40px;
+    padding: 0 30px;
     font-family: "Georgia", serif;
     font-size: 1.5rem;
     line-height: 1.6;
@@ -21,9 +21,9 @@ body {
     box-shadow: 0 0 10px #ddd;
 }
 .meta {
-    max-width: 660px;
+    max-width: 650px;
     margin: 0 auto;
-    padding: 25px 40px;
+    padding: 25px 45px;
     font-size: 1.4rem;
     color: #aaa;
 }
@@ -237,7 +237,7 @@ table {
     border-spacing: 0;
     margin: 3rem auto;
     width: 80%;
-    font-size: 14px;
+    font-size: 1.4rem;
 }
 thead {
     background-color: #eee;
@@ -305,4 +305,66 @@ h1 + ul {
     color: #a94442;
     border-color: #ebccd1;
     background-color: #f2dede;
+}
+
+/*
+    Small Screen (Tablet/Landscape Phone)
+*/
+
+@media (max-width: 800px) {
+    html {
+        font-size: 58.333333%;
+    }
+    body {
+        padding: 0;
+    }
+    .content {
+        padding: 0 30px 40px;
+        border: none;
+        box-shadow: none;
+    }
+    .header {
+        padding: 20px 30px;
+    }
+    .footer {
+        display: none;
+    }
+}
+
+/*
+    Very Small Screen (Portrait Phone)
+*/
+
+@media (max-width: 420px) {
+    html {
+        font-size: 54.166667%;
+    }
+    .content {
+        padding: 0 20px 30px;
+    }
+    .header {
+        text-align: left;
+        font-size: 1.5rem;
+        padding: 15px 20px;
+        color: #333;
+    }
+    .header ul {
+        border-top:    1px dotted #ccc;
+        margin: 15px 40px;
+    }
+    .header li {
+        margin: 0;
+        padding-left: 10px;
+        display: list-item;
+        border-bottom: 1px dotted #ccc;
+    }
+    .header li:before, .header li:first-child:before {
+        content: "§";
+    }
+    .header a {
+        display: inline-block;
+        padding: 5px 10px;
+        color: #4183C4;
+        text-decoration: none;
+    }
 }
