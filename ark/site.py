@@ -254,10 +254,10 @@ def _load_site_config():
     if data.setdefault('root', '') and not data['root'].endswith('/'):
         data['root'] += '/'
 
-    # The 'types' dictionary stores configuration data for each entry type.
+    # The 'types' dictionary stores configuration data for record types.
     data.setdefault('types', {})
 
-    # Get a list of the types this site is using.
+    # Assemble a list of the site's record types from its @type directories.
     types = [
         di.name.lstrip('@')
             for di in utils.subdirs(src())
@@ -266,22 +266,28 @@ def _load_site_config():
 
     # Supply default values for any missing type data.
     for typeid in types:
-        defaults = {
-            "name": utils.titlecase(typeid),
-            "slug": '' if typeid == 'pages' else utils.slugify(typeid),
-            "tag_slug": "tags",
-            "indexed": False if typeid == 'pages' else True,
-            "order_by": "datetime",
-            "reverse": True,
-            "per_index": 10,
-            "per_tag_index": 10,
-            "homepage": False,
+        settings = {
+            'name': utils.titlecase(typeid),
+            'slug': utils.slugify(typeid),
+            'tag_slug': 'tags',
+            'indexed': True,
+            'order_by': 'url',
+            'reverse': False,
+            'per_index': 10,
+            'per_tag_index': 10,
+            'homepage': False,
         }
-        defaults.update(data['types'].get(typeid, {}))
-        data['types'][typeid] = defaults
+        if typeid == 'posts':
+            settings['order_by'] = 'datetime'
+            settings['reverse'] = True
+        if typeid == 'pages':
+            settings['slug'] = ''
+            settings['indexed'] = False
+        settings.update(data['types'].get(typeid, {}))
+        data['types'][typeid] = settings
         data['types'][typeid]['id'] = typeid
 
-    # Strip any type entries that don't refer to actual source directories.
+    # Strip any type entries that don't refer to actual @type directories.
     for typeid in list(data['types']):
         if not typeid in types:
             del data['types'][typeid]
