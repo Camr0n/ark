@@ -51,12 +51,17 @@ class Record(dict):
         self['slugs'] = site.slugs_from_src(dirpath, slug)
         self['url'] = site.url(self['slugs'])
 
-        # Convert `date` objects to `datetime` objects.
-        dtime = self.get('datetime') or self.get('date')
-        if isinstance(dtime, datetime.datetime):
-            self['datetime'] = dtime
-        elif isinstance(dtime, datetime.date):
-            self['datetime'] = datetime.datetime.fromordinal(dtime.toordinal())
+        # Ensure every record has a datetime stamp.
+        # We use the 'date' or 'datetime' attribute if it's present,
+        # otherwise we use the file creation time (OSX, BSD, Windows) or
+        # the time of the file's last metadata change (Linux).
+        dt = self.get('datetime') or self.get('date')
+        if isinstance(dt, datetime.datetime):
+            self['datetime'] = dt
+        elif isinstance(dt, datetime.date):
+            self['datetime'] = datetime.datetime.fromordinal(dt.toordinal())
+        else:
+            self['datetime'] = utils.get_creation_time(filepath)
 
         # Process the record's tag list, if present.
         taglist, self['tags'] = self.get('tags', ''), []

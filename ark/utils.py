@@ -6,6 +6,7 @@ import os
 import unicodedata
 import re
 import shutil
+import datetime
 
 
 # Named tuples for file and directory information.
@@ -38,6 +39,19 @@ def textfiles(directory):
     """ Returns a list of text files in the specified directory. """
     extensions = ('.txt', '.stx', '.md', '.markdown')
     return [fi for fi in files(directory) if fi.ext in extensions]
+
+
+def get_creation_time(path):
+    """ Returns the creation time of the specified file.
+
+    This function works on OSX, BSD, and Windows. On Linux it returns the
+    time of the file's last metadata change.
+    """
+    stat = os.stat(path)
+    if hasattr(stat, 'st_birthtime') and stat.st_birthtime:
+        return datetime.datetime.fromtimestamp(stat.st_birthtime)
+    else:
+        return datetime.datetime.fromtimestamp(stat.st_ctime)
 
 
 def slugify(s):
