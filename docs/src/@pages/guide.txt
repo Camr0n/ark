@@ -79,21 +79,21 @@ You can determine the behaviour of your custom types (or alter the behaviour of 
         @sonnets/
             my-sonnet.txt   # this record is a sonnet
 
-New custom types behave, by default, much like the builtin *post* type, but we can alter this behaviour by adding a `types` dictionary to our `config.py` file:
+New custom types behave, by default, like the builtin *post* type, but we can alter this behaviour by adding a `types` dictionary to our `config.py` file:
 
 ::: python
 
     types = {
-        "sonnets": {              # type id corresponding to the @type directory
-            "name": "Sonnets",    # defaults to the titlecased type id
-            "slug": "sonnets",    # defaults to the slugified type id
-            "tag_slug": "tags",   # defaults to "tags"
-            "indexed": True,      # build directory indexes for this type?
-            "order_by": "url",    # order index entries by this attribute
-            "reverse": False,     # display index entries in reverse order?
-            "per_index": 10,      # number of entries per index page
-            "per_tag_index": 10,  # number of entries per tag index page
-            "homepage": False,    # use this type's index as the site homepage?
+        "sonnets": {                # type id corresponding to the @type directory
+            "name": "Sonnets",      # defaults to the titlecased type id
+            "slug": "sonnets",      # defaults to the slugified type id
+            "tag_slug": "tags",     # defaults to "tags"
+            "indexed": True,        # build directory indexes for this type?
+            "order_by": "datetime", # order index entries by this attribute
+            "reverse": True,        # display index entries in reverse order?
+            "per_index": 10,        # number of entries per index page
+            "per_tag_index": 10,    # number of entries per tag index page
+            "homepage": False,      # use this type's index as the site homepage?
         },
     }
 
