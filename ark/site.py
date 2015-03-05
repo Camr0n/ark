@@ -271,15 +271,12 @@ def _load_site_config():
             'slug': utils.slugify(typeid),
             'tag_slug': 'tags',
             'indexed': True,
-            'order_by': 'url',
-            'reverse': False,
+            'order_by': 'datetime',
+            'reverse': True,
             'per_index': 10,
             'per_tag_index': 10,
             'homepage': False,
         }
-        if typeid == 'posts':
-            settings['order_by'] = 'datetime'
-            settings['reverse'] = True
         if typeid == 'pages':
             settings['slug'] = ''
             settings['indexed'] = False
