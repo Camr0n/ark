@@ -288,23 +288,23 @@ h1 + ul {
 .stx-alert {
     margin: 3rem;
     border: 1px solid;
-    padding: 1rem 2rem;
+    padding: 0.5rem 2rem;
     border-radius: 3px;
 }
 .stx-info {
-    color: #31708f;
-    border-color: #bce8f1;
-    background-color: #d9edf7;
+    color: #224466;
+    border-color: #bac6d3;
+    background-color: #e2eef9;
 }
 .stx-warning {
-    color: #8a6d3b;
-    border-color: #faebcc;
-    background-color: #fcf8e3;
+    color: #4c4a42;
+    border-color: #dfd8c2;
+    background-color: #fff9ea;
 }
 .stx-error {
-    color: #a94442;
-    border-color: #ebccd1;
-    background-color: #f2dede;
+    color: #991111;
+    border-color: #d2b2b2;
+    background-color: #fcdede;
 }
 
 /*
