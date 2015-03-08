@@ -46,7 +46,7 @@ class Record(dict):
         slug = self.get('slug') or utils.slugify(base)
 
         # Add our basic record attributes.
-        self['content'] = html
+        self['html'] = html
         self['type'] = site.type_from_src(dirpath)
         self['slugs'] = site.slugs_from_src(dirpath, slug)
         self['url'] = site.url(self['slugs'])
