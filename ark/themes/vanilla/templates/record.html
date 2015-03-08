@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ record.meta_title or record.title or record.content|firsth|striptags }}
+    {{ record.meta_title or record.title or record.html|firsth|striptags }}
 {% endblock %}
 
 {% block content %}
@@ -9,8 +9,8 @@
     {% if record.title %}
         <h1>{{ record.title }}</h1>
     {% endif %}
-    
-    {{ record.content }}
+
+    {{ record.html }}
 
     {% if record.tags %}
         <hr>

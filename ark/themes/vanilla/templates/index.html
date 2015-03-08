@@ -13,11 +13,11 @@
     <h1>{{ trail|last|titlecase }}</h1>
 
     {% for record in records %}
-        {% if record.title or record.content|firsth %}
-            <h3>{{ record.title or record.content|firsth|striptags }}</h3>
+        {% if record.title or record.html|firsth %}
+            <h3>{{ record.title or record.html|firsth|striptags }}</h3>
         {% endif %}
 
-        {{ record.content|firstp|wrap:'p' }}
+        {{ record.html|firstp|wrap:'p' }}
 
         <p><a href="{{ record.url }}">Read more...</a></p>
 
