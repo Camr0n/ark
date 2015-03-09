@@ -316,8 +316,6 @@ def _load_extensions():
         ]
         for name in names:
             extension = importlib.import_module(name)
-            if hasattr(extension, 'init'):
-                extension.init()
         sys.path.pop(0)
 
 
