@@ -27,17 +27,19 @@
             
 
     
-    
+
     <h1 id="guide">Guide</h1>
-<p>Ark transforms a source directory of text files written in <a href="https://github.com/dmulholland/syntex">Syntex</a> or <a href="http://daringfireball.net/projects/markdown/">Markdown</a> into a static website that can be viewed locally or served remotely.</p>
+<p>Ark transforms a source directory of text files written in <a href="http://daringfireball.net/projects/markdown/">Markdown</a> or <a href="https://github.com/dmulholland/syntex">Syntex</a> into a static website that can be viewed locally or served remotely.</p>
 <ul class="stx-toc">
 <li><a href="#command-line-interface">Command Line Interface</a></li>
 <li><a href="#site-structure">Site Structure</a></li>
 <li><a href="#records">Records</a></li>
+<li><a href="#record-attributes">Record Attributes</a></li>
 <li><a href="#tags">Tags</a></li>
 <li><a href="#links">Links</a></li>
 <li><a href="#includes">Includes</a></li>
 <li><a href="#extensions">Extensions</a></li>
+<li><a href="#markdown-options">Markdown Options</a></li>
 </ul>
 <h2 id="command-line-interface">Command Line Interface</h2>
 <p>To initialize a new site, create a site directory, <code>cd</code> into it, and run the <code>init</code> command:</p>
@@ -117,8 +119,35 @@ src/
 <p>All the settings above are in fact defaults, and in practice we would only need to include those we wished to change.</p>
 <p>Within an <code>@type</code> directory, Ark will preserve any directory structure it finds, so you can use subdirectories to organise your record files by category or date. If the record type is indexed, Ark will generate an individual set of index pages for each subdirectory in the tree.</p>
 <p>Note that you can store other files and directories in your site's <code>src</code> directory and Ark will copy these files untouched to the <code>out</code> directory when it builds your site. Ark only searches directories beginning with an <code>@</code> symbol for record files so you can safely store, for example, a <code>robots.txt</code> file or a directory of images in your <code>src</code> directory.</p>
+<h2 id="record-attributes">Record Attributes</h2>
+<p>A record file's metadata keys are converted to lowercase and spaces are replaced by underscores so the YAML attribute:</p>
+<pre>
+---
+Date of Birth: 1900-01-01
+...
+</pre>
+<p>would be accessible in template files as <code>record.date_of_birth</code>.</p>
+<p>All records have the following default attributes:</p>
+<dl>
+<dt>datetime</dt>
+<dd>
+<p>A default datetime stamp. If the record has a <code>date</code> or <code>datetime</code> attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).</p>
+</dd>
+<dt>html</dt>
+<dd>
+<p>The record's content, rendered into HTML.</p>
+</dd>
+<dt>type</dt>
+<dd>
+<p>The record's type ID, determined by its parent <code>@type</code> directory.</p>
+</dd>
+<dt>url</dt>
+<dd>
+<p>The record's URL.</p>
+</dd>
+</dl>
 <h2 id="tags">Tags</h2>
-<p>Any record can be tagged and every record type supports its own individual set of tag index pages. To tag a record, simply add a <code>tags</code> attribute to its header followed by a comma-separated list of tags:</p>
+<p>Every record can be tagged and every record type supports its own individual set of tag index pages. To tag a record, simply add a <code>tags</code> attribute to its header followed by a comma-separated list of tags:</p>
 <pre>
 ---
 tags: foo, bar, baz
@@ -170,6 +199,15 @@ tags: foo, bar, baz
     <span class="k">print</span><span class="p">(</span><span class="s">&#39;Page count:&#39;</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">page_count</span><span class="p">())</span>
 </pre>
 <p>See the sample plugins bundled with the skeleton site for more examples of extensions in action.</p>
+<h2 id="markdown-options">Markdown Options</h2>
+<p>Ark uses the <a href="https://pythonhosted.org/Markdown/">Python Markdown</a> package to render Markdown files. You can make use of its optional features and extensions by including a dictionary of keyword arguments for the renderer in your site configuration file.</p>
+<p>For example, to turn on the 'Markdown Extra' extension, add the following dictionary to your <code>config.py</code> file:</p>
+<pre class="lang-python stx-pygments" data-lang="python">
+<span class="n">markdown</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;extensions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;markdown.extensions.extra&#39;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre>
+<p>See the package's <a href="https://pythonhosted.org/Markdown/">documentation</a> for further details.</p>
 
     
 

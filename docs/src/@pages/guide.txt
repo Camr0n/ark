@@ -2,12 +2,13 @@
 Guide
 =====
 
-Ark transforms a source directory of text files written in [Syntex][] or [Markdown][] into a static website that can be viewed locally or served remotely.
+Ark transforms a source directory of text files written in [Markdown][] or [Syntex][] into a static website that can be viewed locally or served remotely.
 
-[Syntex]: https://github.com/dmulholland/syntex
 [Markdown]: http://daringfireball.net/projects/markdown/
+[Syntex]: https://github.com/dmulholland/syntex
 
 :insert toc
+
 
 
 Command Line Interface
@@ -28,6 +29,7 @@ The build command takes a number of optional arguments:
     --clear         Clear the output directory before building.
 
 
+
 Site Structure
 --------------
 
@@ -40,6 +42,7 @@ Initializing a new site creates the following directory structure:
         lib/            # library directory for themes
         out/            # output directory for html files
         src/            # source directory for text files
+
 
 
 Records
@@ -104,14 +107,47 @@ Within an `@type` directory, Ark will preserve any directory structure it finds,
 Note that you can store other files and directories in your site's `src` directory and Ark will copy these files untouched to the `out` directory when it builds your site. Ark only searches directories beginning with an `@` symbol for record files so you can safely store, for example, a `robots.txt` file or a directory of images in your `src` directory.
 
 
+
+Record Attributes
+-----------------
+
+A record file's metadata keys are converted to lowercase and spaces are replaced by underscores so the YAML attribute:
+
+    ---
+    Date of Birth: 1900-01-01
+    ...
+
+would be accessible in template files as `record.date_of_birth`.
+
+All records have the following default attributes:
+
+~ datetime
+
+    A default datetime stamp. If the record has a `date` or `datetime` attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).
+
+~ html
+
+    The record's content, rendered into HTML.
+
+~ type
+
+    The record's type ID, determined by its parent `@type` directory.
+
+~ url
+
+    The record's URL.
+
+
+
 Tags
 ----
 
-Any record can be tagged and every record type supports its own individual set of tag index pages. To tag a record, simply add a `tags` attribute to its header followed by a comma-separated list of tags:
+Every record can be tagged and every record type supports its own individual set of tag index pages. To tag a record, simply add a `tags` attribute to its header followed by a comma-separated list of tags:
 
     ---
     tags: foo, bar, baz
     ...
+
 
 
 Links
@@ -148,6 +184,7 @@ Note that you should include the `index` slug when linking to directory or tag i
 Linking to the homepage is a special case: a simple `@root/` will always suffice.
 
 
+
 Includes
 --------
 
@@ -162,6 +199,7 @@ For example, a simple menu can be constructed in either Syntex or Markdown using
         * [2014](@root/posts/2014/index//)
 
 If the menu above was contained in a file named `menu.txt` then the rendered HTML would be available to themes via the `includes.menu` attribute.
+
 
 
 Extensions
@@ -180,3 +218,22 @@ As a simple example, the code below registers a handler on the `exit` event hook
         print('Page count:', site.page_count())
 
 See the sample plugins bundled with the skeleton site for more examples of extensions in action.
+
+
+
+Markdown Options
+----------------
+
+Ark uses the [Python Markdown][mddocs] package to render Markdown files. You can make use of its optional features and extensions by including a dictionary of keyword arguments for the renderer in your site configuration file.
+
+For example, to turn on the 'Markdown Extra' extension, add the following dictionary to your `config.py` file:
+
+::: python
+
+    markdown = {
+        'extensions': ['markdown.extensions.extra'],
+    }
+
+See the package's [documentation][mddocs] for further details.
+
+[mddocs]: https://pythonhosted.org/Markdown/
