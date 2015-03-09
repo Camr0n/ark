@@ -2,7 +2,7 @@
 Ark
 ===
 
-Ark is a static website generator in Python. It transforms a directory of text files written in [Markdown][] or [Syntex][]into a self-contained website that can be viewed locally or served remotely.
+Ark is a static website generator in Python. It transforms a directory of text files written in [Markdown][] or [Syntex][] into a self-contained website that can be viewed locally or served remotely.
 
 [Markdown]: http://daringfireball.net/projects/markdown/
 [Syntex]: https://github.com/dmulholland/syntex
