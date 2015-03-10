@@ -4,11 +4,6 @@ body {
     margin: 0 auto;
     padding: 0 40px;
 }
-    
-td:first-child {
-    padding-right: 20px;
-    font-weight: bold;
-}
 
 pre {
     font-family: Consolas, monospace;

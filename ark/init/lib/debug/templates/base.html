@@ -8,18 +8,17 @@
     <body>
         <h1>{% block title %}{% endblock %}</h1>
         <hr>
-        
+
         {% if includes.menu %}
             {{ includes.menu }}
             <hr>
         {% endif %}
-        
+
         {% block content %}{% endblock %}
-        <hr>
-        
-        <h3>Context</h3>
+
+        <h3>Page Context</h3>
         {% for dict in context.stack %}
-            <pre>{{ dict|pprint|escape }}</pre>
+            <pre>{{ dict|pprint|esc }}</pre>
         {% endfor %}
     </body>
 </html>

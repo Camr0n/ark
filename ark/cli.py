@@ -77,7 +77,3 @@ def init():
         os.path.join(os.path.dirname(__file__), 'init'),
         '.'
     )
-    utils.copydir(
-        os.path.join(os.path.dirname(__file__), 'themes', 'vanilla'),
-        os.path.join('lib', 'vanilla')
-    )

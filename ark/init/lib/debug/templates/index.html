@@ -10,7 +10,6 @@
 
 {% block content %}
     <h3>Records</h3>
-
     <ul>
         {% for record in records %}
             <li>
@@ -20,9 +19,9 @@
             <li>No records to display.</li>
         {% endfor %}
     </ul>
+    <hr>
 
     {% if paging.is_paged %}
-        <hr>
         <h3>Paging ({{ paging.page }} of {{ paging.total }})</h3>
         <ul>
             <li><a href="{{ paging.first_url }}">First</a></li>
@@ -34,5 +33,6 @@
             {% endif %}
             <li><a href="{{ paging.last_url }}">Last</a></li>
         </ul>
+        <hr>
     {% endif %}
 {% endblock %}

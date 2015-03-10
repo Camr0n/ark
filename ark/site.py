@@ -321,10 +321,11 @@ def _load_extensions():
 
 def _set_theme_dir(options):
     """ Determines the theme directory to use for the build. """
-    theme = options.get('theme') or config('theme') or 'vanilla'
-    if os.path.isdir(home('lib')) and theme in os.listdir(home('lib')):
-        return home('lib', theme)
-    elif theme in os.listdir(os.path.join(os.path.dirname(__file__), 'themes')):
-        return os.path.join(os.path.dirname(__file__), 'themes', theme)
+    name = options.get('theme') or config('theme') or 'vanilla'
+    self = os.path.dirname(__file__)
+    if os.path.isdir(home('lib', name)):
+        return home('lib', name)
+    elif os.path.isdir(os.path.join(self, 'init', 'lib', name)):
+        return os.path.join(self, 'init', 'lib', name)
     else:
-        sys.exit('Error: cannot locate theme directory "%s".' % theme)
+        sys.exit('Error: cannot locate theme directory "%s".' % name)
