@@ -6,10 +6,12 @@
 
     <h2>Record Object</h2>
     <pre>{{ record|pprint|pygmentize:'python' }}</pre>
+
     {% if record.tags %}
-        <hr>
-        <p><strong>Tags:</strong> {{ record.tags|join(', ') }}</p>
-        <hr>
+        <h2>Tags</h2>
+        <ul>
+            {% for tag in record.tags %}<li>{{ tag  }}</li>{% endfor %}
+        </ul>
     {% endif %}
 
     <h2>Page Context</h2>
