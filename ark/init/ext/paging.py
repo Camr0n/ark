@@ -18,6 +18,8 @@ the site's config.py file containing one or more of the following options:
         'multiple': 10,         # link to page numbers in multiples of...
     }
 
+License: Public Domain.
+
 """
 
 from ark import hooks, site
