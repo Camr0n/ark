@@ -87,7 +87,7 @@ def copydir(srcdir, dstdir, skip=True):
         if skip and name.startswith('@'):
             continue
 
-        if name == '__pycache__':
+        if name in ('__pycache__', '.DS_Store'):
             continue
 
         if os.path.isfile(src):
