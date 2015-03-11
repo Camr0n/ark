@@ -4,11 +4,12 @@ Ark
 ===
 
 Ark is a static website generator in Python 3. It transforms a directory
-of text files written in Syntex or Markdown into a self-contained website
+of text files written in `Markdown <http://daringfireball.net/projects/markdown/>`
+or `Syntex <https://github.com/dmulholland/syntex>` into a self-contained website
 that can be viewed locally or served remotely.
 
-See the package documentation (http://pythonhosted.org/ark/) or the project's
-Github homepage (https://github.com/dmulholland/ark) for further details.
+See the `package documentation <http://pythonhosted.org/ark/>` or the project's
+`Github homepage <https://github.com/dmulholland/ark>` for further details.
 
 """
 
