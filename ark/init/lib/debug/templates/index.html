@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+
     <h2>Records</h2>
     <ul>
         {% for record in records %}
@@ -38,7 +39,7 @@
 
     <h2>Page Context</h2>
     {% for dict in context.stack %}
-        <pre>{{ dict|pprint|esc }}</pre>
+        <pre>{{ dict|pprint|pygmentize:'python' }}</pre>
     {% endfor %}
 
 {% endblock %}
