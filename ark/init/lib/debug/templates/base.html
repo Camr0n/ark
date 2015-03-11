@@ -7,7 +7,6 @@
     </head>
     <body>
         <h1>{% block title %}{% endblock %}</h1>
-        <hr>
 
         {% if includes.menu %}
             {{ includes.menu }}
@@ -15,10 +14,5 @@
         {% endif %}
 
         {% block content %}{% endblock %}
-
-        <h3>Page Context</h3>
-        {% for dict in context.stack %}
-            <pre>{{ dict|pprint|esc }}</pre>
-        {% endfor %}
     </body>
 </html>

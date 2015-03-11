@@ -3,11 +3,18 @@
 {% block title %}Record{% endblock %}
 
 {% block content %}
-    <h3>Record Object</h3>
+
+    <h2>Record Object</h2>
     <pre>{{ record|pprint|esc }}</pre>
     {% if record.tags %}
         <hr>
         <p><strong>Tags:</strong> {{ record.tags|join(', ') }}</p>
         <hr>
     {% endif %}
+
+    <h2>Page Context</h2>
+    {% for dict in context.stack %}
+        <pre>{{ dict|pprint|esc }}</pre>
+    {% endfor %}
+
 {% endblock %}
