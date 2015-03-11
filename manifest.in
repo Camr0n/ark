@@ -1,3 +1,2 @@
 include license.txt readme.md
-recursive-include ark/themes *
 recursive-include ark/init *
