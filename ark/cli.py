@@ -68,12 +68,7 @@ def build(theme, out, clear, ):
 @cli.command()
 def init():
     """ Initialize a new site directory. """
-
     for name in ('ext', 'inc', 'lib', 'out', 'src'):
         if not os.path.exists(name):
             os.makedirs(name)
-
-    utils.copydir(
-        os.path.join(os.path.dirname(__file__), 'init'),
-        '.'
-    )
+    utils.copydir(os.path.join(os.path.dirname(__file__), 'init'), '.')
