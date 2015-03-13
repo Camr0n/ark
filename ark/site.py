@@ -6,6 +6,8 @@ import importlib
 import time
 import re
 import sys
+import hashlib
+import pickle
 
 import markdown
 import yaml
@@ -37,22 +39,31 @@ _templates = None
 _stime = None
 
 # Stores a count of the number of pages rendered.
-_pcount = None
+_prendered = None
+
+# Stores a count of the number of pages written.
+_pwritten = None
 
 # Stores an initialized markdown renderer.
 _markdown = None
 
+# Stores cached page hashes from the last build run.
+_oldhashes = None
+
+# Stores new page hashes from the current build run.
+_newhashes = None
+
 
 def init(options):
-    """ Called to initialize the site model before building. """
+    """ Initialize the site model before building. """
 
     # Store the start time.
     global _stime
     _stime = time.time()
 
-    # Initialize the page count.
-    global _pcount
-    _pcount = 0
+    # Initialize the page count variables.
+    global _prendered, _pwritten
+    _prendered = _pwritten = 0
 
     # Store the site's home directory.
     global _homedir
@@ -91,6 +102,19 @@ def init(options):
 
     # Load any extensions we can find.
     _load_extensions()
+
+    # Load the cached page hashes from the last build, if they exist.
+    global _oldhashes, _newhashes
+    _oldhashes, _newhashes = _load_hashes(), {}
+
+    # Clear the output directory.
+    if options.get('clear'):
+        utils.cleardir(out())
+
+
+def exit():
+    """ Runs at the end of the build process before exiting. """
+    _save_hashes()
 
 
 def home(*append):
@@ -171,19 +195,25 @@ def index_url(typeid):
 
 
 def build_time():
-    """ Returns the current build time in seconds. """
+    """ Returns the build time in seconds. """
     return time.time() - _stime
 
 
 def page_count():
-    """ Returns the current page count. """
-    return _pcount
+    """ Returns the count of pages rendered and written. """
+    return _prendered, _pwritten
 
 
-def increment_page_count():
-    """ Increments the page count. """
-    global _pcount
-    _pcount += 1
+def increment_pages_rendered():
+    """ Increments the count of pages rendered. """
+    global _prendered
+    _prendered += 1
+
+
+def increment_pages_written():
+    """ Increments the count of pages written. """
+    global _pwritten
+    _pwritten += 1
 
 
 def type_from_src(srcpath):
@@ -329,3 +359,30 @@ def _set_theme_dir(options):
         return os.path.join(self, 'init', 'lib', name)
     else:
         sys.exit('Error: cannot locate theme directory "%s".' % name)
+
+
+def hashmatch(filepath, content):
+    """ Returns true if there is an existing file at `filepath` whose hash
+    matches that of the string `content`. """
+    _newhashes[filepath] = hashlib.sha1(content.encode()).hexdigest()
+    if os.path.exists(filepath):
+        return _oldhashes.get(filepath) == _newhashes[filepath]
+    else:
+        return False
+
+
+def _load_hashes():
+    """ Loads cached page hashes from the last build run. """
+    if os.path.exists(home('.ark', 'hashes.pickle')):
+        with open(home('.ark', 'hashes.pickle'), 'rb') as file:
+            return pickle.load(file)
+    else:
+        return {}
+
+
+def _save_hashes():
+    """ Caches page hashes to disk for the next build run. """
+    if not os.path.exists(home('.ark')):
+        os.makedirs(home('.ark'))
+    with open(home('.ark', 'hashes.pickle'), 'wb') as file:
+        pickle.dump(_newhashes, file)

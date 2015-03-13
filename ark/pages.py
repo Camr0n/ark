@@ -98,6 +98,7 @@ class Page(dict):
         # Render the page into html.
         try:
             html = template.render(self)
+            site.increment_pages_rendered()
         except ibis.errors.TemplateError as e:
             msg =  'Template error rendering file:\n'
             msg += '  %s\n\n' % filepath
@@ -111,9 +112,10 @@ class Page(dict):
         # Rewrite all '@root/' urls into their final form.
         html = self._rewrite_urls(html, len(slugs))
 
-        # Write the output file.
-        utils.writefile(filepath, html)
-        site.increment_page_count()
+        # Write the page to disk. Avoid overwriting identical existing files.
+        if not site.hashmatch(filepath, html):
+            utils.writefile(filepath, html)
+            site.increment_pages_written()
 
     def _rewrite_urls(self, html, depth):
         """ Rewrite all @root/ urls to their final form.
