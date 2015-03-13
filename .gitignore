@@ -54,3 +54,6 @@ target/
 
 # Development scratch files
 dev/
+
+# Ark cache files
+.ark/
