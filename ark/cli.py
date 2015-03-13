@@ -22,7 +22,7 @@ def print_version(ctx, param, value):
 def locate_home_directory():
     path = os.getcwd()
     while True:
-        if os.path.exists(os.path.join(path, 'src')):
+        if os.path.exists(os.path.join(path, '.ark')):
             return path
         path = os.path.join(path, '..')
         if not os.path.isdir(path):
@@ -68,7 +68,7 @@ def build(theme, out, clear, ):
 @cli.command()
 def init():
     """ Initialize a new site directory. """
-    for name in ('ext', 'inc', 'lib', 'out', 'src'):
+    for name in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
         if not os.path.exists(name):
             os.makedirs(name)
     utils.copydir(os.path.join(os.path.dirname(__file__), 'init'), '.')
