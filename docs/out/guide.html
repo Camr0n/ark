@@ -67,6 +67,7 @@ site/
     out/            # output directory for html files
     src/            # source directory for text files
 </pre>
+<p>Ark also creates a hidden <code>.ark</code> directory for its own use.</p>
 <h2 id="records">Records</h2>
 <p>A record is a text file written in <a href="https://github.com/dmulholland/syntex">Syntex</a> (using the extension <code>.txt</code> or <code>.stx</code>) or <a href="http://daringfireball.net/projects/markdown/">Markdown</a> (using the extension <code>.md</code> or <code>.markdown</code>). Ark searches the <code>src</code> directory for record files and generates an HTML page in the <code>out</code> directory for each one it finds. It can also generate a set of index pages for each directory of records, depending on their type.</p>
 <p>A record file can begin with a <a href="http://en.wikipedia.org/wiki/YAML">YAML</a> header specifying metadata for the record:</p>
@@ -133,9 +134,17 @@ Date of Birth: 1900-01-01
 <dd>
 <p>A default datetime stamp. If the record has a <code>date</code> or <code>datetime</code> attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).</p>
 </dd>
+<dt>file</dt>
+<dd>
+<p>The record's source file.</p>
+</dd>
 <dt>html</dt>
 <dd>
 <p>The record's content, rendered into HTML.</p>
+</dd>
+<dt>path</dt>
+<dd>
+<p>A list of output path slugs.</p>
 </dd>
 <dt>type</dt>
 <dd>
