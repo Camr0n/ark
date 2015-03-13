@@ -45,7 +45,8 @@ class Record(dict):
         # The filename gives us our default url slug.
         slug = self.get('slug') or utils.slugify(base)
 
-        # Add our basic record attributes.
+        # Add our default record attributes.
+        self['file'] = filepath
         self['html'] = html
         self['type'] = site.type_from_src(dirpath)
         self['slugs'] = site.slugs_from_src(dirpath, slug)
