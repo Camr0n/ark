@@ -125,9 +125,17 @@ All records have the following default attributes:
 
     A default datetime stamp. If the record has a `date` or `datetime` attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).
 
+~ file
+
+    The record's source file.
+
 ~ html
 
     The record's content, rendered into HTML.
+
+~ path
+
+    A list of output path slugs.
 
 ~ type
 
