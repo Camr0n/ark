@@ -224,9 +224,9 @@ class RecordPage(Page):
     def __init__(self, record):
         Page.__init__(self, record['type'])
         self['record'] = record
-        self['slugs'] = record['slugs']
+        self['slugs'] = record['path']
         self['flags']['is_single'] = True
-        self['flags']['is_homepage'] = (record['slugs'] == ['index'])
+        self['flags']['is_homepage'] = (record['path'] == ['index'])
 
 
 class IndexPage(Page):

@@ -34,7 +34,7 @@ class Record(dict):
 
         # Assume all input is utf-8 encoded.
         dirpath, filename = os.path.split(filepath)
-        base, ext = os.path.splitext(filename)
+        basename, ext = os.path.splitext(filename)
         text = open(filepath, encoding='utf-8').read()
 
         # Render the file's text content as html.
@@ -43,14 +43,14 @@ class Record(dict):
             self[key.lower().replace(' ', '_')] = value
 
         # The filename gives us our default url slug.
-        slug = self.get('slug') or utils.slugify(base)
+        slug = self.get('slug') or utils.slugify(basename)
 
         # Add our default record attributes.
         self['file'] = filepath
         self['html'] = html
+        self['path'] = site.slugs_from_src(dirpath, slug)
         self['type'] = site.type_from_src(dirpath)
-        self['slugs'] = site.slugs_from_src(dirpath, slug)
-        self['url'] = site.url(self['slugs'])
+        self['url'] = site.url(self['path'])
 
         # Ensure every record has a datetime stamp.
         # We use the 'date' or 'datetime' attribute if it's present,
