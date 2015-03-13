@@ -43,6 +43,8 @@ Initializing a new site creates the following directory structure:
         out/            # output directory for html files
         src/            # source directory for text files
 
+Ark also creates a hidden `.ark` directory for its own use.
+
 
 
 Records
