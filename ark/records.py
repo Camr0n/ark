@@ -8,6 +8,7 @@ import datetime
 from . import utils
 from . import site
 from . import tags
+from . import hooks
 
 
 # Stores an in-memory cache of record objects.
@@ -32,27 +33,23 @@ class Record(dict):
 
     def __init__(self, filepath):
 
-        # Assume all input is utf-8 encoded.
+        # Load the record file.
+        text, meta, format = site.load(filepath)
+        self.update(meta)
+
+        # The filename gives us the default url slug.
         dirpath, filename = os.path.split(filepath)
-        basename, ext = os.path.splitext(filename)
-        content = open(filepath, encoding='utf-8').read()
+        basename, _ = os.path.splitext(filename)
 
-        # Render the file's text content as html.
-        html, meta = site.render(content, ext)
-        for key, value in meta.items():
-            self[key.lower().replace(' ', '_')] = value
-
-        # The filename gives us our default url slug.
-        slug = self.get('slug') or utils.slugify(basename)
-
-        # Add our default record attributes.
+        # Add default record attributes.
+        self['slug'] = meta.get('slug') or utils.slugify(basename)
         self['file'] = filepath
-        self['html'] = html
-        self['path'] = site.slugs_from_src(dirpath, slug)
+        self['path'] = site.slugs_from_src(dirpath, self['slug'])
         self['type'] = site.type_from_src(dirpath)
-        self['url'] = site.url(self['path'])
+        self['form'] = format
+        self['url']  = site.url(self['path'])
 
-        # Ensure every record has a datetime stamp.
+        # Add a default datetime stamp.
         # We use the 'date' or 'datetime' attribute if it's present,
         # otherwise we use the file creation time (OSX, BSD, Windows) or
         # the time of the file's last metadata change (Linux).
@@ -71,3 +68,17 @@ class Record(dict):
                 tags.register(self['type'], tag, filepath)
                 url = tags.url(self['type'], tag)
                 self['tags'].append(tags.TagInfo(tag, url))
+
+        # Process any shortcodes in the record's content.
+        self['text'] = hooks.filter(
+            'record_text',
+            site.parse_shortcodes(text, self, filepath),
+            self
+        )
+
+        # Render the record's content into html.
+        self['html'] = hooks.filter(
+            'record_html',
+            site.render(self['text'], format),
+            self
+        )

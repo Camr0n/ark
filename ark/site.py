@@ -14,6 +14,7 @@ import yaml
 import syntex
 import ibis
 
+from . import shortcodes
 from . import utils
 
 
@@ -45,7 +46,10 @@ _prendered = None
 _pwritten = None
 
 # Stores an initialized markdown renderer.
-_markdown = None
+_mdrenderer = None
+
+# Stores an initialized shortcode parser.
+_scparser = None
 
 # Stores cached page hashes from the last build run.
 _oldhashes = None
@@ -86,8 +90,12 @@ def init(options):
         _config['types'][typeid]['index_url'] = index_url(typeid)
 
     # Initialize a markdown renderer.
-    global _markdown
-    _markdown = markdown.Markdown(**_config.setdefault('markdown', {}))
+    global _mdrenderer
+    _mdrenderer = markdown.Markdown(**_config.setdefault('markdown', {}))
+
+    # Initialize a shortcode parser.
+    global _scparser
+    _scparser = shortcodes.Parser(**_config.setdefault('shortcodes', {}))
 
     # Load and render include strings from the home/inc directory.
     global _includes
@@ -243,20 +251,48 @@ def trail_from_src(srcdir):
     return trail
 
 
-def render(text, ext):
-    """ Renders `text` into html using either Syntex or Markdown. """
-    if ext.lstrip('.') in ('md', 'markdown'):
-        meta = {}
-        match = re.match(r"---\n(.*?\n)(---|...)\n", text, re.DOTALL)
-        if match:
-            text = text[match.end(0):]
-            if yaml:
-                yaml_meta = yaml.load(match.group(1))
-                if isinstance(yaml_meta, dict):
-                    meta = yaml_meta
-        return _markdown.reset().convert(text), meta
+def load(filepath):
+    """ Loads a record file. """
+
+    with open(filepath, encoding='utf-8') as file:
+        text, meta = file.read(), {}
+
+    match = re.match(r"^---\n(.*?\n)[-.]{3}\n+", text, re.DOTALL)
+    if match:
+        text = text[match.end(0):]
+        data = yaml.load(match.group(1))
+        if isinstance(data, dict):
+            for key, value in data.items():
+                meta[key.lower().replace(' ', '_')] = value
+
+    _, ext = os.path.splitext(filepath)
+    format = 'markdown' if ext in ('md', 'markdown') else 'syntex'
+
+    return text, meta, format
+
+
+def render(text, format):
+    """ Renders `text` into HTML. """
+    if format == 'markdown':
+        html = _mdrenderer.reset().convert(text)
     else:
-        return syntex.render(text)
+        html, _ = syntex.render(text)
+    return html
+
+
+def parse_shortcodes(text, context, src):
+    """ Processes shortcodes in `text`. """
+    try:
+        return _scparser.parse(text, context)
+    except shortcodes.ShortcodeError as e:
+        msg =  'Shortcode error while parsing file:\n'
+        msg += '  %s\n\n' % src
+        msg += '  %s: %s' % (e.__class__.__name__, e)
+        if e.__context__:
+            msg += '\n\n  %s: %s' % (
+                e.__context__.__class__.__name__, e.__context__
+            )
+        sys.exit(msg)
 
 
 def _load_site_config():
@@ -327,8 +363,8 @@ def _load_includes():
     includes = {}
     if os.path.isdir(home('inc')):
         for finfo in utils.textfiles(home('inc')):
-            content = open(finfo.path, encoding='utf-8').read()
-            includes[finfo.base], _ = render(content, finfo.ext)
+            text, _, format = load(finfo.path)
+            includes[finfo.base] = render(text, format)
     return includes
 
 
