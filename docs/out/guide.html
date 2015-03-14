@@ -104,16 +104,16 @@ src/
 <p>New custom types behave, by default, like the builtin <em>post</em> type, but we can alter this behaviour by adding a <code>types</code> dictionary to our <code>config.py</code> file:</p>
 <pre class="lang-python stx-pygments" data-lang="python">
 <span class="n">types</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&quot;sonnets&quot;</span><span class="p">:</span> <span class="p">{</span>                <span class="c"># type id corresponding to the @type directory</span>
-        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>      <span class="c"># defaults to the titlecased type id</span>
-        <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>      <span class="c"># defaults to the slugified type id</span>
-        <span class="s">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">,</span>     <span class="c"># defaults to &quot;tags&quot;</span>
-        <span class="s">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>        <span class="c"># build directory indexes for this type?</span>
-        <span class="s">&quot;order_by&quot;</span><span class="p">:</span> <span class="s">&quot;datetime&quot;</span><span class="p">,</span> <span class="c"># order index entries by this attribute</span>
-        <span class="s">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>        <span class="c"># display index entries in reverse order?</span>
-        <span class="s">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>        <span class="c"># number of entries per index page</span>
-        <span class="s">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>    <span class="c"># number of entries per tag index page</span>
-        <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>      <span class="c"># use this type&#39;s index as the site homepage?</span>
+    <span class="s">&quot;sonnets&quot;</span><span class="p">:</span> <span class="p">{</span>               <span class="c"># type id corresponding to the @type directory</span>
+        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the titlecased type id</span>
+        <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the slugified type id</span>
+        <span class="s">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">,</span>    <span class="c"># defaults to &quot;tags&quot;</span>
+        <span class="s">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># build directory indexes for this type?</span>
+        <span class="s">&quot;order_by&quot;</span><span class="p">:</span> <span class="s">&quot;date&quot;</span><span class="p">,</span>    <span class="c"># order index entries by this attribute</span>
+        <span class="s">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># display index entries in reverse order?</span>
+        <span class="s">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>       <span class="c"># number of entries per index page</span>
+        <span class="s">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>   <span class="c"># number of entries per tag index page</span>
+        <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>     <span class="c"># use this type&#39;s index as the site homepage?</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre>
@@ -124,19 +124,23 @@ src/
 <p>A record file's metadata keys are converted to lowercase and spaces are replaced by underscores so the YAML attribute:</p>
 <pre>
 ---
-Date of Birth: 1900-01-01
+Date of Birth: 1999-09-09
 ...
 </pre>
 <p>would be accessible in template files as <code>record.date_of_birth</code>.</p>
 <p>All records have the following default attributes:</p>
 <dl>
-<dt>datetime</dt>
+<dt>date</dt>
 <dd>
-<p>A default datetime stamp. If the record has a <code>date</code> or <code>datetime</code> attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).</p>
+<p>A default datetime stamp. If the record has a <code>date</code> attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).</p>
 </dd>
 <dt>file</dt>
 <dd>
-<p>The record's source file.</p>
+<p>The source filepath.</p>
+</dd>
+<dt>form</dt>
+<dd>
+<p>One of: <code>markdown</code>, <code>syntex</code>.</p>
 </dd>
 <dt>html</dt>
 <dd>
@@ -144,7 +148,15 @@ Date of Birth: 1900-01-01
 </dd>
 <dt>path</dt>
 <dd>
-<p>A list of output path slugs.</p>
+<p>A list of output-path slugs.</p>
+</dd>
+<dt>slug</dt>
+<dd>
+<p>The record's url slug.</p>
+</dd>
+<dt>text</dt>
+<dd>
+<p>The record's text content.</p>
 </dd>
 <dt>type</dt>
 <dd>

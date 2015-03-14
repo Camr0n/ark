@@ -89,16 +89,16 @@ New custom types behave, by default, like the builtin *post* type, but we can al
 ::: python
 
     types = {
-        "sonnets": {                # type id corresponding to the @type directory
-            "name": "Sonnets",      # defaults to the titlecased type id
-            "slug": "sonnets",      # defaults to the slugified type id
-            "tag_slug": "tags",     # defaults to "tags"
-            "indexed": True,        # build directory indexes for this type?
-            "order_by": "datetime", # order index entries by this attribute
-            "reverse": True,        # display index entries in reverse order?
-            "per_index": 10,        # number of entries per index page
-            "per_tag_index": 10,    # number of entries per tag index page
-            "homepage": False,      # use this type's index as the site homepage?
+        "sonnets": {               # type id corresponding to the @type directory
+            "name": "Sonnets",     # defaults to the titlecased type id
+            "slug": "sonnets",     # defaults to the slugified type id
+            "tag_slug": "tags",    # defaults to "tags"
+            "indexed": True,       # build directory indexes for this type?
+            "order_by": "date",    # order index entries by this attribute
+            "reverse": True,       # display index entries in reverse order?
+            "per_index": 10,       # number of entries per index page
+            "per_tag_index": 10,   # number of entries per tag index page
+            "homepage": False,     # use this type's index as the site homepage?
         },
     }
 
@@ -116,20 +116,24 @@ Record Attributes
 A record file's metadata keys are converted to lowercase and spaces are replaced by underscores so the YAML attribute:
 
     ---
-    Date of Birth: 1900-01-01
+    Date of Birth: 1999-09-09
     ...
 
 would be accessible in template files as `record.date_of_birth`.
 
 All records have the following default attributes:
 
-~ datetime
+~ date
 
-    A default datetime stamp. If the record has a `date` or `datetime` attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).
+    A default datetime stamp. If the record has a `date` attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).
 
 ~ file
 
-    The record's source file.
+    The source filepath.
+
+~ form
+
+    One of: `markdown`, `syntex`.
 
 ~ html
 
@@ -137,7 +141,15 @@ All records have the following default attributes:
 
 ~ path
 
-    A list of output path slugs.
+    A list of output-path slugs.
+
+~ slug
+
+    The record's url slug.
+
+~ text
+
+    The record's text content.
 
 ~ type
 
