@@ -1,5 +1,5 @@
 
-* [Home](@root/)
+* [Ark](@root/)
 * [Quickstart](@root/quickstart//)
 * [Guide](@root/guide//)
 * [Themes](@root/themes//)
