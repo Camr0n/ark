@@ -1,4 +1,4 @@
 
 """ Package meta data. """
 
-__version__ = '0.13.2'
+__version__ = '0.14.0'
