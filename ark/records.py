@@ -49,17 +49,16 @@ class Record(dict):
         self['form'] = format
         self['url']  = site.url(self['path'])
 
-        # Add a default datetime stamp.
-        # We use the 'date' or 'datetime' attribute if it's present,
-        # otherwise we use the file creation time (OSX, BSD, Windows) or
-        # the time of the file's last metadata change (Linux).
-        dt = self.get('datetime') or self.get('date')
-        if isinstance(dt, datetime.datetime):
-            self['datetime'] = dt
-        elif isinstance(dt, datetime.date):
-            self['datetime'] = datetime.datetime.fromordinal(dt.toordinal())
+        # Add a default datetime stamp. We use the 'date' attribute if it's
+        # present, otherwise we use the file creation time (OSX, BSD, Windows)
+        # or the time of the file's last metadata change (Linux).
+        date = self.get('date')
+        if isinstance(date, datetime.datetime):
+            self['date'] = date
+        elif isinstance(date, datetime.date):
+            self['date'] = datetime.datetime.fromordinal(date.toordinal())
         else:
-            self['datetime'] = utils.get_creation_time(filepath)
+            self['date'] = utils.get_creation_time(filepath)
 
         # Process the record's tag list, if present.
         taglist, self['tags'] = self.get('tags', ''), []

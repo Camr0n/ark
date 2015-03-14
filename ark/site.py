@@ -337,7 +337,7 @@ def _load_site_config():
             'slug': utils.slugify(typeid),
             'tag_slug': 'tags',
             'indexed': True,
-            'order_by': 'datetime',
+            'order_by': 'date',
             'reverse': True,
             'per_index': 10,
             'per_tag_index': 10,
