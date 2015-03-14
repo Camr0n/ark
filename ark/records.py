@@ -35,10 +35,10 @@ class Record(dict):
         # Assume all input is utf-8 encoded.
         dirpath, filename = os.path.split(filepath)
         basename, ext = os.path.splitext(filename)
-        text = open(filepath, encoding='utf-8').read()
+        content = open(filepath, encoding='utf-8').read()
 
         # Render the file's text content as html.
-        html, meta = site.render(text, ext)
+        html, meta = site.render(content, ext)
         for key, value in meta.items():
             self[key.lower().replace(' ', '_')] = value
 
