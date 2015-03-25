@@ -263,7 +263,7 @@ def load(filepath):
         data = yaml.load(match.group(1))
         if isinstance(data, dict):
             for key, value in data.items():
-                meta[key.lower().replace(' ', '_')] = value
+                meta[key.lower().replace(' ', '_').replace('-', '_')] = value
 
     _, ext = os.path.splitext(filepath)
     format = 'markdown' if ext in ('md', 'markdown') else 'syntex'
