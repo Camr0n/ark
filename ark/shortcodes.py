@@ -3,7 +3,7 @@ A generic, customizable shortcode parser.
 
 Parses shortcodes of the form:
 
-    {: tag arg1 'arg 2' key1=arg3 key2='arg 4' :} [ ... {: endtag :} ]
+    [% tag arg1 'arg 2' key1=arg3 key2='arg 4' %] ... [% endtag %]
 
 Shortcodes can be atomic or block-scoped and can be nested to any depth.
 Innermost shortcodes are processed first.
@@ -13,20 +13,44 @@ are preserved in their raw state.
 
 Register handler functions using the @register decorator:
 
-    @register('tag')
-    def handler(context={}, pargs=[], kwargs={}):
+    @shortcodes.register('tag')
+    def handler(context=None, content=None, pargs=[], kwargs={}):
         ...
 
 Specify an end-tag to create a shortcode with block scope:
 
-    @register('tag', 'endtag')
-    def handler(context={}, content='', pargs=[], kwargs={}):
+    @shortcodes.register('tag', 'endtag')
+    def handler(context=None, content=None, pargs=[], kwargs={}):
         ...
 
+Handler functions should accept four arguments:
+
+    `context`: an arbitrary context object
+    `content`: the shortcode's content as a string in the case of block-scoped
+               shortcodes, or None in the case of atomic shortcodes
+    `pargs`:   a list of the shortcode's positional arguments
+    `kwargs`:  a dictionary of the shortcode's keyword arguments
+
 Positional and keyword arguments are passed as strings. The handler function
-should return a string.
+itself should return a string.
+
+To parse an input string containing shortcodes, create a Parser() object and
+call its parse() method:
+
+    parser = shortcodes.Parser()
+    output = parser.parse(text, context=None)
+
+A single Parser() object can process multiple input strings. The optional
+`context` argument accepts an arbitrary object to pass on to the registered
+handler functions.
+
+Author: Darren Mulholland <dmulholland@outlook.ie>
+License: This work has been placed in the public domain.
 
 """
+
+__version__ = "2.0.0"
+
 
 import re
 import sys
@@ -36,13 +60,13 @@ import sys
 tagmap = { 'endtags': [] }
 
 
-def register(tag, endtag=None):
+def register(tag, end_tag=None):
     """ Decorator for registering shortcode functions. """
 
     def register_function(function):
-        tagmap[tag] = {'func': function, 'endtag': endtag}
-        if endtag:
-            tagmap['endtags'].append(endtag)
+        tagmap[tag] = {'func': function, 'endtag': end_tag}
+        if end_tag:
+            tagmap['endtags'].append(end_tag)
         return function
 
     return register_function
@@ -119,7 +143,7 @@ class ShortcodeNode(Node):
 
     def render(self, context):
         try:
-            return str(self.func(context, self.pargs, self.kwargs))
+            return str(self.func(context, None, self.pargs, self.kwargs))
         except Exception as e:
             raise RenderingError('error rendering [%s] tag' % self.tag)
 
@@ -160,14 +184,14 @@ class Parser:
 
     """ Parses text and renders shortcodes.
 
-    A single Parser instance can parse multiple input strings.
+    A single Parser instance can parse mulitple input strings.
 
         parser = Parser()
         output = parser.parse(text, context)
 
     """
 
-    def __init__(self, start='{:', end=':}', esc='\\'):
+    def __init__(self, start='[%', end='%]', esc='\\'):
         self.start = start
         self.esc_start = esc + start
         self.len_start = len(start)
@@ -184,7 +208,7 @@ class Parser:
             if token:
                 yield token
 
-    def parse(self, text, context):
+    def parse(self, text, context=None):
         stack = [Node()]
         expecting = []
         for token in self.tokenize(text):
