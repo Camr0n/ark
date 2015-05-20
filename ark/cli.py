@@ -22,7 +22,7 @@ def print_version(ctx, param, value):
 def locate_home_directory():
     path = os.getcwd()
     while True:
-        if os.path.exists(os.path.join(path, '.ark')):
+        if os.path.exists(os.path.join(path, 'src')):
             return path
         path = os.path.join(path, '..')
         if not os.path.isdir(path):
