@@ -5,20 +5,91 @@ import os
 import sys
 import shutil
 
-import click
-
+from . import clio
 from . import meta
 from . import main
 from . import utils
 
 
-def print_version(ctx, param, value):
-    if not value or ctx.resilient_parsing:
-        return
-    click.echo(meta.__version__)
-    ctx.exit()
+# Application help text.
+apphelp = """
+Usage: %s [FLAGS] [COMMAND]
+
+  Static website generator.
+
+Flags:
+  --help            Print the application's help text and exit.
+  --version         Print the application's version number and exit.
+
+Commands:
+  build             Build the current site.
+  init              Initialize a new site directory.
+
+Command Help:
+  help <command>    Print the specified command's help text and exit.
+
+""" % os.path.basename(sys.argv[0])
 
 
+# Help text forthe build command.
+buildhelp = """
+Usage: %s build [FLAGS] [OPTIONS]
+
+  Build the current site.
+
+Flags:
+  --clear           Clear the output directory before building.
+  --help            Print the build command's help text and exit.
+
+Options:
+  --out <path>      Redirect output to the specified directory.
+  --theme <name>    Override the theme specififed in the config file.
+
+""" % os.path.basename(sys.argv[0])
+
+
+# Help text for the init command.
+inithelp = """
+Usage: %s init [FLAGS]
+
+  Initialize a new site directory.
+
+Flags:
+  --help            Print the init command's help text and exit.
+
+""" % os.path.basename(sys.argv[0])
+
+
+# Application entry point.
+def cli():
+    parser = clio.ArgParser(apphelp, meta.__version__)
+
+    build_parser = parser.add_command("build", build, buildhelp)
+    build_parser.add_flag("clear")
+    build_parser.add_str_option("out", None)
+    build_parser.add_str_option("theme", None)
+
+    init_parser = parser.add_command("init", init, inithelp)
+
+    parser.parse()
+
+
+# Callback for the build command.
+def build(argset):
+    options = argset.get_options()
+    options['home'] = locate_home_directory()
+    main.build(options)
+
+
+# Callback for the init command.
+def init(argset):
+    for name in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
+        if not os.path.exists(name):
+            os.makedirs(name)
+    utils.copydir(os.path.join(os.path.dirname(__file__), 'init'), '.')
+
+
+# Attempt to locate the site's home directory.
 def locate_home_directory():
     path = os.getcwd()
     while True:
@@ -28,47 +99,3 @@ def locate_home_directory():
         if not os.path.isdir(path):
             break
     sys.exit('Error: cannot locate site directory.')
-
-
-@click.group()
-@click.option('--version', is_flag=True, expose_value=False, is_eager=True,
-    callback=print_version,
-    help='Print version number and exit.')
-def cli():
-    """ Static website generator. """
-    pass
-
-
-@cli.command()
-@click.option('--theme', metavar='<name>',
-    help='Override the theme specififed in the config file.')
-@click.option('--out', metavar='<path>',
-    help='Redirect output to this directory.')
-@click.option('--clear', is_flag=True, default=False,
-    help='Clear the output directory before building.')
-def build(theme, out, clear, ):
-    """ Build the current site. """
-
-    options = {
-        'home': locate_home_directory()
-    }
-
-    if theme:
-        options['theme'] = theme
-
-    if out:
-        options['out'] = out
-
-    if clear:
-        options['clear'] = True
-
-    main.build(options)
-
-
-@cli.command()
-def init():
-    """ Initialize a new site directory. """
-    for name in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
-        if not os.path.exists(name):
-            os.makedirs(name)
-    utils.copydir(os.path.join(os.path.dirname(__file__), 'init'), '.')

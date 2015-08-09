@@ -37,7 +37,6 @@ setup(
         ],
     },
     install_requires = [
-        'Click',
         'Markdown',
         'Pygments',
         'PyYAML',
