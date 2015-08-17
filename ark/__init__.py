@@ -40,12 +40,6 @@ except ImportError:
 
 
 try:
-    import click
-except ImportError:
-    sys.exit('Error: Ark requires the Click module.')
-
-
-try:
     import pygments
 except ImportError:
     sys.exit('Error: Ark requires the Pygments module.')
