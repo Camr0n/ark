@@ -71,8 +71,8 @@ def cli():
 
     init_parser = parser.add_command("init", init, inithelp)
 
-    args = parser.parse()
-    if not args.has_cmd():
+    parser.parse()
+    if not parser.has_cmd():
       parser.help()
 
 
