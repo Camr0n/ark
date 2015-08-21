@@ -31,11 +31,12 @@ Command Help:
 """ % os.path.basename(sys.argv[0])
 
 
-# Help text forthe build command.
+# Help text for the build command.
 buildhelp = """
 Usage: %s build [FLAGS] [OPTIONS]
 
-  Build the current site.
+  Build the current site. This command can be run from the site directory
+  or any of its subdirectories.
 
 Flags:
   --clear           Clear the output directory before building.
@@ -50,9 +51,14 @@ Options:
 
 # Help text for the init command.
 inithelp = """
-Usage: %s init [FLAGS]
+Usage: %s init [FLAGS] [ARGUMENTS]
 
-  Initialize a new site directory.
+  Initialize a new site directory. If a directory path is specified,
+  that directory will be created and used. Otherwise, the current
+  directory will be used.
+
+Arguments:
+  [dirname]         Directory name. Defaults to the current directory.
 
 Flags:
   --help            Print the init command's help text and exit.
@@ -77,17 +83,18 @@ def cli():
 
 
 # Callback for the build command.
-def build(argset):
-    options = argset.get_options()
-    options['home'] = locate_home_directory()
-    main.build(options)
+def build(parser):
+    parser['home'] = locate_home_directory()
+    main.build(parser.get_options())
 
 
 # Callback for the init command.
-def init(argset):
-    for name in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
-        if not os.path.exists(name):
-            os.makedirs(name)
+def init(parser):
+    dirpath = parser.get_args()[0] if parser.has_args() else '.'
+    os.makedirs(dirpath, exist_ok=True)
+    os.chdir(dirpath)
+    for dirname in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
+        os.makedirs(dirname, exist_ok=True)
     utils.copydir(os.path.join(os.path.dirname(__file__), 'init'), '.')
 
 
