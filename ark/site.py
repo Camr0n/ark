@@ -370,7 +370,7 @@ def _load_includes():
 
 def _load_extensions():
     """ Load any Python modules found in the extensions directories. """
-    dirpaths = [os.path.join(os.path.dirname(__file__), 'extensions')]
+    dirpaths = [os.path.join(os.path.dirname(__file__), 'ext')]
     if os.path.isdir(home('ext')):
         dirpaths.append(home('ext'))
     for dirpath in dirpaths:
