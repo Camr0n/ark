@@ -1,5 +1,5 @@
 """
-This plugin adds a string of page navigation links to index page objects.
+This plugin adds a string of page navigation links to index pages.
 
 The links can be accessed in templates via:
 
@@ -18,7 +18,8 @@ the site's config.py file containing one or more of the following options:
         'multiple': 10,         # link to page numbers in multiples of...
     }
 
-License: Public Domain.
+Author: Darren Mulholland <dmulholland@outlook.ie>
+License: Public Domain
 
 """
 

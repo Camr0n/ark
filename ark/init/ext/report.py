@@ -1,7 +1,8 @@
 """
 This sample plugin prints a simple status report at the end of each build.
 
-License: Public Domain.
+Author: Darren Mulholland <dmulholland@outlook.ie>
+License: Public Domain
 
 """
 
@@ -10,6 +11,7 @@ from ark import hooks, site
 
 @hooks.register('exit')
 def print_status_report():
+    """ Prints a status report when the 'exit' hook is fired. """
     rendered, written = site.page_count()
     time = site.build_time()
     average = time / (rendered or 1)
