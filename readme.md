@@ -20,18 +20,6 @@ Install directly from the Python Package Index using `pip`:
 Ark requires Python 3.2 or later.
 
 
-Dependencies
-------------
-
-Installing Ark automatically installs the following dependencies:
-
-* [Ibis](http://github.com/dmulholland/ibis)
-* [Markdown](https://pythonhosted.org/Markdown/)
-* [Pygments](http://pygments.org/)
-* [PyYAML](http://pyyaml.org/)
-* [Syntex](http://github.com/dmulholland/syntex)
-
-
 License
 -------
 
