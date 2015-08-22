@@ -28,6 +28,9 @@ The build command takes a number of optional arguments:
     --out <path>    Redirect output to the specified directory.
     --clear         Clear the output directory before building.
 
+See the command line help text for further details:
+
+    $ ark --help
 
 
 Site Structure
@@ -123,39 +126,39 @@ would be accessible in template files as `record.date_of_birth`.
 
 All records have the following default attributes:
 
-~ date
+~ `date`
 
     A default datetime stamp. If the record has a `date` attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).
 
-~ file
+~ `file`
 
     The source filepath.
 
-~ form
+~ `form`
 
     One of: `markdown`, `syntex`.
 
-~ html
+~ `html`
 
     The record's content, rendered into HTML.
 
-~ path
+~ `path`
 
     A list of output-path slugs.
 
-~ slug
+~ `slug`
 
     The record's url slug.
 
-~ text
+~ `text`
 
     The record's text content.
 
-~ type
+~ `type`
 
-    The record's type ID, determined by its parent `@type` directory.
+    The record's type, determined by its parent `@type` directory.
 
-~ url
+~ `url`
 
     The record's URL.
 

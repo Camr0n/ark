@@ -56,6 +56,10 @@ $ ark build
 --out &lt;path&gt;    Redirect output to the specified directory.
 --clear         Clear the output directory before building.
 </pre>
+<p>See the command line help text for further details:</p>
+<pre>
+$ ark --help
+</pre>
 <h2 id="site-structure">Site Structure</h2>
 <p>Initializing a new site creates the following directory structure:</p>
 <pre>
@@ -130,39 +134,39 @@ Date of Birth: 1999-09-09
 <p>would be accessible in template files as <code>record.date_of_birth</code>.</p>
 <p>All records have the following default attributes:</p>
 <dl>
-<dt>date</dt>
+<dt><code>date</code></dt>
 <dd>
 <p>A default datetime stamp. If the record has a <code>date</code> attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).</p>
 </dd>
-<dt>file</dt>
+<dt><code>file</code></dt>
 <dd>
 <p>The source filepath.</p>
 </dd>
-<dt>form</dt>
+<dt><code>form</code></dt>
 <dd>
 <p>One of: <code>markdown</code>, <code>syntex</code>.</p>
 </dd>
-<dt>html</dt>
+<dt><code>html</code></dt>
 <dd>
 <p>The record's content, rendered into HTML.</p>
 </dd>
-<dt>path</dt>
+<dt><code>path</code></dt>
 <dd>
 <p>A list of output-path slugs.</p>
 </dd>
-<dt>slug</dt>
+<dt><code>slug</code></dt>
 <dd>
 <p>The record's url slug.</p>
 </dd>
-<dt>text</dt>
+<dt><code>text</code></dt>
 <dd>
 <p>The record's text content.</p>
 </dd>
-<dt>type</dt>
+<dt><code>type</code></dt>
 <dd>
-<p>The record's type ID, determined by its parent <code>@type</code> directory.</p>
+<p>The record's type, determined by its parent <code>@type</code> directory.</p>
 </dd>
-<dt>url</dt>
+<dt><code>url</code></dt>
 <dd>
 <p>The record's URL.</p>
 </dd>

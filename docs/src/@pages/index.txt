@@ -23,7 +23,6 @@ Dependencies
 
 Installing Ark automatically installs the following dependencies:
 
-* [Click](http://click.pocoo.org/)
 * [Ibis](http://github.com/dmulholland/ibis)
 * [Markdown](https://pythonhosted.org/Markdown/)
 * [Pygments](http://pygments.org/)
