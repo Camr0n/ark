@@ -157,7 +157,7 @@ def includes():
 
 def type(typeid):
     """ Returns the specified dictionary of type configuration data. """
-    return _config['types'][typeid.lstrip('@')]
+    return _config['types'][typeid.strip('[]')]
 
 
 def config(key=None, fallback=None):
@@ -228,8 +228,8 @@ def type_from_src(srcpath):
     """ Determines the record type from the source path. """
     slugs = os.path.relpath(srcpath, src()).replace('\\', '/').split('/')
     for slug in slugs:
-        if slug.startswith('@'):
-            return slug.lstrip('@')
+        if slug.startswith('['):
+            return slug.strip('[]')
 
 
 def slugs_from_src(srcdir, *append):
@@ -237,7 +237,7 @@ def slugs_from_src(srcdir, *append):
     typeid = type_from_src(srcdir)
     dirnames = os.path.relpath(srcdir, src()).replace('\\', '/').split('/')
     sluglist = slugs(typeid)
-    sluglist.extend(utils.slugify(d) for d in dirnames if not d.startswith('@'))
+    sluglist.extend(utils.slugify(d) for d in dirnames if not d.startswith('['))
     sluglist.extend(append)
     return sluglist
 
@@ -247,7 +247,7 @@ def trail_from_src(srcdir):
     typeid = type_from_src(srcdir)
     dirnames = os.path.relpath(srcdir, src()).replace('\\', '/').split('/')
     trail = [_config['types'][typeid]['name']]
-    trail.extend(dname for dname in dirnames if not dname.startswith('@'))
+    trail.extend(name for name in dirnames if not name.startswith('['))
     return trail
 
 
@@ -266,7 +266,7 @@ def load(filepath):
                 meta[key.lower().replace(' ', '_').replace('-', '_')] = value
 
     _, ext = os.path.splitext(filepath)
-    format = 'markdown' if ext in ('md', 'markdown') else 'syntex'
+    format = 'markdown' if ext in ('.md', '.markdown') else 'syntex'
 
     return text, meta, format
 
@@ -323,11 +323,11 @@ def _load_site_config():
     # The 'types' dictionary stores configuration data for record types.
     data.setdefault('types', {})
 
-    # Assemble a list of the site's record types from its @type directories.
+    # Assemble a list of the site's record types from its [type] directories.
     types = [
-        di.name.lstrip('@')
+        di.name.strip('[]')
             for di in utils.subdirs(src())
-                if di.name.startswith('@')
+                if di.name.startswith('[')
     ]
 
     # Supply default values for any missing type data.
@@ -350,7 +350,7 @@ def _load_site_config():
         data['types'][typeid] = settings
         data['types'][typeid]['id'] = typeid
 
-    # Strip any type entries that don't refer to actual @type directories.
+    # Strip any type entries that don't refer to actual [type] directories.
     for typeid in list(data['types']):
         if not typeid in types:
             del data['types'][typeid]
@@ -362,7 +362,7 @@ def _load_includes():
     """ Process any text files in the home/inc directory. """
     includes = {}
     if os.path.isdir(home('inc')):
-        for finfo in utils.textfiles(home('inc')):
+        for finfo in utils.srcfiles(home('inc')):
             text, _, format = load(finfo.path)
             includes[finfo.base] = render(text, format)
     return includes

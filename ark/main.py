@@ -12,15 +12,16 @@ from . import hooks
 
 
 def build(options):
-    """ Builds the site. Argument is a dictionary of command line options. """
+    """ Builds the site. Accepts a dictionary of command line options. """
 
     # Initialize the site model.
     site.init(options)
 
-    # Fire the 'init' event.
+    # Fire the 'init' event. (Runs callbacks registered on the 'init' hook.)
     hooks.event('init')
 
-    # Copy the site's resource files to the output directory.
+    # Copy the site's resource files to the output directory, i.e. any files
+    # in the site's src directory not inside a [type] directory.
     utils.copydir(site.src(), site.out())
 
     # Copy the theme's resource files to the output directory.
@@ -29,9 +30,9 @@ def build(options):
 
     # Build the individual record pages and directory indexes.
     for dirname, dirpath in utils.subdirs(site.src()):
-        if dirname.startswith('@'):
+        if dirname.startswith('['):
             build_record_pages(dirpath)
-            if site.type(dirname)['indexed']:
+            if site.type(dirname.strip('[]'))['indexed']:
                 build_directory_indexes(dirpath)
 
     # Build the tag index pages.
@@ -40,14 +41,14 @@ def build(options):
     # Cleanup actions before exiting.
     site.exit()
 
-    # Fire the 'exit' event.
+    # Fire the 'exit' event. (Runs callbacks registered on the 'exit' hook.)
     hooks.event('exit')
 
 
 def build_record_pages(dirpath):
     """ Creates an HTML page for each record in the source directory. """
 
-    for fileinfo in utils.textfiles(dirpath):
+    for fileinfo in utils.srcfiles(dirpath):
         record = records.record(fileinfo.path)
         page = pages.RecordPage(record)
         page.render()
@@ -70,7 +71,7 @@ def build_directory_indexes(dirpath, recursing=False):
         index.extend(build_directory_indexes(dirinfo.path, True))
 
     # Add any records in this directory to the index.
-    for fileinfo in utils.textfiles(dirpath):
+    for fileinfo in utils.srcfiles(dirpath):
         record = records.record(fileinfo.path)
         if site.type(typeid)['order_by'] in record:
             index.append(record)

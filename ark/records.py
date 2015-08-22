@@ -39,7 +39,7 @@ class Record(dict):
 
         # The filename gives us the default url slug.
         dirpath, filename = os.path.split(filepath)
-        basename, _ = os.path.splitext(filename)
+        basename, ext = os.path.splitext(filename)
 
         # Add default record attributes.
         self['slug'] = meta.get('slug') or utils.slugify(basename)
@@ -47,6 +47,7 @@ class Record(dict):
         self['path'] = site.slugs_from_src(dirpath, self['slug'])
         self['type'] = site.type_from_src(dirpath)
         self['form'] = format
+        self['ext']  = ext.strip('.')
         self['url']  = site.url(self['path'])
 
         # Add a default datetime stamp. We use the 'date' attribute if it's

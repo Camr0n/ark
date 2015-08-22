@@ -35,9 +35,9 @@ def files(directory):
     return files
 
 
-def textfiles(directory):
-    """ Returns a list of text files in the specified directory. """
-    extensions = ('.txt', '.stx', '.md', '.markdown')
+def srcfiles(directory):
+    """ Returns a list of source files in the specified directory. """
+    extensions = ('.txt', '.stx', '.md', '.html')
     return [fi for fi in files(directory) if fi.ext in extensions]
 
 
@@ -84,7 +84,7 @@ def copydir(srcdir, dstdir, skip=True):
         src = os.path.join(srcdir, name)
         dst = os.path.join(dstdir, name)
 
-        if skip and name.startswith('@'):
+        if skip and name.startswith('['):
             continue
 
         if name in ('__pycache__', '.DS_Store'):
