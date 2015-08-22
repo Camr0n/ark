@@ -5,7 +5,8 @@ import os
 import sys
 import shutil
 
-from . import clio
+import clio
+
 from . import meta
 from . import main
 from . import utils

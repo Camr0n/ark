@@ -13,8 +13,8 @@ import markdown
 import yaml
 import syntex
 import ibis
+import shortcodes
 
-from . import shortcodes
 from . import utils
 
 
