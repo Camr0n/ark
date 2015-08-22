@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# Site Configuration File
+# -----------------------------------------------------------------------------
 
 # This is a sample site configuration file. You can use this file to
 # customise how Ark builds your site. Variables you set here are also
@@ -9,6 +12,8 @@
 # -----------------------------------------------------------------------------
 # Theme Directory
 # -----------------------------------------------------------------------------
+
+# The name of the active theme directory in your site's lib folder.
 
 theme = "vanilla"
 
