@@ -104,7 +104,7 @@ def locate_home_directory():
     path = os.getcwd()
     while True:
         if os.path.exists(os.path.join(path, 'src')):
-            return path
+            return os.path.abspath(path)
         path = os.path.join(path, '..')
         if not os.path.isdir(path):
             break
