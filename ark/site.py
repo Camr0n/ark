@@ -12,7 +12,6 @@ import pickle
 import markdown
 import yaml
 import syntex
-import ibis
 
 from . import utils
 
@@ -32,11 +31,8 @@ _config = None
 # Stores include strings loaded from the inc directory.
 _includes = None
 
-# Stores a list of available template names.
-_templates = None
-
 # Stores the build's start time.
-_stime = None
+_starttime = None
 
 # Stores a count of the number of pages rendered.
 _prendered = None
@@ -58,8 +54,8 @@ def init(options):
     """ Initialize the site model before building. """
 
     # Store the start time.
-    global _stime
-    _stime = time.time()
+    global _starttime
+    _starttime = time.time()
 
     # Initialize the page count variables.
     global _prendered, _pwritten
@@ -89,16 +85,9 @@ def init(options):
     global _mdrenderer
     _mdrenderer = markdown.Markdown(**_config.setdefault('markdown', {}))
 
-    # Load and render include strings from the home/inc directory.
+    # Load and render include strings from the inc directory.
     global _includes
     _includes = _load_includes()
-
-    # Assemble a list of available templates.
-    global _templates
-    _templates = [finfo.base for finfo in utils.files(theme('templates'))]
-
-    # Initialize the template loader.
-    ibis.config.loader = ibis.loaders.FileLoader(theme('templates'))
 
     # Load any extensions we can find.
     _load_extensions()
@@ -135,11 +124,6 @@ def out(*append):
 def theme(*append):
     """ Returns the path to the theme directory. """
     return os.path.join(_themedir, *append)
-
-
-def templates():
-    """ Returns the list of available template names. """
-    return _templates
 
 
 def includes():
@@ -191,7 +175,7 @@ def index_url(typeid):
 
 def build_time():
     """ Returns the build time in seconds. """
-    return time.time() - _stime
+    return time.time() - _starttime
 
 
 def page_count():

@@ -6,11 +6,10 @@ import re
 import sys
 import math
 
-import ibis
-
 from . import site
 from . import hooks
 from . import utils
+from . import templates
 
 
 class Page(dict):
@@ -49,17 +48,37 @@ class Page(dict):
     def render(self):
         """ Renders the page into HTML and prints the output file. """
 
-        # Generate css classes for the body element.
-        self._set_css_classes()
-
-        # Determine the template to use.
-        self._set_template()
-
-        # Fire the 'render_page' event.
+        # Fire the 'rendering_page' event.
         hooks.event('rendering_page', self)
 
-        # Determine the output filepath. Directory-style URLs require
-        # us to add an extra 'index' element to the path.
+        # Generate a string of CSS classes for the page.
+        self['classes'] = ' '.join(self._get_css_classes())
+
+        # Generate a list of possible template names.
+        self['templates'] = self._get_template_list()
+
+        # Determine the output filepath.
+        self['path'], depth = self._get_output_filepath()
+
+        # Render the page into html.
+        html = templates.render(self)
+        site.increment_pages_rendered()
+
+        # Rewrite all '@root/' urls into their final form.
+        html = self._rewrite_urls(html, depth)
+
+        # Filter the page's html before writing it to disk.
+        html = hooks.filter('page_html', html, self)
+
+        # Write the page to disk. Avoid overwriting identical existing files.
+        if not site.hashmatch(self['path'], html):
+            utils.writefile(self['path'], html)
+            site.increment_pages_written()
+
+    def _get_output_filepath(self):
+        """ Determines the output filepath for the page. """
+
+        # Directory-style urls require us to append an extra 'index' element.
         slugs = self['slugs'][:]
         if site.config('extension') == '/':
             if slugs[-1] == 'index':
@@ -82,43 +101,10 @@ class Page(dict):
             msg += '\n  ' + filepath
             sys.exit(msg)
 
-        # Load the template.
-        try:
-            template = ibis.config.loader(self['template'])
-        except ibis.errors.TemplateError as e:
-            msg =  'Error loading template file:\n'
-            msg += '  %s\n\n' % self['template']
-            msg += '  %s: %s' % (e.__class__.__name__, e)
-            if e.__context__:
-                msg += '\n\n  %s: %s' % (
-                    e.__context__.__class__.__name__, e.__context__
-                )
-            sys.exit(msg)
-
-        # Render the page into html.
-        try:
-            html = template.render(self)
-            site.increment_pages_rendered()
-        except ibis.errors.TemplateError as e:
-            msg =  'Template error rendering file:\n'
-            msg += '  %s\n\n' % filepath
-            msg += '  %s: %s' % (e.__class__.__name__, e)
-            if e.__context__:
-                msg += '\n\n  %s: %s' % (
-                    e.__context__.__class__.__name__, e.__context__
-                )
-            sys.exit(msg)
-
-        # Rewrite all '@root/' urls into their final form.
-        html = self._rewrite_urls(html, len(slugs))
-
-        # Write the page to disk. Avoid overwriting identical existing files.
-        if not site.hashmatch(filepath, html):
-            utils.writefile(filepath, html)
-            site.increment_pages_written()
+        return filepath, len(slugs)
 
     def _rewrite_urls(self, html, depth):
-        """ Rewrite all @root/ urls to their final form.
+        """ Rewrites all @root/ urls to their final form.
 
         We rewrite all @root/ urls to page-relative form by appending an
         appropriate number of '../' elements.
@@ -162,8 +148,8 @@ class Page(dict):
 
         return self.re_url.sub(rewrite_callback, html)
 
-    def _set_css_classes(self):
-        """ Assembles a set of CSS classes for the <body> element. """
+    def _get_css_classes(self):
+        """ Generates a list of CSS classes for the page. """
 
         classes = [self['type']['id']]
 
@@ -181,42 +167,34 @@ class Page(dict):
         if self['flags']['is_homepage']:
             classes.append('homepage')
 
-        self['classes'] = ' '.join(classes)
+        return hooks.filter('page_classes', classes, self)
 
-    def _set_template(self):
-        """ Determines the best-match template for the page. """
+    def _get_template_list(self):
+        """ Returns a list of possible template names for the current page. """
 
-        templates = site.templates()
+        templates = []
         typeid = self['type']['id']
 
-        # Single-record page.
+        # Single record page.
         if self['flags']['is_single']:
-            if self['record'].get('template') in templates:
-                template = self['record'].get('template')
-            elif 'record-' + typeid in templates:
-                template = 'record-' + typeid
-            else:
-                template = 'record'
+            if 'template' in self['record']:
+                templates.append(self['record']['template'])
+            templates.append(typeid + '-single')
+            templates.append('single')
 
         # Tag index page.
         elif self['flags']['is_tag_index']:
-            if 'tag-index-' + typeid in templates:
-                template = 'tag-index-' + typeid
-            elif 'tag-index' in templates:
-                template = 'tag-index'
-            else:
-                template = 'index'
+            templates.append(typeid + '-tag-index')
+            templates.append('tag-index')
+            templates.append('index')
 
         # Directory index page.
         else:
-            if 'dir-index-' + typeid in templates:
-                template = 'dir-index' + typeid
-            elif 'dir-index' in templates:
-                template = 'dir-index'
-            else:
-                template = 'index'
+            templates.append(typeid + '-dir-index')
+            templates.append('dir-index')
+            templates.append('index')
 
-        self['template'] = template + '.html'
+        return hooks.filter('page_templates', templates, self)
 
 
 class RecordPage(Page):
@@ -233,7 +211,7 @@ class RecordPage(Page):
 
 class IndexPage(Page):
 
-    """ Represents a (possibly-paged) index of records. """
+    """ Represents an index of records, possibly split into multiple pages."""
 
     def __init__(self, type, slugs, index, per_page):
         Page.__init__(self, type)
@@ -263,11 +241,11 @@ class IndexPage(Page):
                 self['slugs'][-1] = 'page-%s' % page
 
             self['flags']['is_homepage'] = (self['slugs'] == ['index'])
-            self._paging(self['slugs'][:-1], page, self.total_pages)
+            self._set_paging(self['slugs'][:-1], page, self.total_pages)
 
             Page.render(self)
 
-    def _paging(self, slugs, page, total):
+    def _set_paging(self, slugs, page, total):
         self['paging']['is_paged'] = (total > 1)
         self['paging']['page'] = page
         self['paging']['total'] = total
