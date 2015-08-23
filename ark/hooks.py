@@ -2,7 +2,7 @@
 """ Event and filter hooks for plugins. """
 
 
-# Maps hook names to lists of handler functions.
+# Maps hook names to lists of callback functions.
 _handlers = {}
 
 
