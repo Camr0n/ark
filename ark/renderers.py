@@ -1,10 +1,10 @@
 
-""" Handles registered text-to-html rendering-engine callbacks. """
+""" Handles text-to-html rendering-engine callbacks. """
 
 import sys
 
 
-# Maps file extensions to their registered rendering engine callback.
+# Maps file extensions to their registered rendering engine callbacks.
 # We include null renderers for files with a .txt or .html extension.
 # These can be overridden by registered callbacks if desired.
 _renderers = {
