@@ -17,7 +17,7 @@ if sys.version_info < (3, 2):
     sys.exit('Error: Ark requires Python >= 3.2.')
 
 
-# Template for error messages informing the user of any missing libraries..
+# Template for error messages informing the user of any missing libraries.
 error = """Error: Ark requires the %s library. Try:
 
     $ pip install %s"""
