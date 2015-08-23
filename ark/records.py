@@ -43,9 +43,9 @@ class Record(dict):
 
         # Add the default set of record attributes.
         self['slug'] = meta.get('slug') or utils.slugify(fileinfo.base)
-        self['file'] = filepath
         self['path'] = site.slugs_from_src(dirpath, self['slug'])
         self['type'] = site.type_from_src(dirpath)
+        self['src'] = filepath
         self['ext']  = fileinfo.ext
         self['url']  = site.url(self['path'])
 
