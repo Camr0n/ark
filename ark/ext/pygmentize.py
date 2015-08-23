@@ -1,5 +1,14 @@
+"""
+This extension adds a syntax-highlighting filter to Ibis templates.
 
-""" Adds a syntax-highlighting filter to Ibis templates. """
+The filter accepts an input string and an optional language name:
+
+    {{ string|pygmentize:lang }}
+
+Author: Darren Mulholland <dmulholland@outlook.ie>
+License: Public Domain
+
+"""
 
 import html
 import ibis
