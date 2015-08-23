@@ -45,8 +45,9 @@ def names():
 
 def slugs(typeid, tag, *append):
     """ Returns the output-slug list for the specified tag. """
+    typeconfig = site.config('types')[typeid]
     slugs = site.slugs(typeid)
-    slugs.extend(s for s in site.type(typeid)['tag_slug'].split('/') if s)
+    slugs.extend(s for s in typeconfig['tag_slug'].split('/') if s)
     slugs.append(slugify(tag))
     slugs.extend(append)
     return slugs

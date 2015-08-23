@@ -20,10 +20,10 @@ class Page(dict):
     # Regex for locating @root/ urls enclosed in quotes or pipes.
     re_url = re.compile(r'''(["'|])@root(/.*?)(#.*?)?\1''')
 
-    def __init__(self, type):
+    def __init__(self, typeid):
         self['site'] = site.config()
         self['includes'] = site.includes()
-        self['type'] = site.type(type)
+        self['type'] = site.config('types')[typeid]
         self['slugs'] = []
         self['record'] = None
         self['records'] = []

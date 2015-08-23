@@ -147,11 +147,6 @@ def includes():
     return _includes
 
 
-def type(typeid):
-    """ Returns the specified dictionary of type configuration data. """
-    return _config['types'][typeid.strip('[]')]
-
-
 def config(key=None, fallback=None):
     """ Returns the dictionary of site configuration data. """
     if key:
@@ -301,9 +296,9 @@ def _load_site_config():
 
     # Assemble a list of the site's record types from its [type] directories.
     types = [
-        di.name.strip('[]')
-            for di in utils.subdirs(src())
-                if di.name.startswith('[')
+        dirinfo.name.strip('[]')
+            for dirinfo in utils.subdirs(src())
+                if dirinfo.name.startswith('[')
     ]
 
     # Supply default values for any missing type data.
@@ -370,7 +365,7 @@ def _set_theme_dir(options):
     elif os.path.isdir(os.path.join(self, 'init', 'lib', name)):
         return os.path.join(self, 'init', 'lib', name)
     else:
-        sys.exit('Error: cannot locate theme directory "%s".' % name)
+        sys.exit('Error: cannot locate the theme directory "%s".' % name)
 
 
 def hashmatch(filepath, content):

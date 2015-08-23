@@ -32,7 +32,7 @@ def build(options):
     for dirpath, dirname in utils.subdirs(site.src()):
         if dirname.startswith('['):
             build_record_pages(dirpath)
-            if site.type(dirname.strip('[]'))['indexed']:
+            if site.config('types')[dirname.strip('[]')]['indexed']:
                 build_directory_indexes(dirpath)
 
     # Build the tag index pages.
@@ -46,7 +46,7 @@ def build(options):
 
 
 def build_record_pages(dirpath):
-    """ Creates an HTML page for each record in the source directory. """
+    """ Creates an HTML page for each record file in the source directory. """
 
     for fileinfo in utils.srcfiles(dirpath):
         record = records.record(fileinfo.path)
@@ -63,6 +63,9 @@ def build_directory_indexes(dirpath, recursing=False):
     # Determine the record type from the directory path.
     typeid = site.type_from_src(dirpath)
 
+    # Fetch the type's configuration data.
+    typeconfig = site.config('types')[typeid]
+
     # Assemble a list of records in this directory and any subdirectories.
     index = []
 
@@ -73,11 +76,11 @@ def build_directory_indexes(dirpath, recursing=False):
     # Add any records in this directory to the index.
     for fileinfo in utils.srcfiles(dirpath):
         record = records.record(fileinfo.path)
-        if site.type(typeid)['order_by'] in record:
+        if typeconfig['order_by'] in record:
             index.append(record)
 
     # Are we displaying this index on the homepage?
-    if site.type(typeid)['homepage'] and not recursing :
+    if typeconfig['homepage'] and not recursing :
         slugs = []
     else:
         slugs = site.slugs_from_src(dirpath)
@@ -86,7 +89,7 @@ def build_directory_indexes(dirpath, recursing=False):
         typeid,
         slugs,
         index,
-        site.type(typeid)['per_index']
+        typeconfig['per_index']
     )
     page['flags']['is_dir_index'] = True
     page['trail'] = site.trail_from_src(dirpath)
@@ -98,22 +101,28 @@ def build_directory_indexes(dirpath, recursing=False):
 def build_tag_indexes():
     """ Creates a paged index for each registered tag. """
 
+    # Iterate over the site's record types.
     for typeid, recmap in tags.records().items():
+
+        # Fetch the current type's configuration data.
+        typeconfig = site.config('types')[typeid]
+
+        # Iterate over the registered tags for the current record type.
         for slug, reclist in recmap.items():
 
             index = []
             for filepath in reclist:
                 record = records.record(filepath)
-                if site.type(typeid)['order_by'] in record:
+                if typeconfig['order_by'] in record:
                     index.append(record)
 
             page = pages.IndexPage(
                 typeid,
                 tags.slugs(typeid, slug),
                 index,
-                site.type(typeid)['per_tag_index']
+                typeconfig['per_tag_index']
             )
             page['tag'] = tags.names()[typeid][slug]
             page['flags']['is_tag_index'] = True
-            page['trail'] = [site.type(typeid)['name'], page['tag']]
+            page['trail'] = [typeconfig['name'], page['tag']]
             page.render()
