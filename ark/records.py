@@ -24,7 +24,7 @@ def record(filepath):
 
 class Record(dict):
 
-    """ Represents a parsed source file.
+    """ A record object represents a parsed source file.
 
     Record objects should not be instantiated directly. Instead use the
     `record()` function to take advantage of caching.
@@ -42,12 +42,12 @@ class Record(dict):
         self.update(meta)
 
         # Add the default set of record attributes.
-        self['slug'] = meta.get('slug') or utils.slugify(fileinfo.base)
-        self['path'] = site.slugs_from_src(dirpath, self['slug'])
-        self['type'] = site.type_from_src(dirpath)
-        self['src'] = filepath
-        self['ext']  = fileinfo.ext
-        self['url']  = site.url(self['path'])
+        self['type']  = site.type_from_src(dirpath)
+        self['slug']  = meta.get('slug') or utils.slugify(fileinfo.base)
+        self['slugs'] = site.slugs_from_src(dirpath, self['slug'])
+        self['src']   = filepath
+        self['ext']   = fileinfo.ext
+        self['url']   = site.url(self['slugs'])
 
         # Add a default datetime stamp. We use the 'date' attribute if it's
         # present, otherwise we use the file creation time (OSX, BSD, Windows)
