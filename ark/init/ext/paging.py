@@ -1,7 +1,8 @@
 """
-This plugin adds a string of page navigation links to index pages.
+This extension generates a customizable string of page navigation links for
+index pages.
 
-The links can be accessed in templates via:
+The links can be accessed in templates as:
 
     {{ paging.links }}
 
@@ -26,10 +27,10 @@ License: Public Domain
 from ark import hooks, site
 
 
+# Register a callback on the 'rendering_page' event hook to generate our
+# string of page navigation links and add it to the page object.
 @hooks.register('rendering_page')
 def add_paging_links(page):
-    """ Adds a string of page navigation links to the Page object. """
-
     if page['paging']['is_paged']:
         page['paging']['links'] = generate_paging_links(
             page['slugs'][:-1],
@@ -38,8 +39,8 @@ def add_paging_links(page):
         )
 
 
+# Generates a string of page navigation links.
 def generate_paging_links(slugs, page_number, total_pages):
-    """ Generates a string of page navigation links. """
 
     # Default settings can be overridden in the site's configuration file.
     data = {
