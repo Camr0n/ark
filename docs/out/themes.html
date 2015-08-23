@@ -38,24 +38,25 @@
 <pre>
 $ ark build --theme debug
 </pre>
-<p>A theme directory should contain two subdirectories, <code>resources</code> and <code>templates</code>. The content of the <code>resources</code> directory is copied directly to the site's output directory during building. The <code>templates</code> directory contains the theme's template files written in the <a href="https://github.com/dmulholland/ibis">Ibis</a> templating language.</p>
-<p>When Ark generates an HTML page it searches for the appropriate template file in the following order, where <code>&lt;type&gt;</code> indicates the record type in question, e.g. <code>posts</code>:</p>
-<p><em>Record page</em></p>
+<p>A theme directory should contain two subdirectories, <code>resources</code> and <code>templates</code>. The content of the <code>resources</code> directory is copied directly to the site's output directory during building. The <code>templates</code> directory is where Ark looks for the theme's template files.</p>
+<p>Ark has builtin support for templates written in <a href="http://jinja.pocoo.org">Jinja</a> (using a <code>.jinja</code> extension) and <a href="https://github.com/dmulholland/ibis">Ibis</a> (using a <code>.ibis</code> extension). Support for other template languages can be added via extensions.</p>
+<p>When Ark generates a HTML page it searches for the appropriate template file in the following order, where <code>&lt;type&gt;</code> indicates the record type in question, e.g. <code>posts</code>:</p>
+<p><em>Single Record page</em></p>
 <pre>
-1) record-&lt;type&gt;.html
-2) record.html
+1) &lt;type&gt;-single
+2) single
 </pre>
 <p><em>Directory index page</em></p>
 <pre>
-1) dir-index-&lt;type&gt;.html
-2) dir-index.html
-3) index.html
+1) &lt;type&gt;-dir-index
+2) dir-index
+3) index
 </pre>
 <p><em>Tag index page</em></p>
 <pre>
-1) tag-index-&lt;type&gt;.html
-2) tag-index.html
-3) index.html
+1) &lt;type&gt;-tag-index
+2) tag-index
+3) index
 </pre>
 <p>A record can specify a custom template file to use in its header:</p>
 <pre>
@@ -63,7 +64,7 @@ $ ark build --theme debug
 template: my-custom-template
 ...
 </pre>
-<p>Note that the <code>.html</code> extension should be omitted from the filename.</p>
+<p>Note that the extension should be omitted from the template name.</p>
 
     
 

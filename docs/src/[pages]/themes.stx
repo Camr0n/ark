@@ -1,0 +1,49 @@
+
+Themes
+======
+
+A theme is a collection of templates, styles, and scripts that together provide the look and feel for a site. Themes should be placed in the site's `lib` folder, and the name of the active theme directory specified in the `config.py` file.
+
+::: python
+
+    theme = "vanilla"
+
+Ark ships with two builtin themes: `vanilla`, a simple default theme, and `debug`, a diagnostic tool useful when designing themes or debugging sites.
+
+Note that you can override the currently active theme with the `build` command's `--theme` flag:
+
+    $ ark build --theme debug
+
+A theme directory should contain two subdirectories, `resources` and `templates`. The content of the `resources` directory is copied directly to the site's output directory during building. The `templates` directory is where Ark looks for the theme's template files.
+
+Ark has builtin support for templates written in [Jinja][] (using a `.jinja` extension) and [Ibis][] (using a `.ibis` extension). Support for other template languages can be added via extensions.
+
+[Jinja]: http://jinja.pocoo.org
+[Ibis]: https://github.com/dmulholland/ibis
+
+When Ark generates a HTML page it searches for the appropriate template file in the following order, where `<type>` indicates the record type in question, e.g. `posts`:
+
+*Single Record page*
+
+    1) <type>-single
+    2) single
+
+*Directory index page*
+
+    1) <type>-dir-index
+    2) dir-index
+    3) index
+
+*Tag index page*
+
+    1) <type>-tag-index
+    2) tag-index
+    3) index
+
+A record can specify a custom template file to use in its header:
+
+    ---
+    template: my-custom-template
+    ...
+
+Note that the extension should be omitted from the template name.

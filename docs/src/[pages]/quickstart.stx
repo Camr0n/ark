@@ -31,4 +31,4 @@ Ark initializes your `src` directory with a simple skeleton site which you can b
 
 You can run this `build` command from the site directory itself or from any of its subdirectories. It tells Ark to render the text files in the `src` directory into HTML and place the output in the `out` directory.
 
-Run the `build` command and take a look at the output - it may not be much to look at yet, but you've just built your first website using Ark. You can make it look more impressive by [learning more](@root/guide//).
+Run the `build` command and take a look at the output - it may not be much to look at yet, but you've just built your first website using Ark. You can make it look more impressive once you've [learned more](@root/guide//).

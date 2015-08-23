@@ -2,11 +2,6 @@
 Guide
 =====
 
-Ark transforms a source directory of text files written in [Markdown][] or [Syntex][] into a static website that can be viewed locally or served remotely.
-
-[Markdown]: http://daringfireball.net/projects/markdown/
-[Syntex]: https://github.com/dmulholland/syntex
-
 :insert toc
 
 
@@ -53,7 +48,9 @@ Ark also creates a hidden `.ark` directory for its own use.
 Records
 -------
 
-A record is a text file written in [Syntex][] (using the extension `.txt` or `.stx`) or [Markdown][] (using the extension `.md` or `.markdown`). Ark searches the `src` directory for record files and generates an HTML page in the `out` directory for each one it finds. It can also generate a set of index pages for each directory of records, depending on their type.
+A record is a text file stored in a site's `src` directory. Ark searches the `src` directory for record files and generates a HTML page in the `out` directory for each one it finds. It can also generate a set of index pages for each directory of records.
+
+Ark has builtin support for record files written in [Markdown][] and [Syntex][]. Files with a `.md` extension are rendered as Markdown, files with a `.stx` extension are rendered as Syntex. Ark can be extended via plugins to support other formats and extensions.
 
 A record file can begin with a [YAML](http://en.wikipedia.org/wiki/YAML) header specifying metadata for the record:
 
@@ -65,26 +62,26 @@ A record file can begin with a [YAML](http://en.wikipedia.org/wiki/YAML) header 
 
     Record content begins here.
 
-By default, a record's URL slug is generated from its filename, but you can specify a custom slug in the header:
+By default, a record's url slug is generated from its filename, but you can specify a custom slug in the header:
 
     ---
     slug: my-custom-slug
     ...
 
-Every record has a *type*, determined by its parent `@type` directory in the site's `src` directory:
+Every record has a *type*, determined by its parent `[type]` directory in the site's `src` directory:
 
     src/
-        @pages/
+        [pages]/
             my-page.txt     # this record is a page
-        @posts/
+        [posts]/
             my-post.txt     # this record is a post
 
-Ark has two builtin record types - *pages* and *posts* - but you can add as many custom types as you like simply by creating new `@type` directories. Every type can have its own individual set of index and tag index pages.
+Ark has two builtin record types - *pages* and *posts* - but you can add as many custom types as you like simply by creating new `[type]` directories. Every type can have its own individual set of index and tag index pages.
 
-You can determine the behaviour of your custom types (or alter the behaviour of the builtin types) in your site's `config.py` file. Assuming we'll be devoting a section of our site to sonnets, we may wish to create a custom type just for them. We can do this by adding an `@sonnets` directory to our site's `src` directory.
+You can determine the behaviour of your custom types (or alter the behaviour of the builtin types) in your site's `config.py` file. Assuming we'll be devoting a section of our site to sonnets, we may wish to create a custom type just for them. We can do this by adding an `[sonnets]` directory to our site's `src` directory.
 
     src/
-        @sonnets/
+        [sonnets]/
             my-sonnet.txt   # this record is a sonnet
 
 New custom types behave, by default, like the builtin *post* type, but we can alter this behaviour by adding a `types` dictionary to our `config.py` file:
@@ -92,7 +89,7 @@ New custom types behave, by default, like the builtin *post* type, but we can al
 ::: python
 
     types = {
-        "sonnets": {               # type id corresponding to the @type directory
+        "sonnets": {               # type id corresponding to the [type] directory
             "name": "Sonnets",     # defaults to the titlecased type id
             "slug": "sonnets",     # defaults to the slugified type id
             "tag_slug": "tags",    # defaults to "tags"
@@ -107,9 +104,9 @@ New custom types behave, by default, like the builtin *post* type, but we can al
 
 All the settings above are in fact defaults, and in practice we would only need to include those we wished to change.
 
-Within an `@type` directory, Ark will preserve any directory structure it finds, so you can use subdirectories to organise your record files by category or date. If the record type is indexed, Ark will generate an individual set of index pages for each subdirectory in the tree.
+Within a `[type]` directory, Ark will preserve any directory structure it finds, so you can use subdirectories to organise your record files by category or date. If the record type is indexed, Ark will generate an individual set of index pages for each subdirectory in the tree.
 
-Note that you can store other files and directories in your site's `src` directory and Ark will copy these files untouched to the `out` directory when it builds your site. Ark only searches directories beginning with an `@` symbol for record files so you can safely store, for example, a `robots.txt` file or a directory of images in your `src` directory.
+Note that you can store other files and directories in your site's `src` directory and Ark will copy these files untouched to the `out` directory when it builds your site. Ark only searches `[type]` directories for record files so you can safely store, for example, a `robots.txt` file or a directory of images in your `src` directory.
 
 
 
@@ -122,7 +119,7 @@ A record file's metadata keys are converted to lowercase and spaces are replaced
     Date of Birth: 1999-09-09
     ...
 
-would be accessible in template files as `record.date_of_birth`.
+will be accessible in template files as `record.date_of_birth`.
 
 All records have the following default attributes:
 
@@ -130,19 +127,19 @@ All records have the following default attributes:
 
     A default datetime stamp. If the record has a `date` attribute, this will be used. If not, the file creation time will be used if available (OSX, BSD, Windows), or else the time of the file's last metadata change (Linux).
 
-~ `file`
+~ `src`
 
     The source filepath.
 
-~ `form`
+~ `ext`
 
-    One of: `markdown`, `syntex`.
+    The record's file extension, e.g. `md` or `stx`.
 
 ~ `html`
 
     The record's content, rendered into HTML.
 
-~ `path`
+~ `slugs`
 
     A list of output-path slugs.
 
@@ -156,7 +153,7 @@ All records have the following default attributes:
 
 ~ `type`
 
-    The record's type, determined by its parent `@type` directory.
+    The record's type, determined by its parent `[type]` directory.
 
 ~ `url`
 
@@ -178,25 +175,25 @@ Every record can be tagged and every record type supports its own individual set
 Links
 -----
 
-Ark generates page-relative URLs and files with a `.html` extension by default, but you can customize this behaviour to suit your needs.
+Ark generates page-relative urls and files with a `.html` extension by default, but you can customize this behaviour to suit your needs.
 
-First, you can specify a root URL in your `config.py` file. Use an explicit domain, e.g. `"http://example.com/"`, for absolute URLs, or a single forward slash, `"/"`, for site-relative URLs.
+First, you can specify a root url in your `config.py` file. Use an explicit domain, e.g. `"http://example.com/"`, for absolute urls, or a single forward slash, `"/"`, for site-relative urls ending in a slash.
 
 ::: python
 
     root = "http://example.com/"
 
-Second, you can specify a file extension in your `config.py` file. You can choose an arbitrary file extension, e.g. `".html"`, or pass an empty string, `""`, to use no file extension at all. If you specify a single forward slash, `"/"`, Ark will generate directory-style URLs.
+Second, you can specify a file extension in your `config.py` file. You can choose an arbitrary file extension, e.g. `".html"`, or pass an empty string, `""`, to use no file extension at all. If you specify a single forward slash, `"/"`, Ark will generate directory-style urls ending in a slash.
 
 ::: python
 
     extension = ".html"
 
-To link to files within your site from records or templates use site-relative URLs prefixed by `@root/`, e.g.
+To link to files within your site from records or templates use site-relative urls ending in a slash prefixed by `@root/`, e.g.
 
     @root/scripts/jquery.js
 
-Ark will automatically rewrite these URLs in the appropriate format.
+Ark will automatically rewrite these urls ending in a slash in the appropriate format.
 
 Use two trailing slashes when linking to files generated by Ark itself - this tells Ark to rewrite the ending to suit your extension settings.
 
@@ -213,9 +210,9 @@ Linking to the homepage is a special case: a simple `@root/` will always suffice
 Includes
 --------
 
-The includes directory, `inc`, is intended for snippets of HTML that can be reused on multiple pages throughout your site, e.g. menus or footer links. Text files placed in this folder will be parsed as Syntex or Markdown depending on their extension and the resulting HTML made available for inclusion in theme files via the `includes.<filename>` attribute.
+The includes directory, `inc`, is intended for snippets of HTML that can be reused on multiple pages throughout your site, e.g. menus or footer links. Source files placed in this folder will be parsed as Markdown or Syntex depending on their extension and the resulting HTML made available for inclusion in theme files via the `includes.<filename>` attribute.
 
-For example, a simple menu can be constructed in either Syntex or Markdown using nested lists:
+For example, a simple menu can be constructed in either Markdown or Syntex using nested lists:
 
     * [Home](@root/)
     * [About](@root/about//)
@@ -223,26 +220,16 @@ For example, a simple menu can be constructed in either Syntex or Markdown using
         * [2015](@root/posts/2015/index//)
         * [2014](@root/posts/2014/index//)
 
-If the menu above was contained in a file named `menu.txt` then the rendered HTML would be available to themes via the `includes.menu` attribute.
+If the menu above was contained in a file named `menu.stx` then the rendered HTML would be available to themes via the `includes.menu` attribute.
 
 
 
 Extensions
 ----------
 
-The extensions directory, `ext`, is intended for plugins that extend or enhance Ark's functionality. Python modules placed in this directory will be loaded automatically and can make use of Ark's system of event and filter hooks to inject their own code into the build process.
+The extensions directory, `ext`, is intended for plugins that extend or enhance Ark's functionality. Python modules or packages placed in this directory will be loaded automatically and can make use of Ark's system of event and filter hooks to inject their own code into the build process.
 
-As a simple example, the code below registers a handler on the `exit` event hook to report the number of HTML pages Ark has generated:
-
-::: python
-
-    from ark import hooks, site
-
-    @hooks.register('exit')
-    def print_page_count():
-        print('Page count:', site.page_count())
-
-See the sample plugins bundled with the skeleton site for more examples of extensions in action.
+Ark is highly extensible and much of its default functionality is in fact implemented as pluggable extensions. See the sample plugins bundled with the skeleton site or the default plugins in the `ark/ext` folder for examples of extensions in action.
 
 
 
@@ -259,6 +246,6 @@ For example, to turn on the 'Markdown Extra' extension, add the following dictio
         'extensions': ['markdown.extensions.extra'],
     }
 
-See the package's [documentation][mddocs] for further details.
+See the Markdown package's [documentation][mddocs] for details of its available options.
 
 [mddocs]: https://pythonhosted.org/Markdown/
