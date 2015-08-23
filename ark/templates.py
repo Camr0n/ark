@@ -1,34 +1,64 @@
 
-""" Handles registered template-engine callbacks. """
+""" Handles template-engine callbacks. """
 
 import sys
 
-
-# Stores registered template engine callback functions.
-_callbacks = []
-
-
-# Error message if we don't have a registered handler for a page.
-errmsg = """Error: no registered template engine for page.
-
-  Page: %s
-  Templates: %s"""
+from . import site
+from . import utils
 
 
-def register(callback):
+# Maps file extensions to their registered template engine callbacks.
+_callbacks = {}
+
+
+# Stores a cached list of the theme's template files.
+_templates = None
+
+
+def register(ext):
     """ Decorator function for registering template-engine callbacks.
 
-    A template engine callback should accept a page object and return a string
-    of html if it chooses to handle it or None if it chooses to decline it. """
-    _callbacks.append(callback)
-    return callback
+    A template-engine callback should accept a path to a template file
+    and a page object and should return a string of html.
+
+    Callbacks are registered per file extension, e.g.
+
+    @ark.templates.register('.ibis')
+    def callback(filepath, page):
+        ...
+        return html
+
+    """
+
+    def register_callback(callback):
+        _callbacks[ext] = callback
+        return callback
+
+    return register_callback
 
 
 def render(page):
     """ Renders the supplied page object into html. """
-    for callback in _callbacks:
-        html = callback(page)
-        if html is not None:
-            return html
-    sys.exit(errmsg % (page['path'], ', '.join(page['templates'])))
 
+    # Cache a list of the theme's template files for future calls.
+    global _templates
+    if _templates is None:
+        _templates = utils.files(site.theme('templates'))
+
+    # Find the first template file matching the page's template list.
+    for name in page['templates']:
+        for finfo in _templates:
+            if name == finfo.base:
+                if finfo.ext in _callbacks:
+                    return _callbacks[finfo.ext](finfo.path, page)
+                else:
+                    sys.exit(
+                        "Error: unrecognised template extension '.%s'." % finfo.ext
+                    )
+
+    # Missing template file. Print an error message and exit.
+    sys.exit(
+        "Error: missing template file.\n\n  Page: %s\n  Templates: %s" % (
+            page['path'], ', '.join(page['templates'])
+        )
+    )
