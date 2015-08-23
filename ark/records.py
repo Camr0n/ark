@@ -39,7 +39,7 @@ class Record(dict):
         fileinfo = utils.fileinfo(filepath)
 
         # Load the record file.
-        text, meta = site.load(filepath)
+        text, meta = utils.load(filepath)
         self.update(meta)
 
         # Add the default set of record attributes.

@@ -8,6 +8,8 @@ import re
 import shutil
 import datetime
 
+import yaml
+
 
 # Named tuples for file and directory information.
 DirInfo = collections.namedtuple('DirInfo', 'path, name')
@@ -140,3 +142,20 @@ def make_redirect(filepath, url):
         os.makedirs(os.path.dirname(filepath))
     with open(filepath, 'w', encoding='utf-8') as file:
         file.write(html)
+
+
+def load(filepath):
+    """ Loads a source file and parses its yaml header if present. """
+
+    with open(filepath, encoding='utf-8') as file:
+        text, meta = file.read(), {}
+
+    match = re.match(r"^---\n(.*?\n)[-.]{3}\n+", text, re.DOTALL)
+    if match:
+        text = text[match.end(0):]
+        data = yaml.load(match.group(1))
+        if isinstance(data, dict):
+            for key, value in data.items():
+                meta[key.lower().replace(' ', '_').replace('-', '_')] = value
+
+    return text, meta

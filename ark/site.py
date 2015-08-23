@@ -9,8 +9,6 @@ import sys
 import hashlib
 import pickle
 
-import yaml
-
 from . import utils
 from . import renderers
 
@@ -121,7 +119,7 @@ def includes():
         _includes = {}
         if os.path.isdir(home('inc')):
             for finfo in utils.srcfiles(home('inc')):
-                text, _ = load(finfo.path)
+                text, _ = utils.load(finfo.path)
                 _includes[finfo.base] = renderers.render(text, finfo.ext)
     return _includes
 
@@ -215,23 +213,6 @@ def trail_from_src(srcdir):
     trail = [_config['types'][typeid]['name']]
     trail.extend(name for name in dirnames if not name.startswith('['))
     return trail
-
-
-def load(filepath):
-    """ Loads a text file and parses its yaml header if present. """
-
-    with open(filepath, encoding='utf-8') as file:
-        text, meta = file.read(), {}
-
-    match = re.match(r"^---\n(.*?\n)[-.]{3}\n+", text, re.DOTALL)
-    if match:
-        text = text[match.end(0):]
-        data = yaml.load(match.group(1))
-        if isinstance(data, dict):
-            for key, value in data.items():
-                meta[key.lower().replace(' ', '_').replace('-', '_')] = value
-
-    return text, meta
 
 
 def _load_site_config():
