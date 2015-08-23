@@ -16,7 +16,7 @@ errmsg = """Error: no registered template engine for page.
 
 
 def register(callback):
-    """ Decorator function for registering template engine callbacks.
+    """ Decorator function for registering template-engine callbacks.
 
     A template engine callback should accept a page object and return a string
     of html if it chooses to handle it or None if it chooses to decline it. """
