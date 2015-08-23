@@ -13,7 +13,6 @@ import markdown
 import yaml
 import syntex
 import ibis
-import shortcodes
 
 from . import utils
 
@@ -47,9 +46,6 @@ _pwritten = None
 
 # Stores an initialized markdown renderer.
 _mdrenderer = None
-
-# Stores an initialized shortcode parser.
-_scparser = None
 
 # Stores cached page hashes from the last build run.
 _oldhashes = None
@@ -92,10 +88,6 @@ def init(options):
     # Initialize a markdown renderer.
     global _mdrenderer
     _mdrenderer = markdown.Markdown(**_config.setdefault('markdown', {}))
-
-    # Initialize a shortcode parser.
-    global _scparser
-    _scparser = shortcodes.Parser(**_config.setdefault('shortcodes', {}))
 
     # Load and render include strings from the home/inc directory.
     global _includes
@@ -252,7 +244,7 @@ def trail_from_src(srcdir):
 
 
 def load(filepath):
-    """ Loads a record file. """
+    """ Loads a text file and parses its yaml header if present. """
 
     with open(filepath, encoding='utf-8') as file:
         text, meta = file.read(), {}
@@ -265,34 +257,18 @@ def load(filepath):
             for key, value in data.items():
                 meta[key.lower().replace(' ', '_').replace('-', '_')] = value
 
-    _, ext = os.path.splitext(filepath)
-    format = 'markdown' if ext in ('.md', '.markdown') else 'syntex'
-
-    return text, meta, format
+    return text, meta
 
 
-def render(text, format):
+def render(text, ext):
     """ Renders `text` into HTML. """
-    if format == 'markdown':
-        html = _mdrenderer.reset().convert(text)
+    if ext == 'md':
+        rendered = _mdrenderer.reset().convert(text)
+    elif ext == 'stx':
+        rendered, _ = syntex.render(text)
     else:
-        html, _ = syntex.render(text)
-    return html
-
-
-def parse_shortcodes(text, context, src):
-    """ Processes shortcodes in `text`. """
-    try:
-        return _scparser.parse(text, context)
-    except shortcodes.ShortcodeError as e:
-        msg =  'Shortcode error while parsing file:\n'
-        msg += '  %s\n\n' % src
-        msg += '  %s: %s' % (e.__class__.__name__, e)
-        if e.__context__:
-            msg += '\n\n  %s: %s' % (
-                e.__context__.__class__.__name__, e.__context__
-            )
-        sys.exit(msg)
+        rendered = text
+    return rendered
 
 
 def _load_site_config():
@@ -363,8 +339,8 @@ def _load_includes():
     includes = {}
     if os.path.isdir(home('inc')):
         for finfo in utils.srcfiles(home('inc')):
-            text, _, format = load(finfo.path)
-            includes[finfo.base] = render(text, format)
+            text, _ = load(finfo.path)
+            includes[finfo.base] = render(text, finfo.ext)
     return includes
 
 

@@ -16,7 +16,7 @@ _cache = {}
 
 
 def record(filepath):
-    """ Returns the Record object corresponding to the specified text file. """
+    """ Returns the Record object corresponding to the specified source file. """
     if not filepath in _cache:
         _cache[filepath] = Record(filepath)
     return _cache[filepath]
@@ -24,7 +24,7 @@ def record(filepath):
 
 class Record(dict):
 
-    """ Represents a parsed text file.
+    """ Represents a parsed source file.
 
     Record objects should not be instantiated directly. Instead use the
     `record()` function to take advantage of caching.
@@ -33,21 +33,20 @@ class Record(dict):
 
     def __init__(self, filepath):
 
+        # Parse the filepath.
+        dirpath = os.path.dirname(filepath)
+        fileinfo = utils.fileinfo(filepath)
+
         # Load the record file.
-        text, meta, format = site.load(filepath)
+        text, meta = site.load(filepath)
         self.update(meta)
 
-        # The filename gives us the default url slug.
-        dirpath, filename = os.path.split(filepath)
-        basename, ext = os.path.splitext(filename)
-
-        # Add default record attributes.
-        self['slug'] = meta.get('slug') or utils.slugify(basename)
+        # Add the default set of record attributes.
+        self['slug'] = meta.get('slug') or utils.slugify(fileinfo.base)
         self['file'] = filepath
         self['path'] = site.slugs_from_src(dirpath, self['slug'])
         self['type'] = site.type_from_src(dirpath)
-        self['form'] = format
-        self['ext']  = ext.strip('.')
+        self['ext']  = fileinfo.ext
         self['url']  = site.url(self['path'])
 
         # Add a default datetime stamp. We use the 'date' attribute if it's
@@ -69,16 +68,11 @@ class Record(dict):
                 url = tags.url(self['type'], tag)
                 self['tags'].append(tags.TagInfo(tag, url))
 
-        # Process any shortcodes in the record's content.
-        self['text'] = hooks.filter(
-            'record_text',
-            site.parse_shortcodes(text, self, filepath),
-            self
-        )
+        # Filter the record's text content.
+        self['text'] = hooks.filter('record_text', text, self)
 
         # Render the record's content into html.
-        self['html'] = hooks.filter(
-            'record_html',
-            site.render(self['text'], format),
-            self
-        )
+        html = site.render(self['text'], fileinfo.ext)
+
+        # Filter the record's html content.
+        self['html'] = hooks.filter('record_html', html, self)

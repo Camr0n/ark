@@ -29,7 +29,7 @@ def build(options):
         utils.copydir(site.theme('resources'), site.out())
 
     # Build the individual record pages and directory indexes.
-    for dirname, dirpath in utils.subdirs(site.src()):
+    for dirpath, dirname in utils.subdirs(site.src()):
         if dirname.startswith('['):
             build_record_pages(dirpath)
             if site.type(dirname.strip('[]'))['indexed']:

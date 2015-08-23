@@ -10,8 +10,8 @@ import datetime
 
 
 # Named tuples for file and directory information.
-DirInfo = collections.namedtuple('DirInfo', 'name, path')
-FileInfo = collections.namedtuple('FileInfo', 'name, path, base, ext')
+DirInfo = collections.namedtuple('DirInfo', 'path, name')
+FileInfo = collections.namedtuple('FileInfo', 'path, name, base, ext')
 
 
 def subdirs(directory):
@@ -20,7 +20,7 @@ def subdirs(directory):
     for name in os.listdir(directory):
         path = os.path.join(directory, name)
         if os.path.isdir(path):
-            directories.append(DirInfo(name, path))
+            directories.append(DirInfo(path, name))
     return directories
 
 
@@ -30,14 +30,20 @@ def files(directory):
     for name in os.listdir(directory):
         path = os.path.join(directory, name)
         if os.path.isfile(path):
-            base, ext = os.path.splitext(name)
-            files.append(FileInfo(name, path, base, ext))
+            files.append(fileinfo(path))
     return files
+
+
+def fileinfo(path):
+    """ Returns a FileInfo instance for the specified filepath. """
+    name = os.path.basename(path)
+    base, ext = os.path.splitext(name)
+    return FileInfo(path, name, base, ext.strip('.'))
 
 
 def srcfiles(directory):
     """ Returns a list of source files in the specified directory. """
-    extensions = ('.txt', '.stx', '.md', '.html')
+    extensions = ('txt', 'stx', 'md', 'html')
     return [fi for fi in files(directory) if fi.ext in extensions]
 
 

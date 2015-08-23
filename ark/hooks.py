@@ -22,8 +22,8 @@ def event(hook, *args):
         func(*args)
 
 
-def filter(hook, val, *args):
+def filter(hook, value, *args):
     """ Fires a filter hook. """
     for func in _handlers.get(hook, []):
-        val = func(val, *args)
-    return val
+        value = func(value, *args)
+    return value
