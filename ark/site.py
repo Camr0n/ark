@@ -9,11 +9,10 @@ import sys
 import hashlib
 import pickle
 
-import markdown
 import yaml
-import syntex
 
 from . import utils
+from . import renderers
 
 
 # Stores the path to the site's home directory.
@@ -28,7 +27,7 @@ _themedir = None
 # Stores the site's configuration data.
 _config = None
 
-# Stores include strings loaded from the inc directory.
+# Stores rendered include strings loaded from the inc directory.
 _includes = None
 
 # Stores the build's start time.
@@ -39,9 +38,6 @@ _prendered = None
 
 # Stores a count of the number of pages written.
 _pwritten = None
-
-# Stores an initialized markdown renderer.
-_mdrenderer = None
 
 # Stores cached page hashes from the last build run.
 _oldhashes = None
@@ -77,17 +73,9 @@ def init(options):
     global _outdir
     _outdir = options.get('out') or home('out')
 
-    # Determine the urls of the main record-type index pages.
+    # Determine the urls of the root directory index pages.
     for typeid in _config['types']:
         _config['types'][typeid]['index_url'] = index_url(typeid)
-
-    # Initialize a markdown renderer.
-    global _mdrenderer
-    _mdrenderer = markdown.Markdown(**_config.setdefault('markdown', {}))
-
-    # Load and render include strings from the inc directory.
-    global _includes
-    _includes = _load_includes()
 
     # Load any extensions we can find.
     _load_extensions()
@@ -127,7 +115,14 @@ def theme(*append):
 
 
 def includes():
-    """ Returns the dictionary of processed include strings. """
+    """ Returns a dictionary of processed strings from the inc directory. """
+    global _includes
+    if _includes is None:
+        _includes = {}
+        if os.path.isdir(home('inc')):
+            for finfo in utils.srcfiles(home('inc')):
+                text, _ = load(finfo.path)
+                _includes[finfo.base] = renderers.render(text, finfo.ext)
     return _includes
 
 
@@ -239,17 +234,6 @@ def load(filepath):
     return text, meta
 
 
-def render(text, ext):
-    """ Renders `text` into HTML. """
-    if ext == 'md':
-        rendered = _mdrenderer.reset().convert(text)
-    elif ext == 'stx':
-        rendered, _ = syntex.render(text)
-    else:
-        rendered = text
-    return rendered
-
-
 def _load_site_config():
     """ Loads and normalizes the site's configuration data. """
 
@@ -311,16 +295,6 @@ def _load_site_config():
             del data['types'][typeid]
 
     return data
-
-
-def _load_includes():
-    """ Process any text files in the home/inc directory. """
-    includes = {}
-    if os.path.isdir(home('inc')):
-        for finfo in utils.srcfiles(home('inc')):
-            text, _ = load(finfo.path)
-            includes[finfo.base] = render(text, finfo.ext)
-    return includes
 
 
 def _load_extensions():

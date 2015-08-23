@@ -9,6 +9,7 @@ from . import utils
 from . import site
 from . import tags
 from . import hooks
+from . import renderers
 
 
 # Stores an in-memory cache of record objects.
@@ -72,7 +73,7 @@ class Record(dict):
         self['text'] = hooks.filter('record_text', text, self)
 
         # Render the record's content into html.
-        html = site.render(self['text'], fileinfo.ext)
+        html = renderers.render(self['text'], fileinfo.ext)
 
         # Filter the record's html content.
         self['html'] = hooks.filter('record_html', html, self)
