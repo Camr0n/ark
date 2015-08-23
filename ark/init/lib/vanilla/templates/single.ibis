@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.ibis" %}
 
 {% block title %}
     {{ record.meta_title or record.title or record.html|firsth|striptags }}

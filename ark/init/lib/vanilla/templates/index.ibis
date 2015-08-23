@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.ibis" %}
 
 {% block title %}
     {% if flags.is_homepage %}
