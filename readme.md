@@ -6,10 +6,11 @@ Ark is a static website generator in Python. It transforms a directory of text f
 
 Ark is highly extensible. It has builtin support for text files written in [Markdown][] and [Syntex][], but can be extended via plugins to support any similar text-to-html format.
 
+See the project's [documentation][] for further details.
+
 [Markdown]: http://daringfireball.net/projects/markdown/
 [Syntex]: https://github.com/dmulholland/syntex
-
-See the project's [documentation](http://pythonhosted.org/ark/) for further details.
+[documentation]: http://pythonhosted.org/ark/
 
 
 Installation
