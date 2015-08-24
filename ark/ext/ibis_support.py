@@ -17,7 +17,7 @@ def init():
     ibis.config.loader = ibis.loaders.FastFileLoader(ark.site.theme('templates'))
 
 
-# Register our template engine callback.
+# Register our template engine callback for files with a .ibis extension.
 @ark.templates.register('ibis')
 def callback(page, filename):
 

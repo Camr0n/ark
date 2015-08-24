@@ -32,7 +32,7 @@ def init():
     env = jinja2.Environment(**settings)
 
 
-# Register our template engine callback.
+# Register our template engine callback for files with a .jinja extension.
 @ark.templates.register('jinja')
 def callback(page, filename):
 
