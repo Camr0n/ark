@@ -46,4 +46,4 @@ A record can specify a custom template file to use in its header:
     template: my-custom-template
     ...
 
-Note that the extension should be omitted from the template name.
+Note that the file extension should be omitted from the template name.
