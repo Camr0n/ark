@@ -48,6 +48,7 @@ setup(
         'ibis',
         'shortcodes',
         'pyclio',
+        'jinja2',
     ],
     author = 'Darren Mulholland',
     url='https://github.com/dmulholland/ark',

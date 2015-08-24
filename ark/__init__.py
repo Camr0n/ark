@@ -66,6 +66,12 @@ except ImportError:
     sys.exit(error % ('Shortcodes', 'shortcodes'))
 
 
+try:
+    import jinja2
+except ImportError:
+    sys.exit(error % ('Jinja', 'jinja2'))
+
+
 # We import the package's modules so users can access 'ark.foo' via a simple
 # 'import ark' statement. Otherwise the user would have to import each module
 # individually as 'import ark.foo'.
