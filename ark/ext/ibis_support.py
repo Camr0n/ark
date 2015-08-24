@@ -10,16 +10,22 @@ import ark
 import ibis
 
 
+# Initialize our Ibis template loader on the 'init' event hook.
+@ark.hooks.register('init')
+def init():
+    ibis.config.loader = ibis.loaders.FastFileLoader(ark.site.theme('templates'))
+
+
 # Register our template engine callback.
 @ark.templates.register('ibis')
-def callback(path, page):
+def callback(page, filename):
 
     # Load the template object.
     try:
-        template = ibis.config.loader(path)
+        template = ibis.config.loader(filename)
     except ibis.errors.TemplateError as e:
         msg =  'Ibis template error loading file:\n'
-        msg += '  %s\n\n' % path
+        msg += '  %s\n\n' % filename
         msg += '  %s: %s' % (e.__class__.__name__, e)
         if e.__context__:
             msg += '\n\n  %s: %s' % (
@@ -39,9 +45,3 @@ def callback(path, page):
                 e.__context__.__class__.__name__, e.__context__
             )
         sys.exit(msg)
-
-
-# Initialize our Ibis template loader on the 'init' event hook.
-@ark.hooks.register('init')
-def init():
-    ibis.config.loader = ibis.loaders.FastFileLoader(ark.site.theme('templates'))

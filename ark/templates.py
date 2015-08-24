@@ -18,8 +18,8 @@ _templates = None
 def register(ext):
     """ Decorator function for registering template-engine callbacks.
 
-    A template-engine callback should accept a path to a template file
-    and a page object and should return a string of html.
+    A template-engine callback should accept a page object and a
+    template filename and should return a string of html.
 
     Callbacks are registered per file extension, e.g.
 
@@ -50,7 +50,7 @@ def render(page):
         for finfo in _templates:
             if name == finfo.base:
                 if finfo.ext in _callbacks:
-                    return _callbacks[finfo.ext](finfo.path, page)
+                    return _callbacks[finfo.ext](page, finfo.name)
                 else:
                     sys.exit(
                         "Error: unrecognised template extension '.%s'." % finfo.ext
