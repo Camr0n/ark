@@ -83,7 +83,7 @@ Every record has a *type*, determined by its parent `[type]` directory in the si
 
 Ark has two builtin record types - *pages* and *posts* - but you can add as many custom types as you like simply by creating new `[type]` directories. Every type can have its own individual set of index and tag index pages.
 
-You can determine the behaviour of your custom types (or alter the behaviour of the builtin types) in your site's `config.py` file. Assuming we'll be devoting a section of our site to sonnets, we may wish to create a custom type just for them. We can do this by adding an `[sonnets]` directory to our site's `src` directory.
+You can determine the behaviour of your custom types (or alter the behaviour of the builtin types) in your site's `config.py` file. Assuming we'll be devoting a section of our site to sonnets, we may wish to create a custom type just for them. We can do this by adding a `[sonnets]` directory to our site's `src` directory.
 
     src/
         [sonnets]/
