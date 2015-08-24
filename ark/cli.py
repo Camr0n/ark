@@ -24,6 +24,7 @@ Flags:
 
 Commands:
   build             Build the current site.
+  clear             Clear the output directory.
   init              Initialize a new site directory.
 
 Command Help:
@@ -67,6 +68,18 @@ Flags:
 """ % os.path.basename(sys.argv[0])
 
 
+# Help text for the clear command.
+clearhelp = """
+Usage: %s clear [FLAGS]
+
+  Clear the output directory.
+
+Flags:
+  --help            Print the clear command's help text and exit.
+
+""" % os.path.basename(sys.argv[0])
+
+
 # Application entry point.
 def cli():
     parser = clio.ArgParser(apphelp, meta.__version__)
@@ -77,6 +90,7 @@ def cli():
     build_parser.add_str_option("theme", None)
 
     init_parser = parser.add_command("init", init, inithelp)
+    clear_parser = parser.add_command("clear", clear, clearhelp)
 
     parser.parse()
     if not parser.has_cmd():
@@ -97,6 +111,16 @@ def init(parser):
     for dirname in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
         os.makedirs(dirname, exist_ok=True)
     utils.copydir(os.path.join(os.path.dirname(__file__), 'init'), '.')
+
+
+# Callback for the clear command.
+def clear(parser):
+  home = locate_home_directory()
+  out = os.path.join(home, 'out')
+  if os.path.exists(out):
+      utils.cleardir(out)
+  else:
+      sys.exit("Error: cannot locate the out directory.")
 
 
 # Attempt to locate the site's home directory.
