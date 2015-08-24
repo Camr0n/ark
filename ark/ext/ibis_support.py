@@ -8,6 +8,7 @@ License: Public Domain
 
 import ark
 import ibis
+import sys
 
 
 # Initialize our Ibis template loader on the 'init' event hook.
@@ -24,8 +25,7 @@ def callback(page, filename):
     try:
         template = ibis.config.loader(filename)
     except ibis.errors.TemplateError as e:
-        msg =  'Ibis template error loading file:\n'
-        msg += '  %s\n\n' % filename
+        msg =  'Ibis template error loading file: %s\n\n' % filename
         msg += '  %s: %s' % (e.__class__.__name__, e)
         if e.__context__:
             msg += '\n\n  %s: %s' % (

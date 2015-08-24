@@ -8,6 +8,7 @@ License: Public Domain
 
 import ark
 import jinja2
+import sys
 
 
 # Stores an initialized Jinja environment instance.
@@ -39,8 +40,7 @@ def callback(page, filename):
     try:
         template = env.get_template(filename)
     except jinja2.TemplateError as e:
-        msg =  'Jinja template error loading file:\n'
-        msg += '  %s\n\n' % path
+        msg =  'Jinja template error loading file: %s\n\n' % filename
         msg += '  %s: %s' % (e.__class__.__name__, e)
         if e.__context__:
             msg += '\n\n  %s: %s' % (
