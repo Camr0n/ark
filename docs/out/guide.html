@@ -94,16 +94,16 @@ slug: my-custom-slug
 <pre>
 src/
     [pages]/
-        my-page.txt     # this record is a page
+        my-page.md     # this record is a page
     [posts]/
-        my-post.txt     # this record is a post
+        my-post.md     # this record is a post
 </pre>
 <p>Ark has two builtin record types - <em>pages</em> and <em>posts</em> - but you can add as many custom types as you like simply by creating new <code>[type]</code> directories. Every type can have its own individual set of index and tag index pages.</p>
 <p>You can determine the behaviour of your custom types (or alter the behaviour of the builtin types) in your site's <code>config.py</code> file. Assuming we'll be devoting a section of our site to sonnets, we may wish to create a custom type just for them. We can do this by adding an <code>[sonnets]</code> directory to our site's <code>src</code> directory.</p>
 <pre>
 src/
     [sonnets]/
-        my-sonnet.txt   # this record is a sonnet
+        my-sonnet.md   # this record is a sonnet
 </pre>
 <p>New custom types behave, by default, like the builtin <em>post</em> type, but we can alter this behaviour by adding a <code>types</code> dictionary to our <code>config.py</code> file:</p>
 <pre class="lang-python stx-pygments" data-lang="python">

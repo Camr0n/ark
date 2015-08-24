@@ -77,9 +77,9 @@ Every record has a *type*, determined by its parent `[type]` directory in the si
 
     src/
         [pages]/
-            my-page.txt     # this record is a page
+            my-page.md     # this record is a page
         [posts]/
-            my-post.txt     # this record is a post
+            my-post.md     # this record is a post
 
 Ark has two builtin record types - *pages* and *posts* - but you can add as many custom types as you like simply by creating new `[type]` directories. Every type can have its own individual set of index and tag index pages.
 
@@ -87,7 +87,7 @@ You can determine the behaviour of your custom types (or alter the behaviour of 
 
     src/
         [sonnets]/
-            my-sonnet.txt   # this record is a sonnet
+            my-sonnet.md   # this record is a sonnet
 
 New custom types behave, by default, like the builtin *post* type, but we can alter this behaviour by adding a `types` dictionary to our `config.py` file:
 
