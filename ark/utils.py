@@ -117,7 +117,7 @@ def cleardir(dirpath):
 
 
 def writefile(filepath, content):
-    """ Writes a string to a file. """
+    """ Writes a string to a file. Creates directories if required. """
     if not os.path.isdir(os.path.dirname(filepath)):
         os.makedirs(os.path.dirname(filepath))
 

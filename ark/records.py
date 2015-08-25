@@ -69,7 +69,7 @@ class Record(dict):
                 url = tags.url(self['type'], tag)
                 self['tags'].append(tags.TagInfo(tag, url))
 
-        # Filter the record's text content.
+        # Filter the record's text content. Shortcodes are processed on this hook.
         self['text'] = hooks.filter('record_text', text, self)
 
         # Render the record's content into html.
