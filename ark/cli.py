@@ -225,5 +225,5 @@ def serve(parser):
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\n" + "-" * 80 + "Stopping server...\n" + "-" * 80);
+        print("\n" + "-" * 80 + "Stopping server...\n" + "-" * 80)
         server.server_close()
