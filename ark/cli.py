@@ -108,11 +108,18 @@ Usage: %s serve [FLAGS] [OPTIONS]
 
   Serve the site's output directory using Python's builtin web server.
 
+  Host IP defaults to localhost (127.0.0.1). Specify an IP address to serve
+  only on that address or '0.0.0.0' to serve an all available IPs.
+
+  Port number defaults to 8080 as ports below 1024 require sudo on OSX.
+  Set to 0 to randomly select an available port.
+
 Options:
-  -h, --host <str>  Host IP address. Defaults to localhost.
-  -p, --port <int>  Port number. Defaults to 8080.
+  --host, -h <str>  Host IP address. Defaults to localhost.
+  --port, -p <int>  Port number. Defaults to 8080.
 
 Flags:
+  --browser, -b     Launch the default web browser.
   --help            Print the serve command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
@@ -144,6 +151,7 @@ def cli():
     new_parser = parser.add_command("new", new, newhelp)
 
     serve_parser = parser.add_command("serve", serve, servehelp)
+    serve_parser.add_flag("browser", "b")
     serve_parser.add_str_option("host", "localhost", "h")
     serve_parser.add_int_option("port", 8080, "p")
 
@@ -216,11 +224,13 @@ def serve(parser):
 
     print("-" * 80)
     print("Root: %s" % root)
-    print("Host: %s:%s"  % (address[0], address[1]))
+    print("Host: %s"  % address[0])
+    print("Port: %s" % address[1])
     print("Stop: Ctrl-C")
     print("-" * 80)
 
-    webbrowser.open("http://%s:%s" % (address[0], address[1]))
+    if parser['browser']:
+        webbrowser.open("http://%s:%s" % (address[0], address[1]))
 
     try:
         server.serve_forever()
