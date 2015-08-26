@@ -268,10 +268,10 @@ th, td {
     padding: 0.6rem 1.2rem;
     text-align: left;
 }
-table .align-center {
+table .stx-center {
     text-align: center;
 }
-table .align-right {
+table .stx-right {
     text-align: right;
 }
 

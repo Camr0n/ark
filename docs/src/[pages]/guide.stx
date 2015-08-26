@@ -16,15 +16,28 @@ To build an existing site, run the `build` command from the site directory or an
 
     $ ark build
 
-The build command takes a number of optional arguments:
-
-    --theme <name>  Override the theme specififed in the site's config file.
-    --out <path>    Redirect output to the specified directory.
-    --clear         Clear the output directory before building.
-
 See the command line help text for further details of the `ark` command's interface:
 
     $ ark --help
+
+    Usage: ark [FLAGS] [COMMAND]
+
+      Static website generator.
+
+    Flags:
+      --help            Print the application's help text and exit.
+      --version         Print the application's version number and exit.
+
+    Commands:
+      build             Build the current site.
+      clear             Clear the output directory.
+      init              Initialize a new site directory.
+      new               Create a new record file.
+      serve             Run a web server on the site's output directory.
+      watch             Monitor the site directory and rebuild on changes.
+
+    Command Help:
+      help <command>    Print the specified command's help text and exit.
 
 
 
@@ -63,7 +76,7 @@ A record file can begin with a [YAML][] header specifying metadata for the recor
     title: My Important Document
     author: John Doe
     date: 2014-07-21
-    ...
+    ---
 
     Record content begins here.
 
@@ -71,7 +84,7 @@ By default, a record's url slug is generated from its filename, but you can spec
 
     ---
     slug: my-custom-slug
-    ...
+    ---
 
 Every record has a *type*, determined by its parent `[type]` directory in the site's `src` directory:
 
@@ -122,7 +135,7 @@ A record file's metadata keys are converted to lowercase and spaces are replaced
 
     ---
     Date of Birth: 1999-09-09
-    ...
+    ---
 
 will be accessible in template files as `record.date_of_birth`.
 
@@ -173,7 +186,7 @@ Every record can be tagged and every record type supports its own individual set
 
     ---
     tags: foo, bar, baz
-    ...
+    ---
 
 
 

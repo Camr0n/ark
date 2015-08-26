@@ -24,9 +24,9 @@
         </header>
 
         <article id="content" class="content">
+            
 
-
-
+    
 
     <h1 id="guide">Guide</h1>
 <ul class="stx-toc">
@@ -49,15 +49,28 @@ $ ark init
 <pre>
 $ ark build
 </pre>
-<p>The build command takes a number of optional arguments:</p>
-<pre>
---theme &lt;name&gt;  Override the theme specififed in the site's config file.
---out &lt;path&gt;    Redirect output to the specified directory.
---clear         Clear the output directory before building.
-</pre>
 <p>See the command line help text for further details of the <code>ark</code> command's interface:</p>
 <pre>
 $ ark --help
+
+Usage: ark [FLAGS] [COMMAND]
+
+  Static website generator.
+
+Flags:
+  --help            Print the application's help text and exit.
+  --version         Print the application's version number and exit.
+
+Commands:
+  build             Build the current site.
+  clear             Clear the output directory.
+  init              Initialize a new site directory.
+  new               Create a new record file.
+  serve             Run a web server on the site's output directory.
+  watch             Monitor the site directory and rebuild on changes.
+
+Command Help:
+  help &lt;command&gt;    Print the specified command's help text and exit.
 </pre>
 <h2 id="site-structure">Site Structure</h2>
 <p>Initializing a new site creates the following directory structure:</p>
@@ -80,7 +93,7 @@ site/
 title: My Important Document
 author: John Doe
 date: 2014-07-21
-...
+---
 
 Record content begins here.
 </pre>
@@ -88,7 +101,7 @@ Record content begins here.
 <pre>
 ---
 slug: my-custom-slug
-...
+---
 </pre>
 <p>Every record has a <em>type</em>, determined by its parent <code>[type]</code> directory in the site's <code>src</code> directory:</p>
 <pre>
@@ -129,7 +142,7 @@ src/
 <pre>
 ---
 Date of Birth: 1999-09-09
-...
+---
 </pre>
 <p>will be accessible in template files as <code>record.date_of_birth</code>.</p>
 <p>All records have the following default attributes:</p>
@@ -176,7 +189,7 @@ Date of Birth: 1999-09-09
 <pre>
 ---
 tags: foo, bar, baz
-...
+---
 </pre>
 <h2 id="links">Links</h2>
 <p>Ark generates page-relative urls and files with a <code>.html</code> extension by default, but you can customize this behaviour to suit your needs.</p>
@@ -226,7 +239,7 @@ tags: foo, bar, baz
 </pre>
 <p>See the Markdown package's <a href="https://pythonhosted.org/Markdown/">documentation</a> for details of its available options.</p>
 
-
+    
 
 
         </article>
