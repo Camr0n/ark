@@ -10,7 +10,7 @@ Menu Support
 
 Add a menu file to your site's `inc` folder containing a list of links in Markdown or Syntex format and Vanilla will display the links in its header and footer.
 
-The menu file should be named `menu.md` or `menu.txt`.
+The menu file should be named `menu.md` or `menu.stx`.
 
 
 License
