@@ -8,6 +8,7 @@ License: Public Domain
 
 import ark
 import shortcodes
+import sys
 
 
 # Stores an initialized shortcodes.Parser() instance.
@@ -31,14 +32,16 @@ def init():
 # any shortcodes contained in it.
 @ark.hooks.register('record_text')
 def render(text, record):
+
     try:
         return scparser.parse(text, record)
     except shortcodes.ShortcodeError as e:
-        msg =  'Shortcode error while rendering file:\n'
-        msg += '  %s\n\n' % record['file']
-        msg += '  %s: %s' % (e.__class__.__name__, e)
+        msg =  "-------------------\n"
+        msg += "  Shortcode Error  \n"
+        msg += "-------------------\n\n"
+        msg += "  Record: %s\n\n" % record['src']
+        msg += "  %s: %s" % (e.__class__.__name__, e)
         if e.__context__:
-            msg += '\n\n  %s: %s' % (
-                e.__context__.__class__.__name__, e.__context__
-            )
+            msg += "\n\nThe error was caused by the following exception:\n\n"
+            msg += "%s: %s" % (e.__context__.__class__.__name__, e.__context__)
         sys.exit(msg)
