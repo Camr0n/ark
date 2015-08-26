@@ -3,7 +3,7 @@ title: My First Sample Post
 author: John Doe
 date: 2015-01-01
 tags: foo, bar, baz
-...
+---
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 

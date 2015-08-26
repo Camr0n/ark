@@ -1,6 +1,6 @@
 ---
 # This is a sample page.
-...
+---
 
 Home
 ====
