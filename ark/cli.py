@@ -8,6 +8,9 @@ import datetime
 import subprocess
 import http.server
 import webbrowser
+import hashlib
+import subprocess
+import time
 
 import clio
 
@@ -32,6 +35,7 @@ Commands:
   init              Initialize a new site directory.
   new               Create a new record file.
   serve             Run a web server on the site's output directory.
+  watch             Monitor the site directory and rebuild on changes.
 
 Command Help:
   help <command>    Print the specified command's help text and exit.
@@ -125,6 +129,19 @@ Flags:
 """ % os.path.basename(sys.argv[0])
 
 
+# Help text for the watch command.
+watchhelp = """
+Usage: %s watch [FLAGS]
+
+  Monitor the site directory and automatically rebuild the site when any
+  file changes are detected.
+
+Flags:
+  --help            Print the watch command's help text and exit.
+
+""" % os.path.basename(sys.argv[0])
+
+
 # Attempt to locate the site's home directory.
 def locate_home_directory():
     path = os.getcwd()
@@ -146,14 +163,15 @@ def cli():
     build_parser.add_str_option("out", None)
     build_parser.add_str_option("theme", None)
 
-    init_parser = parser.add_command("init", init, inithelp)
-    clear_parser = parser.add_command("clear", clear, clearhelp)
-    new_parser = parser.add_command("new", new, newhelp)
-
     serve_parser = parser.add_command("serve", serve, servehelp)
     serve_parser.add_flag("browser", "b")
     serve_parser.add_str_option("host", "localhost", "h")
     serve_parser.add_int_option("port", 8080, "p")
+
+    init_parser = parser.add_command("init", init, inithelp)
+    clear_parser = parser.add_command("clear", clear, clearhelp)
+    new_parser = parser.add_command("new", new, newhelp)
+    watch_parser = parser.add_command("watch", watch, watchhelp)
 
     parser.parse()
     if not parser.has_cmd():
@@ -237,3 +255,45 @@ def serve(parser):
     except KeyboardInterrupt:
         print("\n" + "-" * 80 + "Stopping server...\n" + "-" * 80)
         server.server_close()
+
+
+# Callback for the watch command. Python doesn't have a builtin file system
+# watcher so we hack together one of our own.
+def watch(parser):
+    home = locate_home_directory()
+
+    print("-" * 80)
+    print("Site: %s" % home)
+    print("Stop: Ctrl-C")
+    print("-" * 80)
+
+    oldhash = hashsite(home)
+
+    try:
+        while True:
+            newhash = hashsite(home)
+            if newhash != oldhash:
+                subprocess.call((sys.argv[0], 'build'))
+                newhash = hashsite(home)
+            oldhash = newhash
+            time.sleep(0.5)
+    except KeyboardInterrupt:
+        print("\n" + "-" * 80 + "Ending watch...\n" + "-" * 80)
+
+
+# Returns a hash digest of the site directory.
+def hashsite(sitedirpath):
+    hash = hashlib.sha256()
+
+    def hashdir(dirpath, is_home):
+        for finfo in utils.files(dirpath):
+            mtime = os.path.getmtime(finfo.path)
+            hash.update(str(mtime).encode())
+
+        for dinfo in utils.subdirs(dirpath):
+            if is_home and dinfo.name in ('out', '.ark'):
+                continue
+            hashdir(dinfo.path, False)
+
+    hashdir(sitedirpath, True)
+    return hash.digest()
