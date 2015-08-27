@@ -308,14 +308,26 @@ def _load_extensions():
 
 def _set_theme_dir(options):
     """ Determines the theme directory to use for the build. """
-    name = options.get('theme') or config('theme') or 'vanilla'
-    self = os.path.dirname(__file__)
-    if os.path.isdir(home('lib', name)):
-        return home('lib', name)
-    elif os.path.isdir(os.path.join(self, 'init', 'lib', name)):
-        return os.path.join(self, 'init', 'lib', name)
-    else:
-        sys.exit('Error: cannot locate the theme directory "%s".' % name)
+    theme = options.get('theme') or config('theme') or 'vanilla'
+
+    # Have we been given a directory name in the site's theme library.
+    if os.path.isdir(home('lib', theme)):
+        return home('lib', theme)
+
+    # Have we been given a directory name in the global theme library.
+    if os.getenv('ARK_THEMES'):
+        if os.path.isdir(os.path.join(os.getenv('ARK_THEMES'), theme)):
+            return os.path.join(os.getenv('ARK_THEMES'), theme)
+
+    # Have we been given a directory path?
+    if os.path.isdir(theme):
+        return theme
+
+    # Last chance. Do we have a bundled theme we can use?
+    if os.path.isdir(os.path.join(os.path.dirname(__file__), 'init', 'lib', theme)):
+        return os.path.join(os.path.dirname(__file__), 'init', 'lib', theme)
+
+    sys.exit("Error: cannot locate theme directory '%s'." % theme)
 
 
 def hashmatch(filepath, content):
