@@ -217,7 +217,7 @@ def new(parser):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     template = "---\ndate: %s\n---\n\n\n"
     utils.writefile(path, template % now)
-    editor = os.getenv('ARKEDITOR') or os.getenv('EDITOR') or 'vim'
+    editor = os.getenv('ARK_EDITOR') or os.getenv('EDITOR') or 'vim'
     subprocess.call((editor, path))
 
 
