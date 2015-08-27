@@ -43,6 +43,9 @@ _oldhashes = None
 # Stores new page hashes from the current build run.
 _newhashes = None
 
+# Stores build flags appended to the 'build' command.
+_buildflags = None
+
 
 def init(options):
     """ Initialize the site model before building. """
@@ -54,6 +57,9 @@ def init(options):
     # Initialize the page count variables.
     global _prendered, _pwritten
     _prendered = _pwritten = 0
+
+    global _buildflags
+    _buildflags = options['flags']
 
     # Store the site's home directory.
     global _homedir
@@ -110,6 +116,11 @@ def out(*append):
 def theme(*append):
     """ Returns the path to the theme directory. """
     return os.path.join(_themedir, *append)
+
+
+def flags():
+    """ Returns the list of build flags. """
+    return _buildflags
 
 
 def includes():

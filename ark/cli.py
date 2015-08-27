@@ -181,6 +181,7 @@ def cli():
 # Callback for the build command.
 def build(parser):
     parser['home'] = locate_home_directory()
+    parser['flags'] = parser.get_args()
     main.build(parser.get_options())
 
 
