@@ -262,6 +262,7 @@ def serve(parser):
 # watcher so we hack together one of our own.
 def watch(parser):
     home = locate_home_directory()
+    args = [sys.argv[0], 'build'] + parser.get_args()
 
     print("-" * 80)
     print("Site: %s" % home)
@@ -274,7 +275,7 @@ def watch(parser):
         while True:
             newhash = hashsite(home)
             if newhash != oldhash:
-                subprocess.call((sys.argv[0], 'build'))
+                subprocess.call(args)
                 newhash = hashsite(home)
             oldhash = newhash
             time.sleep(0.5)
