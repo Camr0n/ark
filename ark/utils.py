@@ -83,7 +83,11 @@ def titlecase(s):
 
 
 def copydir(srcdir, dstdir, skip=True):
-    """ Copies `srcdir` to `dstdir`, creating `dstdir` if necessary. """
+    """ Copies the contents of srcdir to dstdir.
+
+    The destination directory is created if necessary. If a file with the same
+    name exists in the destination directory, the source file is only copied
+    if it has a newer modification timestamp. """
 
     if not os.path.exists(dstdir):
         os.makedirs(dstdir)
@@ -99,6 +103,9 @@ def copydir(srcdir, dstdir, skip=True):
             continue
 
         if os.path.isfile(src):
+            if os.path.isfile(dst):
+                if os.path.getmtime(src) <= os.path.getmtime(dst):
+                    continue
             shutil.copy2(src, dst)
 
         elif os.path.isdir(src):
