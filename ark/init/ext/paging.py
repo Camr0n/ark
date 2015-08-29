@@ -4,7 +4,7 @@ index pages.
 
 The links can be accessed in templates as:
 
-    {{ paging.links }}
+    {{ paging }}
 
 Default settings can be overridden by including a 'paging' dictionary in
 the site's config.py file containing one or more of the following options:
@@ -31,11 +31,11 @@ from ark import hooks, site
 # string of page navigation links and add it to the page object.
 @hooks.register('rendering_page')
 def add_paging_links(page):
-    if page['paging']['is_paged']:
-        page['paging']['links'] = generate_paging_links(
+    if page['is_paged']:
+        page['paging'] = generate_paging_links(
             page['slugs'][:-1],
-            page['paging']['page'],
-            page['paging']['total']
+            page['page'],
+            page['total']
         )
 
 

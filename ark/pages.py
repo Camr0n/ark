@@ -14,7 +14,7 @@ from . import templates
 
 class Page(dict):
 
-    """ Represents an HTML page. """
+    """ Represents a HTML page. """
 
     # Regex for locating @root/ urls enclosed in quotes or pipes.
     re_url = re.compile(r'''(["'|])@root(/.*?)(#.*?)?\1''')
@@ -35,14 +35,12 @@ class Page(dict):
         self['is_tag_index'] = False
         self['is_homepage'] = False
         self['is_paged'] = False
-        self['paging'] = {
-            'page': 1,
-            'total': 1,
-            'prev_url': '',
-            'next_url': '',
-            'first_url': '',
-            'last_url': '',
-        }
+        self['page'] = 1
+        self['total'] = 1
+        self['prev_url'] = ''
+        self['next_url'] = ''
+        self['first_url'] = ''
+        self['last_url'] = ''
 
     def render(self):
         """ Renders the page into HTML and prints the output file. """
@@ -246,9 +244,9 @@ class IndexPage(Page):
 
     def _set_paging(self, slugs, page, total):
         self['is_paged'] = (total > 1)
-        self['paging']['page'] = page
-        self['paging']['total'] = total
-        self['paging']['prev_url'] = site.paged_url(slugs, page - 1, total)
-        self['paging']['next_url'] = site.paged_url(slugs, page + 1, total)
-        self['paging']['first_url'] = site.paged_url(slugs, 1, total)
-        self['paging']['last_url'] = site.paged_url(slugs, total, total)
+        self['page'] = page
+        self['total'] = total
+        self['prev_url'] = site.paged_url(slugs, page - 1, total)
+        self['next_url'] = site.paged_url(slugs, page + 1, total)
+        self['first_url'] = site.paged_url(slugs, 1, total)
+        self['last_url'] = site.paged_url(slugs, total, total)
