@@ -29,15 +29,13 @@ class Page(dict):
         self['records'] = []
         self['trail'] = []
         self['tag'] = ''
-        self['flags'] = {
-            'is_single': False,
-            'is_index': False,
-            'is_dir_index': False,
-            'is_tag_index': False,
-            'is_homepage': False,
-        }
+        self['is_single'] = False
+        self['is_index'] = False
+        self['is_dir_index'] = False
+        self['is_tag_index'] = False
+        self['is_homepage'] = False
+        self['is_paged'] = False
         self['paging'] = {
-            'is_paged': False,
             'page': 1,
             'total': 1,
             'prev_url': '',
@@ -154,18 +152,18 @@ class Page(dict):
 
         classes = [self['type']['id']]
 
-        if self['flags']['is_single']:
+        if self['is_single']:
             classes.append('single')
 
-        elif self['flags']['is_index']:
+        elif self['is_index']:
             classes.append('index')
 
-            if self['flags']['is_dir_index']:
+            if self['is_dir_index']:
                 classes.append('dir-index')
-            elif self['flags']['is_tag_index']:
+            elif self['is_tag_index']:
                 classes.append('tag-index')
 
-        if self['flags']['is_homepage']:
+        if self['is_homepage']:
             classes.append('homepage')
 
         return hooks.filter('page_classes', classes, self)
@@ -177,14 +175,14 @@ class Page(dict):
         typeid = self['type']['id']
 
         # Single record page.
-        if self['flags']['is_single']:
+        if self['is_single']:
             if 'template' in self['record']:
                 templates.append(self['record']['template'])
             templates.append(typeid + '-single')
             templates.append('single')
 
         # Tag index page.
-        elif self['flags']['is_tag_index']:
+        elif self['is_tag_index']:
             templates.append(typeid + '-tag-index')
             templates.append('tag-index')
             templates.append('index')
@@ -206,8 +204,8 @@ class RecordPage(Page):
         Page.__init__(self, record['type'])
         self['record'] = record
         self['slugs'] = record['slugs']
-        self['flags']['is_single'] = True
-        self['flags']['is_homepage'] = (record['slugs'] == ['index'])
+        self['is_single'] = True
+        self['is_homepage'] = (record['slugs'] == ['index'])
 
 
 class IndexPage(Page):
@@ -217,7 +215,7 @@ class IndexPage(Page):
     def __init__(self, type, slugs, index, per_page):
         Page.__init__(self, type)
         self['slugs'] = slugs
-        self['flags']['is_index'] = True
+        self['is_index'] = True
 
         index.sort(
             key = lambda record: record[self['type']['order_by']],
@@ -241,13 +239,13 @@ class IndexPage(Page):
             else:
                 self['slugs'][-1] = 'page-%s' % page
 
-            self['flags']['is_homepage'] = (self['slugs'] == ['index'])
+            self['is_homepage'] = (self['slugs'] == ['index'])
             self._set_paging(self['slugs'][:-1], page, self.total_pages)
 
             Page.render(self)
 
     def _set_paging(self, slugs, page, total):
-        self['paging']['is_paged'] = (total > 1)
+        self['is_paged'] = (total > 1)
         self['paging']['page'] = page
         self['paging']['total'] = total
         self['paging']['prev_url'] = site.paged_url(slugs, page - 1, total)

@@ -91,7 +91,7 @@ def build_directory_indexes(dirpath, recursing=False):
         index,
         typeconfig['per_index']
     )
-    page['flags']['is_dir_index'] = True
+    page['is_dir_index'] = True
     page['trail'] = site.trail_from_src(dirpath)
     page.render()
 
@@ -123,6 +123,6 @@ def build_tag_indexes():
                 typeconfig['per_tag_index']
             )
             page['tag'] = tags.names()[typeid][slug]
-            page['flags']['is_tag_index'] = True
+            page['is_tag_index'] = True
             page['trail'] = [typeconfig['name'], page['tag']]
             page.render()
