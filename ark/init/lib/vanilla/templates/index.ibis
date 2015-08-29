@@ -1,7 +1,7 @@
 {% extends "base.ibis" %}
 
 {% block title %}
-    {% if flags.is_homepage %}
+    {% if is_homepage %}
         {{ site.title }}
     {% else %}
         {{ trail|join:": "|titlecase }}
@@ -24,24 +24,20 @@
         {% if not loop.last %}<hr>{% endif %}
     {% endfor %}
 
-    {% if paging.is_paged %}
+    {% if is_paged %}
         <hr>
         <p class="paging">
-
-            {% if paging.page > 1 %}
-                <a href="{{ paging.first_url }}">First</a> ~
-                <a href="{{ paging.prev_url }}">Prev</a> ~
+            {% if page > 1 %}
+                <a href="{{ first_url }}">First</a> ~
+                <a href="{{ prev_url }}">Prev</a> ~
             {% endif %}
 
-            <span class="pagecount">
-                Page {{ paging.page }} of {{ paging.total }}
-            </span>
+            <span>Page {{ page }} of {{ total }}</span>
 
-            {% if paging.page < paging.total %}
-                ~ <a href="{{ paging.next_url }}">Next</a>
-                ~ <a href="{{ paging.last_url }}">Last</a>
+            {% if page < total %}
+                ~ <a href="{{ next_url }}">Next</a>
+                ~ <a href="{{ last_url }}">Last</a>
             {% endif %}
-
         </p>
     {% endif %}
 
