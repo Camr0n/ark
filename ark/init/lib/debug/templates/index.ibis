@@ -3,8 +3,10 @@
 {% block title %}
     {% if flags.is_dir_index %}
         Directory Index
-    {% else %}
+    {% elif flags.is_tag_index %}
         Tag Index
+    {% else %}
+        Index
     {% endif %}
 {% endblock %}
 
