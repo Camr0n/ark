@@ -20,7 +20,7 @@ class Page(dict):
     re_url = re.compile(r'''(["'|])@root(/.*?)(#.*?)?\1''')
 
     def __init__(self, typeid):
-        self['build'] = site.flags()
+        self['flags'] = site.flags()
         self['site'] = site.config()
         self['includes'] = site.includes()
         self['type'] = site.config('types')[typeid]
