@@ -249,7 +249,7 @@ def serve(parser):
     print("-" * 80)
 
     if parser['browser']:
-        webbrowser.open("http://%s:%s" % (address[0], address[1]))
+        webbrowser.open("http://%s:%s" % (parser['host'], parser['port']))
 
     try:
         server.serve_forever()
