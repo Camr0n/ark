@@ -1,5 +1,5 @@
 """
-This sample extension prints a simple status report at the end of each build.
+This extension prints a simple status report at the end of each build.
 
 Author: Darren Mulholland <dmulholland@outlook.ie>
 License: Public Domain
