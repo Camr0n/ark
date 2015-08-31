@@ -332,6 +332,7 @@ h1 + ul {
 @media (max-width: 800px) {
     html {
         font-size: 58.333333%;
+        -webkit-text-size-adjust: none;
     }
     body {
         padding: 0;
@@ -356,6 +357,7 @@ h1 + ul {
 @media (max-width: 420px) {
     html {
         font-size: 54.166667%;
+        -webkit-text-size-adjust: none;
     }
     .content {
         padding: 0 20px 30px;
