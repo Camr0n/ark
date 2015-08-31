@@ -10,7 +10,7 @@
         <script src="@root/js/jquery-1.11.2.min.js"></script>
         <script src="@root/js/theme.js"></script>
     </head>
-    <body class="{{{ classes }}}">
+    <body class="{{{classes}}}">
 
         <header id="header" class="header meta">
             {{ includes.menu }}
