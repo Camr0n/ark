@@ -291,6 +291,7 @@ def hashsite(sitedirpath):
         for finfo in utils.files(dirpath):
             mtime = os.path.getmtime(finfo.path)
             hash.update(str(mtime).encode())
+            hash.update(finfo.name.encode())
 
         for dinfo in utils.subdirs(dirpath):
             if is_home and dinfo.name in ('out', '.ark'):
