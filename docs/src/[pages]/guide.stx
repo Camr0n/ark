@@ -16,7 +16,7 @@ To build an existing site, run the `build` command from the site directory or an
 
     $ ark build
 
-See the command line help text for further details of the `ark` command's interface:
+See the built in help text for further details of Ark's command line interface:
 
     $ ark --help
 
