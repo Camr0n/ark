@@ -13,7 +13,10 @@
   <body class="{{{classes}}}">
 
     <header id="header" class="header meta">
-      {{ includes.menu }}
+      {% if includes.menu %}
+        <div class="hamburger unselectable">☰</div>
+        {{ includes.menu }}
+      {% endif %}
     </header>
 
     <article id="content" class="content">
