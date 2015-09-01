@@ -9,10 +9,10 @@ served remotely.
 
 Ark is highly extensible. It has builtin support for text files written in
 `Markdown <http://daringfireball.net/projects/markdown/>`_ and
-`Syntex <https://github.com/dmulholland/syntex>`_ but can be extended via
+`Syntex <https://github.com/dmulholland/syntex>`_ and can be extended via
 plugins to support any similar text-to-html format.
 
-See the `package documentation <http://pythonhosted.org/ark/>`_ or the project's
+See the `package documentation <http://mulholland.xyz/docs/ark/>`_ or the project's
 `Github homepage <https://github.com/dmulholland/ark>`_ for further details.
 
 """
