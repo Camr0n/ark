@@ -28,7 +28,7 @@
         {% endif %}
         {{ record.html|firstp|wrap:'p' }}
         <p><a href="{{ record.url }}">Read more...</a></p>
-        {% if not loop.last %}<hr>{% endif %}
+        {% if not loop.is_last %}<hr>{% endif %}
       {% endfor %}
 
       {% if is_paged %}
