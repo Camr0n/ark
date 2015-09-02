@@ -35,7 +35,6 @@ def init():
 # Register our template engine callback for files with a .jinja extension.
 @ark.templates.register('jinja')
 def callback(page, filename):
-
     try:
         template = env.get_template(filename)
         return template.render(page)
