@@ -23,7 +23,7 @@ def register(ext):
 
     Callbacks are registered per file extension, e.g.
 
-    @ark.templates.register('.ibis')
+    @ark.templates.register('ibis')
     def callback(filepath, page):
         ...
         return html
