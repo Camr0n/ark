@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>{% if is_homepage %}{{ site.title }}{% else %}{{ trail|join:": "|titlecase }}{% endif %}</title>
+    <title>{{ is_homepage ?? site.title :: trail|join:": "|titlecase }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="@root/css/theme.css">
     <link rel="stylesheet" href="@root/css/pygments.css">
@@ -23,8 +23,8 @@
       <h1>{{ trail|last|titlecase }}</h1>
 
       {% for record in records %}
-        {% if record.title or record.html|firsth %}
-          <h3>{{ record.title or record.html|firsth|striptags }}</h3>
+        {% if record.title || record.html|firsth %}
+          <h3>{{ record.title || record.html|firsth|striptags }}</h3>
         {% endif %}
         {{ record.html|firstp|wrap:'p' }}
         <p><a href="{{ record.url }}">Read more...</a></p>

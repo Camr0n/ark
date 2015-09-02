@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>{{ record.meta_title or record.title or record.html|firsth|striptags }}</title>
+    <title>{{ record.meta_title || record.title || record.html|firsth|striptags }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="@root/css/theme.css">
     <link rel="stylesheet" href="@root/css/pygments.css">
