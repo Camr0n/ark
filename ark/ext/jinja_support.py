@@ -46,6 +46,6 @@ def callback(page, filename):
         msg += "  Page:     %s\n\n" % page['path']
         msg += "  %s: %s" % (e.__class__.__name__, e)
         if e.__context__:
-            msg += "\n\nThe error was caused by the following exception:\n\n"
+            msg += "\n\nThe following exception was reported:\n\n"
             msg += "%s: %s" % (e.__context__.__class__.__name__, e.__context__)
         sys.exit(msg)
