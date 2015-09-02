@@ -14,13 +14,12 @@ import sys
 # Initialize our Ibis template loader on the 'init' event hook.
 @ark.hooks.register('init')
 def init():
-    ibis.config.loader = ibis.loaders.FastFileLoader(ark.site.theme('templates'))
+    ibis.config.loader = ibis.loaders.FileLoader(ark.site.theme('templates'))
 
 
 # Register our template engine callback for files with a .ibis extension.
 @ark.templates.register('ibis')
 def callback(page, filename):
-
     try:
         template = ibis.config.loader(filename)
         return template.render(page)
