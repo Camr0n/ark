@@ -1,13 +1,12 @@
-"""
-Ark: a static website generator in Python 3.
-
-Ark transforms a directory of text files written in Syntex or Markdown
-into a static website that can be viewed locally or served remotely.
-
-Author: Darren Mulholland <dmulholland@outlook.ie>
-License: Public Domain
-
-"""
+# --------------------------------------------------------------------------
+# Ark: a static website generator in Python 3.
+#
+# Ark transforms a directory of text files written in Syntex or Markdown
+# into a static website that can be viewed locally or served remotely.
+#
+# Author: Darren Mulholland <dmulholland@outlook.ie>
+# License: Public Domain
+# --------------------------------------------------------------------------
 
 import sys
 
@@ -77,7 +76,6 @@ except ImportError:
 # individually as 'import ark.foo'.
 from . import main
 from . import hooks
-from . import cli
 from . import pages
 from . import records
 from . import site
@@ -86,3 +84,5 @@ from . import utils
 from . import meta
 from . import templates
 from . import renderers
+from . import hashes
+from . import extensions

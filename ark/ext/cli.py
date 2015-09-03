@@ -1,5 +1,9 @@
-
-""" Command line interface. """
+# --------------------------------------------------------------------------
+# This extension implements a pluggable command line interface for Ark.
+#
+# Author: Darren Mulholland <dmulholland@outlook.ie>
+# License: Public Domain
+# --------------------------------------------------------------------------
 
 import os
 import sys
@@ -13,10 +17,7 @@ import subprocess
 import time
 
 import clio
-
-from . import meta
-from . import main
-from . import utils
+from ark import build, hooks, meta, site, utils
 
 
 # Application help text.
@@ -30,10 +31,10 @@ Flags:
   --version         Print the application's version number and exit.
 
 Commands:
-  build             Build the current site.
+  build             Build the site.
   clear             Clear the output directory.
+  edit              Edit an existing record or create a new file.
   init              Initialize a new site directory.
-  new               Create a new record file.
   serve             Run a web server on the site's output directory.
   watch             Monitor the site directory and rebuild on changes.
 
@@ -67,7 +68,7 @@ Usage: %s init [FLAGS] [ARGUMENTS]
 
   Initialize a new site directory. If a directory path is specified,
   that directory will be created and used. Otherwise, the current
-  directory will be used.
+  directory will be used. Existing files will not be overwritten.
 
 Arguments:
   [dirname]         Directory name. Defaults to the current directory.
@@ -90,18 +91,18 @@ Flags:
 """ % os.path.basename(sys.argv[0])
 
 
-# Help text for the new command.
-newhelp = """
-Usage: %s new [FLAGS] ARGUMENTS
+# Help text for the edit command.
+edithelp = """
+Usage: %s edit [FLAGS] ARGUMENTS
 
-  Create a new record file.
+  Edit a record file. Creates a new record if the file does not exist.
 
 Arguments:
   <type>            Record type, e.g. 'posts'.
   <name>            Record filename.
 
 Flags:
-  --help            Print the new command's help text and exit.
+  --help            Print the edit command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -119,12 +120,12 @@ Usage: %s serve [FLAGS] [OPTIONS]
   Set to 0 to randomly select an available port.
 
 Options:
-  --host, -h <str>  Host IP address. Defaults to localhost.
-  --port, -p <int>  Port number. Defaults to 8080.
+  -h, --host <str>  Host IP address. Defaults to localhost.
+  -p, --port <int>  Port number. Defaults to 8080.
 
 Flags:
-  --browser, -b     Launch the default web browser.
-  --help            Print the serve command's help text and exit.
+  -b, --browser     Launch the default web browser.
+      --help        Print the serve command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -142,36 +143,27 @@ Flags:
 """ % os.path.basename(sys.argv[0])
 
 
-# Attempt to locate the site's home directory.
-def locate_home_directory():
-    path = os.getcwd()
-    while True:
-        if os.path.exists(os.path.join(path, 'src')):
-            return os.path.abspath(path)
-        path = os.path.join(path, '..')
-        if not os.path.isdir(path):
-            break
-    sys.exit('Error: cannot locate site directory.')
-
-
-# Application entry point.
+# Initialize the command line interface on the 'init' hook.
+@hooks.register('init')
 def cli():
     parser = clio.ArgParser(apphelp, meta.__version__)
 
-    build_parser = parser.add_command("build", build, buildhelp)
+    build_parser = parser.add_command("build", cmd_build, buildhelp)
     build_parser.add_flag("clear")
     build_parser.add_str_option("out", None)
     build_parser.add_str_option("theme", None)
 
-    serve_parser = parser.add_command("serve", serve, servehelp)
+    serve_parser = parser.add_command("serve", cmd_serve, servehelp)
     serve_parser.add_flag("browser", "b")
     serve_parser.add_str_option("host", "localhost", "h")
     serve_parser.add_int_option("port", 8080, "p")
 
-    init_parser = parser.add_command("init", init, inithelp)
-    clear_parser = parser.add_command("clear", clear, clearhelp)
-    new_parser = parser.add_command("new", new, newhelp)
-    watch_parser = parser.add_command("watch", watch, watchhelp)
+    init_parser = parser.add_command("init", cmd_init, inithelp)
+    clear_parser = parser.add_command("clear", cmd_clear, clearhelp)
+    edit_parser = parser.add_command("edit", cmd_edit, edithelp)
+    watch_parser = parser.add_command("watch", cmd_watch, watchhelp)
+
+    hooks.event('init_clio', parser)
 
     parser.parse()
     if not parser.has_cmd():
@@ -179,57 +171,62 @@ def cli():
 
 
 # Callback for the build command.
-def build(parser):
-    parser['home'] = locate_home_directory()
-    parser['flags'] = parser.get_args()
-    main.build(parser.get_options())
+def cmd_build(parser):
+    if parser['out']:
+        site.setconfig('[outdir]', parser['out'])
+
+    if parser['theme']:
+        site.setconfig('[themedir]', site.locate_theme(parser['theme']))
+
+    if parser['clear']:
+        utils.cleardir(site.out())
+
+    site.setconfig('[flags]', parser.get_args())
+
+    @hooks.register('main')
+    def build_callback():
+        build.build_site()
 
 
 # Callback for the init command.
-def init(parser):
-    dirpath = parser.get_args()[0] if parser.has_args() else '.'
-    os.makedirs(dirpath, exist_ok=True)
-    os.chdir(dirpath)
-    for dirname in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
-        os.makedirs(dirname, exist_ok=True)
-    utils.copydir(os.path.join(os.path.dirname(__file__), 'init'), '.')
+def cmd_init(parser):
+    initdir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'init')
+    sitedir = parser.get_args()[0] if parser.has_args() else '.'
+    os.makedirs(sitedir, exist_ok=True)
+    os.chdir(sitedir)
+    for name in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
+        os.makedirs(name, exist_ok=True)
+    utils.copydir(initdir, '.', noclobber=True)
 
 
 # Callback for the clear command.
-def clear(parser):
-  home = locate_home_directory()
-  out = os.path.join(home, 'out')
-  if os.path.exists(out):
-      utils.cleardir(out)
-  else:
-      sys.exit("Error: cannot locate the out directory.")
+def cmd_clear(parser):
+    if os.path.exists(site.out()):
+        utils.cleardir(site.out())
+    else:
+        sys.exit("Error: cannot locate the site's output directory.")
 
 
-# Callback for the new command.
-def new(parser):
+# Callback for the edit command.
+def cmd_edit(parser):
     args = parser.get_args()
     if len(args) != 2:
-        sys.exit("Error: the 'new' command requires 2 arguments.")
-    home = locate_home_directory()
-    path = os.path.join(home, 'src', '[%s]' % args[0], args[1])
-    if os.path.exists(path):
-        sys.exit("Error: the file already exists.")
-    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    template = "---\ndate: %s\n---\n\n\n"
-    utils.writefile(path, template % now)
+        sys.exit("Error: the 'edit' command requires 2 arguments.")
+    path = site.src('[%s]' % args[0], args[1])
+    if not os.path.exists(path):
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        template = "---\ndate: %s\n---\n\n\n"
+        utils.writefile(path, template % now)
     editor = os.getenv('ARK_EDITOR') or os.getenv('EDITOR') or 'vim'
     subprocess.call((editor, path))
 
 
 # Callback for the serve command.
-def serve(parser):
-    home = locate_home_directory()
-    root = os.path.join(home, 'out')
+def cmd_serve(parser):
+    if not os.path.exists(site.out()):
+        sys.exit("Error: cannot locate the site's output directory.")
 
-    if not os.path.exists(root):
-        sys.exit("Error: cannot locate the out directory.")
-
-    os.chdir(root)
+    os.chdir(site.out())
 
     try:
         server = http.server.HTTPServer(
@@ -242,7 +239,7 @@ def serve(parser):
     address = server.socket.getsockname()
 
     print("-" * 80)
-    print("Root: %s" % root)
+    print("Root: %s" % site.out())
     print("Host: %s"  % address[0])
     print("Port: %s" % address[1])
     print("Stop: Ctrl-C")
@@ -260,8 +257,8 @@ def serve(parser):
 
 # Callback for the watch command. Python doesn't have a builtin file system
 # watcher so we hack together one of our own.
-def watch(parser):
-    home = locate_home_directory()
+def cmd_watch(parser):
+    home = site.home()
     args = [sys.argv[0], 'build'] + parser.get_args()
 
     print("-" * 80)
@@ -280,7 +277,7 @@ def watch(parser):
             oldhash = newhash
             time.sleep(0.5)
     except KeyboardInterrupt:
-        print("\n" + "-" * 80 + "Ending watch...\n" + "-" * 80)
+        print("\n" + "-" * 80 + "Ending watch.\n" + "-" * 80)
 
 
 # Returns a hash digest of the site directory.

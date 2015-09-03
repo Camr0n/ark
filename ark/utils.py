@@ -1,5 +1,6 @@
-
-""" Utility functions. """
+# --------------------------------------------------------------------------
+# Utility functions.
+# --------------------------------------------------------------------------
 
 import collections
 import os
@@ -16,8 +17,8 @@ DirInfo = collections.namedtuple('DirInfo', 'path, name')
 FileInfo = collections.namedtuple('FileInfo', 'path, name, base, ext')
 
 
+# Returns a list of subdirectories of the specified directory.
 def subdirs(directory):
-    """ Returns a list of subdirectories of the specified directory. """
     directories = []
     for name in os.listdir(directory):
         path = os.path.join(directory, name)
@@ -26,8 +27,8 @@ def subdirs(directory):
     return directories
 
 
+# Returns a list of files in the specified directory.
 def files(directory):
-    """ Returns a list of files in the specified directory. """
     files = []
     for name in os.listdir(directory):
         path = os.path.join(directory, name)
@@ -36,25 +37,23 @@ def files(directory):
     return files
 
 
+# Returns a FileInfo instance for the specified filepath.
 def fileinfo(path):
-    """ Returns a FileInfo instance for the specified filepath. """
     name = os.path.basename(path)
     base, ext = os.path.splitext(name)
     return FileInfo(path, name, base, ext.strip('.'))
 
 
+# Returns a list of source files in the specified directory.
 def srcfiles(directory):
-    """ Returns a list of source files in the specified directory. """
     extensions = ('txt', 'stx', 'md', 'html')
     return [fi for fi in files(directory) if fi.ext in extensions]
 
 
+# Returns the creation time of the specified file.
+# This function works on OSX, BSD, and Windows. On Linux it returns the
+# time of the file's last metadata change.
 def get_creation_time(path):
-    """ Returns the creation time of the specified file.
-
-    This function works on OSX, BSD, and Windows. On Linux it returns the
-    time of the file's last metadata change.
-    """
     stat = os.stat(path)
     if hasattr(stat, 'st_birthtime') and stat.st_birthtime:
         return datetime.datetime.fromtimestamp(stat.st_birthtime)
@@ -62,8 +61,8 @@ def get_creation_time(path):
         return datetime.datetime.fromtimestamp(stat.st_ctime)
 
 
+# Slug preparation function. Used to sanitize url components, etc.
 def slugify(s):
-    """ Slug preparation function. Used to sanitize url components, etc. """
     s = unicodedata.normalize('NFKD', s)
     s = s.encode('ascii', 'ignore').decode('ascii')
     s = s.lower()
@@ -73,8 +72,8 @@ def slugify(s):
     return s.strip('-')
 
 
+# Returns a titlecased version of the supplied string.
 def titlecase(s):
-    """ Returns a titlecased version of the supplied string. """
     return re.sub(
         r"[A-Za-z]+('[A-Za-z]+)?",
         lambda m: m.group(0)[0].upper() + m.group(0)[1:],
@@ -82,12 +81,12 @@ def titlecase(s):
     )
 
 
-def copydir(srcdir, dstdir, skip=True):
-    """ Copies the contents of srcdir to dstdir.
-
-    The destination directory is created if necessary. If a file with the same
-    name exists in the destination directory, the source file is only copied
-    if it has a newer modification timestamp. """
+# Copies the contents of srcdir to dstdir.
+# The destination directory is created if necessary. If a file with the same
+# name exists in the destination directory, the source file is only copied
+# if it has a newer modification timestamp. If noclobber is set to true,
+# existing files are never overwritten.
+def copydir(srcdir, dstdir, skiptypes=True, noclobber=False):
 
     if not os.path.exists(dstdir):
         os.makedirs(dstdir)
@@ -96,7 +95,7 @@ def copydir(srcdir, dstdir, skip=True):
         src = os.path.join(srcdir, name)
         dst = os.path.join(dstdir, name)
 
-        if skip and name.startswith('['):
+        if skiptypes and name.startswith('['):
             continue
 
         if name in ('__pycache__', '.DS_Store'):
@@ -104,7 +103,7 @@ def copydir(srcdir, dstdir, skip=True):
 
         if os.path.isfile(src):
             if os.path.isfile(dst):
-                if os.path.getmtime(src) <= os.path.getmtime(dst):
+                if noclobber or os.path.getmtime(src) <= os.path.getmtime(dst):
                     continue
             shutil.copy2(src, dst)
 
@@ -112,8 +111,8 @@ def copydir(srcdir, dstdir, skip=True):
             copydir(src, dst, False)
 
 
+# Clears the contents of a directory.
 def cleardir(dirpath):
-    """ Clears the contents of a directory. """
     if os.path.isdir(dirpath):
         for name in os.listdir(dirpath):
             path = os.path.join(dirpath, name)
@@ -123,8 +122,8 @@ def cleardir(dirpath):
                 shutil.rmtree(path)
 
 
+# Writes a string to a file. Creates parent directories if required.
 def writefile(filepath, content):
-    """ Writes a string to a file. Creates directories if required. """
     if not os.path.isdir(os.path.dirname(filepath)):
         os.makedirs(os.path.dirname(filepath))
 
@@ -132,14 +131,12 @@ def writefile(filepath, content):
         file.write(content)
 
 
+# Creates a redirect page at the specified filepath.
 def make_redirect(filepath, url):
-    """ Creates a redirect page at the specified filepath. """
     html = """\
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <title>Redirect</title>
         <meta http-equiv="refresh" content="0; url=%s">
     </head>
     <body></body>
@@ -151,9 +148,8 @@ def make_redirect(filepath, url):
         file.write(html)
 
 
+# Loads a source file and parses its yaml header if present.
 def load(filepath):
-    """ Loads a source file and parses its yaml header if present. """
-
     with open(filepath, encoding='utf-8') as file:
         text, meta = file.read(), {}
 

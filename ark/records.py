@@ -1,5 +1,6 @@
-
-""" Handles the creation and caching of Record objects. """
+# --------------------------------------------------------------------------
+# Handles the creation and caching of Record objects.
+# --------------------------------------------------------------------------
 
 import os
 import re
@@ -16,8 +17,8 @@ from . import renderers
 _cache = {}
 
 
+# Returns the Record object corresponding to the specified source file.
 def record(filepath):
-    """ Returns the Record object corresponding to the specified source file. """
     if not filepath in _cache:
         _cache[filepath] = Record(filepath)
     return _cache[filepath]
@@ -69,7 +70,8 @@ class Record(dict):
                 url = tags.url(self['type'], tag)
                 self['tags'].append(tags.TagInfo(tag, url))
 
-        # Filter the record's text content. Shortcodes are processed on this hook.
+        # Filter the record's text content.
+        # (Shortcodes are processed on this hook.)
         self['text'] = hooks.filter('record_text', text, self)
 
         # Render the record's content into html.

@@ -1,5 +1,6 @@
-
-""" Handles the creation and rendering of Page objects. """
+# --------------------------------------------------------------------------
+# Handles the creation and rendering of Page objects.
+# --------------------------------------------------------------------------
 
 import os
 import re
@@ -10,11 +11,12 @@ from . import site
 from . import hooks
 from . import utils
 from . import templates
+from . import includes
+from . import hashes
 
 
+# A Page instance represents a HTML page in the site's output.
 class Page(dict):
-
-    """ Represents a HTML page. """
 
     # Regex for locating @root/ urls enclosed in quotes or pipes.
     re_url = re.compile(r'''(["'|])@root(/.*?)(#.*?)?\1''')
@@ -22,7 +24,7 @@ class Page(dict):
     def __init__(self, typeid):
         self['flags'] = site.flags()
         self['site'] = site.config()
-        self['includes'] = site.includes()
+        self['includes'] = includes.includes()
         self['type'] = site.config('types')[typeid]
         self['slugs'] = []
         self['record'] = None
@@ -42,8 +44,8 @@ class Page(dict):
         self['first_url'] = ''
         self['last_url'] = ''
 
+    # Renders the page into HTML and prints the output file.
     def render(self):
-        """ Renders the page into HTML and prints the output file. """
 
         # Fire the 'rendering_page' event.
         hooks.event('rendering_page', self)
@@ -59,7 +61,7 @@ class Page(dict):
 
         # Render the page into html.
         html = templates.render(self)
-        site.increment_pages_rendered()
+        site.inc_rendered()
 
         # Rewrite all '@root/' urls into their final form.
         html = self._rewrite_urls(html, depth)
@@ -68,12 +70,12 @@ class Page(dict):
         html = hooks.filter('page_html', html, self)
 
         # Write the page to disk. Avoid overwriting identical existing files.
-        if not site.hashmatch(self['path'], html):
+        if not hashes.match(self['path'], html):
             utils.writefile(self['path'], html)
-            site.increment_pages_written()
+            site.inc_written()
 
+    # Determines the output filepath for the page.
     def _get_output_filepath(self):
-        """ Determines the output filepath for the page. """
 
         # Directory-style urls require us to append an extra 'index' element.
         slugs = self['slugs'][:]
@@ -145,9 +147,8 @@ class Page(dict):
 
         return self.re_url.sub(rewrite_callback, html)
 
+    # Generates a list of CSS classes for the page.
     def _get_css_classes(self):
-        """ Generates a list of CSS classes for the page. """
-
         classes = [self['type']['id']]
 
         if self['is_single']:
@@ -166,9 +167,8 @@ class Page(dict):
 
         return hooks.filter('page_classes', classes, self)
 
+    # Returns a list of possible template names for the current page.
     def _get_template_list(self):
-        """ Returns a list of possible template names for the current page. """
-
         templates = []
         typeid = self['type']['id']
 
@@ -194,9 +194,8 @@ class Page(dict):
         return hooks.filter('page_templates', templates, self)
 
 
+# A RecordPage instance represents a single record.
 class RecordPage(Page):
-
-    """ Represents a single record. """
 
     def __init__(self, record):
         Page.__init__(self, record['type'])
@@ -206,9 +205,9 @@ class RecordPage(Page):
         self['is_homepage'] = (record['slugs'] == ['index'])
 
 
+# An IndexPage instance represents an index of records, possibly split into
+# a paged set of HTML pages in the output.
 class IndexPage(Page):
-
-    """ Represents an index of records, possibly split into multiple pages."""
 
     def __init__(self, type, slugs, index, per_page):
         Page.__init__(self, type)

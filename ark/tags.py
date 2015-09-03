@@ -1,5 +1,6 @@
-
-""" Handles all tagging functionality. """
+# --------------------------------------------------------------------------
+# Handles tagging functionality.
+# --------------------------------------------------------------------------
 
 from . import site
 from .utils import slugify
@@ -8,13 +9,13 @@ from .utils import slugify
 # Maps tag-slugs to lists of record-filepaths indexed by type.
 _rmap = {}
 
+
 # Maps tag-slugs to tag-names indexed by type.
 _nmap = {}
 
 
+# A TagInfo instance pairs a tag-name with its corresponding tag-index url.
 class TagInfo:
-
-    """ Pairs a tag-name with its corresponding tag-index url. """
 
     def __init__(self, name, url):
         self.name = name
@@ -27,24 +28,24 @@ class TagInfo:
         return '<a href="%s">%s</a>' % (self.url, self.name)
 
 
+# Register a new tag mapping.
 def register(typeid, tag, filepath):
-    """ Register a new tag mapping. """
     _rmap.setdefault(typeid, {}).setdefault(slugify(tag), []).append(filepath)
     _nmap.setdefault(typeid, {}).setdefault(slugify(tag), tag)
 
 
+# Returns the dictionary of registered tag-to-record mappings.
 def records():
-    """ Returns the dictionary of registered tag-to-record mappings. """
     return _rmap
 
 
+# Returns the dictionary of tag-slug to tag-name mappings.
 def names():
-    """ Returns the dictionary of tag-slug-to-tag-name mappings. """
     return _nmap
 
 
+# Returns the output-slug list for the specified tag.
 def slugs(typeid, tag, *append):
-    """ Returns the output-slug list for the specified tag. """
     typeconfig = site.config('types')[typeid]
     slugs = site.slugs(typeid)
     slugs.extend(s for s in typeconfig['tag_slug'].split('/') if s)
@@ -53,6 +54,6 @@ def slugs(typeid, tag, *append):
     return slugs
 
 
+# Returns the tag-index url for the specified tag.
 def url(typeid, tag):
-    """ Returns the index-page url for the specified tag. """
     return site.url(slugs(typeid, tag, 'index'))

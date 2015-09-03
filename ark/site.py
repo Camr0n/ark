@@ -1,140 +1,81 @@
-
-""" Loads, processes, and stores the site's configuration data. """
+# --------------------------------------------------------------------------
+# Loads, processes, and stores the site's configuration data.
+# --------------------------------------------------------------------------
 
 import os
-import importlib
 import time
-import re
 import sys
-import hashlib
-import pickle
 
 from . import utils
-from . import renderers
 
-
-# Stores the path to the site's home directory.
-_homedir = None
-
-# Stores the path to the site's output directory.
-_outdir = None
-
-# Stores the path to the site's theme directory.
-_themedir = None
 
 # Stores the site's configuration data.
-_config = None
-
-# Stores rendered include strings loaded from the inc directory.
-_includes = None
-
-# Stores the build's start time.
-_starttime = None
-
-# Stores a count of the number of pages rendered.
-_prendered = None
-
-# Stores a count of the number of pages written.
-_pwritten = None
-
-# Stores cached page hashes from the last build run.
-_oldhashes = None
-
-# Stores new page hashes from the current build run.
-_newhashes = None
-
-# Stores build flags appended to the 'build' command.
-_buildflags = None
+_config = {}
 
 
-def init(options):
-    """ Initialize the site model before building. """
+# Initialize the site model.
+def init():
 
-    # Store the start time.
-    global _starttime
-    _starttime = time.time()
+    # Record the start time.
+    setconfig('[starttime]', time.time())
 
-    # Initialize the page count variables.
-    global _prendered, _pwritten
-    _prendered = _pwritten = 0
-
-    global _buildflags
-    _buildflags = options['flags']
-
-    # Store the site's home directory.
-    global _homedir
-    _homedir = options['home']
+    # Locate the site's home directory.
+    setconfig('[homedir]', locate_home())
 
     # Load the site's configuration data.
-    global _config
-    _config = _load_site_config()
+    load_site_config()
 
-    # Determine the theme directory.
-    global _themedir
-    _themedir = _set_theme_dir(options)
+    # Locate the theme directory.
+    setconfig('[themedir]', locate_theme(config('theme')))
 
-    # Determine the output directory.
-    global _outdir
-    _outdir = options.get('out') or home('out')
+    # Set the output directory.
+    setconfig('[outdir]', home('out'))
 
-    # Determine the urls of the root directory index pages.
-    for typeid in _config['types']:
-        _config['types'][typeid]['index_url'] = index_url(typeid)
+    # Initialize a count of the number of pages rendered.
+    setconfig('[rendered]', 0)
 
-    # Load any extensions we can find.
-    _load_extensions()
-
-    # Load the cached page hashes from the last build, if they exist.
-    global _oldhashes, _newhashes
-    _oldhashes, _newhashes = _load_hashes(), {}
-
-    # Clear the output directory.
-    if options.get('clear'):
-        utils.cleardir(out())
+    # Initialize a count of the number of pages written to disk.
+    setconfig('[written]', 0)
 
 
-def exit():
-    """ Runs at the end of the build process before exiting. """
-    _save_hashes()
+# Attempts to determine the path to the site's home directory.
+# Exits with an error message on failure.
+def locate_home():
+    path = os.getcwd()
+    while os.path.isdir(path):
+        if os.path.exists(os.path.join(path, 'src')):
+            return os.path.abspath(path)
+        path = os.path.join(path, '..')
+    sys.exit("Error: cannot locate the site's home directory.")
 
 
-def home(*append):
-    """ Returns the path to the home directory. """
-    return os.path.join(_homedir, *append)
+# Attempts to determine the path to the theme directory corresponding to
+# the specified theme name. Exits with an error message on failure.
+def locate_theme(name):
+
+    # A directory in the site's theme library?
+    if os.path.isdir(home('lib', name)):
+        return home('lib', name)
+
+    # A directory in the global theme library?
+    if os.getenv('ARK_THEMES'):
+        if os.path.isdir(os.path.join(os.getenv('ARK_THEMES'), name)):
+            return os.path.join(os.getenv('ARK_THEMES'), name)
+
+    # A raw directory path?
+    if os.path.isdir(name):
+        return name
+
+    # A bundled theme directory in the application folder?
+    bundled = os.path.join(os.path.dirname(__file__), 'init', 'lib', name)
+    if os.path.isdir(bundled):
+        return bundled
+
+    sys.exit("Error: cannot locate the theme directory '%s'." % name)
 
 
-def src(*append):
-    """ Returns the path to the home/src directory. """
-    return home('src', *append)
-
-
-def out(*append):
-    """ Returns the path to the home/out directory. """
-    return os.path.join(_outdir, *append)
-
-
-def theme(*append):
-    """ Returns the path to the theme directory. """
-    return os.path.join(_themedir, *append)
-
-
-def flags():
-    """ Returns the list of build flags. """
-    return _buildflags
-
-
-def includes():
-    """ Returns a dictionary of processed strings from the inc directory. """
-    global _includes
-    if _includes is None:
-        _includes = {}
-        if os.path.isdir(home('inc')):
-            for finfo in utils.srcfiles(home('inc')):
-                text, _ = utils.load(finfo.path)
-                _includes[finfo.base] = renderers.render(text, finfo.ext)
-    return _includes
-
-
+# Returns a value from the site's configuration dictionary.
+# Returns the entire dictionary if no key is specified.
 def config(key=None, fallback=None):
     """ Returns the dictionary of site configuration data. """
     if key:
@@ -143,21 +84,51 @@ def config(key=None, fallback=None):
         return _config
 
 
+# Sets a value in the site's configuration dictionary.
+def setconfig(key, value):
+    _config[key] = value
+
+
+# Returns the path to the site's home directory.
+def home(*append):
+    return os.path.join(config('[homedir]'), *append)
+
+
+# Returns the path to the site's src directory.
+def src(*append):
+    return home('src', *append)
+
+
+# Returns the path to the output directory.
+def out(*append):
+    return os.path.join(config('[outdir]'), *append)
+
+
+# Returns the path to the theme directory.
+def theme(*append):
+    return os.path.join(config('[themedir]'), *append)
+
+
+# Returns a list of command line build flags.
+def flags():
+    return config('[flags]', [])
+
+
+# Returns the output slug list for the specified record type.
 def slugs(typeid, *append):
-    """ Returns the output slug list for the specified record type. """
-    typeslug = _config['types'][typeid]['slug']
+    typeslug = config('types')[typeid]['slug']
     sluglist = [slug for slug in typeslug.split('/') if slug]
     sluglist.extend(append)
     return sluglist
 
 
+# Returns the URL corresponding to the specified slug list.
 def url(slugs):
-    """ Returns the URL corresponding to the specified slug list. """
     return '@root/' + '/'.join(slugs) + '//'
 
 
+# Returns the paged URL corresponding to the specified slug list.
 def paged_url(slugs, page_number, total_pages):
-    """ Returns the paged URL corresponding to the specified slug list. """
     if page_number == 1:
         return url(slugs + ['index'])
     elif 2 <= page_number <= total_pages:
@@ -166,10 +137,10 @@ def paged_url(slugs, page_number, total_pages):
         return ''
 
 
+# Returns the URL of the index page of the specified record type.
 def index_url(typeid):
-    """ Returns the URL of the index page of the specified record type. """
-    if _config['types'][typeid]['indexed']:
-        if _config['types'][typeid]['homepage']:
+    if config('types')[typeid]['indexed']:
+        if config('types')[typeid]['homepage']:
             return url(['index'])
         else:
             return url(slugs(typeid, 'index'))
@@ -177,38 +148,16 @@ def index_url(typeid):
         return ''
 
 
-def build_time():
-    """ Returns the build time in seconds. """
-    return time.time() - _starttime
-
-
-def page_count():
-    """ Returns the count of pages rendered and written. """
-    return _prendered, _pwritten
-
-
-def increment_pages_rendered():
-    """ Increments the count of pages rendered. """
-    global _prendered
-    _prendered += 1
-
-
-def increment_pages_written():
-    """ Increments the count of pages written. """
-    global _pwritten
-    _pwritten += 1
-
-
+# Returns the record type corresponding to a source path.
 def type_from_src(srcpath):
-    """ Determines the record type from the source path. """
     slugs = os.path.relpath(srcpath, src()).replace('\\', '/').split('/')
     for slug in slugs:
         if slug.startswith('['):
             return slug.strip('[]')
 
 
+# Returns the output slug list for the specified source directory.
 def slugs_from_src(srcdir, *append):
-    """ Returns the output slug list for the specified source directory. """
     typeid = type_from_src(srcdir)
     dirnames = os.path.relpath(srcdir, src()).replace('\\', '/').split('/')
     sluglist = slugs(typeid)
@@ -217,141 +166,82 @@ def slugs_from_src(srcdir, *append):
     return sluglist
 
 
+# Returns the name trail for the specified source directory.
 def trail_from_src(srcdir):
-    """ Returns the name trail for the specified source directory. """
     typeid = type_from_src(srcdir)
     dirnames = os.path.relpath(srcdir, src()).replace('\\', '/').split('/')
-    trail = [_config['types'][typeid]['name']]
+    trail = [config('types')[typeid]['name']]
     trail.extend(name for name in dirnames if not name.startswith('['))
     return trail
 
 
-def _load_site_config():
-    """ Loads and normalizes the site's configuration data. """
+# Returns the run time in seconds.
+def runtime():
+    return time.time() - config('[starttime]')
 
-    data, configstr = {}, ''
 
-    # Look for a config.py file in the home directory.
+# Returns the count of pages rendered.
+def rendered():
+    return config('[rendered]')
+
+
+# Increments the count of pages rendered.
+def inc_rendered():
+    setconfig('[rendered]', config('[rendered]') + 1)
+
+
+# Returns the count of pages written.
+def written():
+    return config('[written]')
+
+
+# Increments the count of pages written.
+def inc_written():
+    setconfig('[written]', config('[written]') + 1)
+
+
+# Loads and normalize the site's configuration data.
+def load_site_config():
+
+    # Load the default site configuration file.
+    path = os.path.join(os.path.dirname(__file__), 'config.py')
+    with open(path, encoding='utf-8') as file:
+        exec(file.read(), _config)
+
+    # Load the custom site configuration file.
     if os.path.isfile(home('config.py')):
-        configstr = open(home('config.py'), encoding='utf-8').read()
+        with open(home('config.py'), encoding='utf-8') as file:
+            exec(file.read(), _config)
 
-    # Evaluate the file contents as a string of Python code.
-    if configstr:
-        exec(configstr, data)
-        del data['__builtins__']
+    # Delete the __builtins__ attribute as it pollutes variable dumps.
+    del _config['__builtins__']
 
-    # Set a default extension for generated files.
-    # The extension can be an empty string, an arbitrary file extension,
-    # or a forward slash for directory-style urls.
-    data.setdefault('extension', '.html')
-
-    # If a root has been supplied, make sure it ends with a trailing slash.
-    # The root string can be a full url (http://example.com/), a single
-    # slash (/), or an empty string (the default) for page relative urls.
-    if data.setdefault('root', '') and not data['root'].endswith('/'):
-        data['root'] += '/'
+    # If 'root' isn't an empty string, make sure it ends in a slash.
+    if _config['root'] and not _config['root'].endswith('/'):
+        _config['root'] += '/'
 
     # The 'types' dictionary stores configuration data for record types.
-    data.setdefault('types', {})
+    _config.setdefault('types', {})
 
     # Assemble a list of the site's record types from its [type] directories.
-    types = [
-        dirinfo.name.strip('[]')
-            for dirinfo in utils.subdirs(src())
-                if dirinfo.name.startswith('[')
-    ]
+    types = [di.name.strip('[]')
+                for di in utils.subdirs(src())
+                    if di.name.startswith('[')]
 
-    # Supply default values for any missing type data.
-    for typeid in types:
-        settings = {
-            'name': utils.titlecase(typeid),
-            'slug': utils.slugify(typeid),
+    # Supply default values for any missing data.
+    for id in types:
+        data = {
+            'id': id,
+            'name': utils.titlecase(id),
+            'slug': '' if id == 'pages' else utils.slugify(id),
             'tag_slug': 'tags',
-            'indexed': True,
+            'indexed': False if id == 'pages' else True,
             'order_by': 'date',
             'reverse': True,
             'per_index': 10,
             'per_tag_index': 10,
             'homepage': False,
         }
-        if typeid == 'pages':
-            settings['slug'] = ''
-            settings['indexed'] = False
-        settings.update(data['types'].get(typeid, {}))
-        data['types'][typeid] = settings
-        data['types'][typeid]['id'] = typeid
-
-    # Strip any type entries that don't refer to actual [type] directories.
-    for typeid in list(data['types']):
-        if not typeid in types:
-            del data['types'][typeid]
-
-    return data
-
-
-def _load_extensions():
-    """ Load any Python modules found in the extensions directories. """
-    dirpaths = [os.path.join(os.path.dirname(__file__), 'ext')]
-    if os.path.isdir(home('ext')):
-        dirpaths.append(home('ext'))
-    for dirpath in dirpaths:
-        sys.path.insert(0, dirpath)
-        names = [
-            os.path.splitext(name)[0]
-                for name in os.listdir(dirpath)
-                    if not name[0] in '_.'
-        ]
-        for name in names:
-            extension = importlib.import_module(name)
-        sys.path.pop(0)
-
-
-def _set_theme_dir(options):
-    """ Determines the theme directory to use for the build. """
-    theme = options.get('theme') or config('theme') or 'vanilla'
-
-    # Have we been given a directory name in the site's theme library.
-    if os.path.isdir(home('lib', theme)):
-        return home('lib', theme)
-
-    # Have we been given a directory name in the global theme library.
-    if os.getenv('ARK_THEMES'):
-        if os.path.isdir(os.path.join(os.getenv('ARK_THEMES'), theme)):
-            return os.path.join(os.getenv('ARK_THEMES'), theme)
-
-    # Have we been given a directory path?
-    if os.path.isdir(theme):
-        return theme
-
-    # Last chance. Do we have a bundled theme we can use?
-    if os.path.isdir(os.path.join(os.path.dirname(__file__), 'init', 'lib', theme)):
-        return os.path.join(os.path.dirname(__file__), 'init', 'lib', theme)
-
-    sys.exit("Error: cannot locate theme directory '%s'." % theme)
-
-
-def hashmatch(filepath, content):
-    """ Returns true if there is an existing file at `filepath` whose hash
-    matches that of the string `content`. """
-    _newhashes[filepath] = hashlib.sha1(content.encode()).hexdigest()
-    if os.path.exists(filepath):
-        return _oldhashes.get(filepath) == _newhashes[filepath]
-    else:
-        return False
-
-
-def _load_hashes():
-    """ Loads cached page hashes from the last build run. """
-    if os.path.exists(home('.ark', 'hashes.pickle')):
-        with open(home('.ark', 'hashes.pickle'), 'rb') as file:
-            return pickle.load(file)
-    else:
-        return {}
-
-
-def _save_hashes():
-    """ Caches page hashes to disk for the next build run. """
-    if not os.path.exists(home('.ark')):
-        os.makedirs(home('.ark'))
-    with open(home('.ark', 'hashes.pickle'), 'wb') as file:
-        pickle.dump(_newhashes, file)
+        data.update(_config['types'].get(id, {}))
+        _config['types'][id] = data
+        _config['types'][id]['index_url'] = index_url(id)

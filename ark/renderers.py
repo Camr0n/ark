@@ -1,5 +1,6 @@
-
-""" Handles text-to-html rendering-engine callbacks. """
+# --------------------------------------------------------------------------
+# Handles text-to-html rendering-engine callbacks.
+# --------------------------------------------------------------------------
 
 import sys
 
@@ -36,8 +37,8 @@ def register(ext):
     return register_callback
 
 
+# Renders a string and returns the result.
 def render(text, ext):
-    """ Renders `text` and returns the result. """
     if ext in _renderers:
         return _renderers[ext](text)
     else:

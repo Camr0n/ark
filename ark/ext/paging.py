@@ -1,28 +1,27 @@
-"""
-This extension generates a customizable string of page navigation links for
-index pages.
-
-The links can be accessed in templates as:
-
-    {{ paging }}
-
-Default settings can be overridden by including a 'paging' dictionary in
-the site's config.py file containing one or more of the following options:
-
-    paging = {
-        'first': 'First',       # text for link to first page
-        'last': 'Last',         # text for link to last page
-        'prev': 'Prev',         # text for link to previous page
-        'next': 'Next',         # text for link to next page
-        'delta': 2,             # number of neighbouring pages to include
-        'multiples': 2,         # number of larger/smaller multiples to include
-        'multiple': 10,         # link to page numbers in multiples of...
-    }
-
-Author: Darren Mulholland <dmulholland@outlook.ie>
-License: Public Domain
-
-"""
+# --------------------------------------------------------------------------
+# This extension generates a customizable string of page navigation links
+# for index pages.
+#
+# The links can be accessed in templates as:
+#
+#     {{ paging }}
+#
+# Default settings can be overridden by including a 'paging' dictionary in
+# the site's config.py file containing one or more of the following options:
+#
+#     paging = {
+#         'first': 'First',  # text for link to first page
+#         'last': 'Last',    # text for link to last page
+#         'prev': 'Prev',    # text for link to previous page
+#         'next': 'Next',    # text for link to next page
+#         'delta': 2,        # number of neighbouring pages to include
+#         'multiples': 2,    # number of larger/smaller multiples
+#         'multiple': 10,    # link to page numbers in multiples of...
+#     }
+#
+# Author: Darren Mulholland <dmulholland@outlook.ie>
+# License: Public Domain
+# --------------------------------------------------------------------------
 
 from ark import hooks, site
 

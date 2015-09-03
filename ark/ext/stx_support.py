@@ -1,12 +1,11 @@
-"""
-This extension adds syntex support to Ark.
-
-Files with a .stx extension will be rendered as syntex.
-
-Author: Darren Mulholland <dmulholland@outlook.ie>
-License: Public Domain
-
-"""
+# --------------------------------------------------------------------------
+# This extension adds syntex support to Ark.
+#
+# Files with a .stx extension will be rendered as syntex.
+#
+# Author: Darren Mulholland <dmulholland@outlook.ie>
+# License: Public Domain
+# --------------------------------------------------------------------------
 
 import ark
 import syntex

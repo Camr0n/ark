@@ -31,8 +31,8 @@ See the built in help text for further details of Ark's command line interface:
     Commands:
       build             Build the current site.
       clear             Clear the output directory.
+      edit              Edit an existing record or create a new file.
       init              Initialize a new site directory.
-      new               Create a new record file.
       serve             Run a web server on the site's output directory.
       watch             Monitor the site directory and rebuild on changes.
 
@@ -107,9 +107,9 @@ New custom types behave, by default, like the builtin *post* type, but we can al
 ::: python
 
     types = {
-        "sonnets": {               # type id corresponding to the [type] directory
-            "name": "Sonnets",     # defaults to the titlecased type id
-            "slug": "sonnets",     # defaults to the slugified type id
+        "sonnets": {               # id corresponding to the [type] directory
+            "name": "Sonnets",     # defaults to the titlecased id
+            "slug": "sonnets",     # defaults to the slugified id
             "tag_slug": "tags",    # defaults to "tags"
             "indexed": True,       # build directory indexes for this type?
             "order_by": "date",    # order index entries by this attribute

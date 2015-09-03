@@ -1,10 +1,9 @@
-"""
-This extension adds support for Ibis templates to Ark.
-
-Author: Darren Mulholland <dmulholland@outlook.ie>
-License: Public Domain
-
-"""
+# --------------------------------------------------------------------------
+# This extension adds support for Ibis templates to Ark.
+#
+# Author: Darren Mulholland <dmulholland@outlook.ie>
+# License: Public Domain
+# --------------------------------------------------------------------------
 
 import ark
 import ibis

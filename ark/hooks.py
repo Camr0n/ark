@@ -1,13 +1,13 @@
-
-""" Event and filter hooks for plugins. """
-
+# --------------------------------------------------------------------------
+# Event and filter hooks.
+# --------------------------------------------------------------------------
 
 # Maps hook names to lists of callback functions.
 _handlers = {}
 
 
+# Decorator function for registering event and filter handlers.
 def register(hook):
-    """ Decorator function for registering event and filter handlers. """
 
     def callback(func):
         _handlers.setdefault(hook, []).append(func)
@@ -16,14 +16,14 @@ def register(hook):
     return callback
 
 
+# Fires an event hook.
 def event(hook, *args):
-    """ Fires an event hook. """
     for func in _handlers.get(hook, []):
         func(*args)
 
 
+# Fires a filter hook.
 def filter(hook, value, *args):
-    """ Fires a filter hook. """
     for func in _handlers.get(hook, []):
         value = func(value, *args)
     return value

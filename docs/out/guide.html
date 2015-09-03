@@ -63,8 +63,8 @@ Flags:
 Commands:
   build             Build the current site.
   clear             Clear the output directory.
+  edit              Edit an existing record or create a new file.
   init              Initialize a new site directory.
-  new               Create a new record file.
   serve             Run a web server on the site's output directory.
   watch             Monitor the site directory and rebuild on changes.
 
@@ -120,9 +120,9 @@ src/
 <p>New custom types behave, by default, like the builtin <em>post</em> type, but we can alter this behaviour by adding a <code>types</code> dictionary to our <code>config.py</code> file:</p>
 <pre class="lang-python stx-pygments" data-lang="python">
 <span class="n">types</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&quot;sonnets&quot;</span><span class="p">:</span> <span class="p">{</span>               <span class="c"># type id corresponding to the [type] directory</span>
-        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the titlecased type id</span>
-        <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the slugified type id</span>
+    <span class="s">&quot;sonnets&quot;</span><span class="p">:</span> <span class="p">{</span>               <span class="c"># id corresponding to the [type] directory</span>
+        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the titlecased id</span>
+        <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the slugified id</span>
         <span class="s">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">,</span>    <span class="c"># defaults to &quot;tags&quot;</span>
         <span class="s">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># build directory indexes for this type?</span>
         <span class="s">&quot;order_by&quot;</span><span class="p">:</span> <span class="s">&quot;date&quot;</span><span class="p">,</span>    <span class="c"># order index entries by this attribute</span>

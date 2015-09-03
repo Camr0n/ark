@@ -1,5 +1,6 @@
-
-""" Handles template-engine callbacks. """
+# --------------------------------------------------------------------------
+# Handles template-engine callbacks.
+# --------------------------------------------------------------------------
 
 import sys
 
@@ -19,7 +20,7 @@ def register(ext):
     """ Decorator function for registering template-engine callbacks.
 
     A template-engine callback should accept a page object and a
-    template filename and should return a string of html.
+    template filename and return a string of html.
 
     Callbacks are registered per file extension, e.g.
 
@@ -37,8 +38,8 @@ def register(ext):
     return register_callback
 
 
+# Renders the supplied page object into html.
 def render(page):
-    """ Renders the supplied page object into html. """
 
     # Cache a list of the theme's template files for future calls.
     global _templates
