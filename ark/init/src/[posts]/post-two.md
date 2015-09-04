@@ -1,5 +1,5 @@
 ---
-title: My Second Sample Post
+title: Second Sample Post
 author: John Doe
 date: 2015-01-02
 tags: foo, bar, baz

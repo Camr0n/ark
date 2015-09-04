@@ -1,5 +1,5 @@
 ---
-title: My First Sample Post
+title: First Sample Post
 author: John Doe
 date: 2015-01-01
 tags: foo, bar, baz
