@@ -14,15 +14,15 @@ _rmap = {}
 _nmap = {}
 
 
-# A TagInfo instance pairs a tag-name with its corresponding tag-index url.
-class TagInfo:
+# A Tag instance pairs a tag-name with its corresponding tag-index url.
+class Tag:
 
     def __init__(self, name, url):
         self.name = name
         self.url = url
 
     def __repr__(self):
-        return 'TagInfo(name=%s, url=%s)' % (repr(self.name), repr(self.url))
+        return 'Tag(name=%s, url=%s)' % (repr(self.name), repr(self.url))
 
     def __str__(self):
         return '<a href="%s">%s</a>' % (self.url, self.name)

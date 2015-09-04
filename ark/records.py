@@ -68,7 +68,7 @@ class Record(dict):
             if tag:
                 tags.register(self['type'], tag, filepath)
                 url = tags.url(self['type'], tag)
-                self['tags'].append(tags.TagInfo(tag, url))
+                self['tags'].append(tags.Tag(tag, url))
 
         # Filter the record's text content.
         # (Shortcodes are processed on this hook.)
