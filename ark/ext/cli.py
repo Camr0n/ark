@@ -27,19 +27,19 @@ Usage: %s [FLAGS] [COMMAND]
   Static website generator.
 
 Flags:
-  --help            Print the application's help text and exit.
-  --version         Print the application's version number and exit.
+  --help              Print the application's help text and exit.
+  --version           Print the application's version number and exit.
 
 Commands:
-  build             Build the site.
-  clear             Clear the output directory.
-  edit              Edit an existing record or create a new file.
-  init              Initialize a new site directory.
-  serve             Run a web server on the site's output directory.
-  watch             Monitor the site directory and rebuild on changes.
+  build               Build the site.
+  clear               Clear the output directory.
+  edit                Edit an existing record or create a new file.
+  init                Initialize a new site directory.
+  serve               Run a web server on the site's output directory.
+  watch               Monitor the site directory and rebuild on changes.
 
 Command Help:
-  help <command>    Print the specified command's help text and exit.
+  help <command>      Print the specified command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -52,12 +52,12 @@ Usage: %s build [FLAGS] [OPTIONS]
   or any of its subdirectories.
 
 Flags:
-  --clear           Clear the output directory before building.
-  --help            Print the build command's help text and exit.
+  --clear             Clear the output directory before building.
+  --help              Print the build command's help text and exit.
 
 Options:
-  --out <path>      Redirect output to the specified directory.
-  --theme <name>    Override the theme specififed in the config file.
+  -o, --out <path>    Redirect output to the specified directory.
+  -t, --theme <name>  Override the theme specififed in the config file.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -71,11 +71,11 @@ Usage: %s init [FLAGS] [ARGUMENTS]
   directory will be used. Existing files will not be overwritten.
 
 Arguments:
-  [dirname]         Directory name. Defaults to the current directory.
+  [dirname]           Directory name. Defaults to the current directory.
 
 Flags:
-  -e, --empty       Do not create a skeleton site.
-      --help        Print the init command's help text and exit.
+  -e, --empty         Do not create a skeleton site.
+      --help          Print the init command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -87,7 +87,7 @@ Usage: %s clear [FLAGS]
   Clear the output directory.
 
 Flags:
-  --help            Print the clear command's help text and exit.
+  --help              Print the clear command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -99,11 +99,11 @@ Usage: %s edit [FLAGS] ARGUMENTS
   Edit a record file. Creates a new record if the file does not exist.
 
 Arguments:
-  <type>            Record type, e.g. 'posts'.
-  <name>            Record filename.
+  <type>              Record type, e.g. 'posts'.
+  <name>              Record filename.
 
 Flags:
-  --help            Print the edit command's help text and exit.
+  --help              Print the edit command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -121,12 +121,12 @@ Usage: %s serve [FLAGS] [OPTIONS]
   Set to 0 to randomly select an available port.
 
 Options:
-  -h, --host <str>  Host IP address. Defaults to localhost.
-  -p, --port <int>  Port number. Defaults to 8080.
+  -h, --host <str>    Host IP address. Defaults to localhost.
+  -p, --port <int>    Port number. Defaults to 8080.
 
 Flags:
-  -b, --browser     Launch the default web browser.
-      --help        Print the serve command's help text and exit.
+  -b, --browser       Launch the default web browser.
+      --help          Print the serve command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -139,7 +139,7 @@ Usage: %s watch [FLAGS]
   file changes are detected.
 
 Flags:
-  --help            Print the watch command's help text and exit.
+  --help              Print the watch command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -151,8 +151,8 @@ def cli():
 
     build_parser = parser.add_command("build", cmd_build, buildhelp)
     build_parser.add_flag("clear")
-    build_parser.add_str_option("out", None)
-    build_parser.add_str_option("theme", None)
+    build_parser.add_str_option("out", None, "o")
+    build_parser.add_str_option("theme", None, "t")
 
     serve_parser = parser.add_command("serve", cmd_serve, servehelp)
     serve_parser.add_flag("browser", "b")
