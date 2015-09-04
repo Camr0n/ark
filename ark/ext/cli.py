@@ -74,7 +74,8 @@ Arguments:
   [dirname]         Directory name. Defaults to the current directory.
 
 Flags:
-  --help            Print the init command's help text and exit.
+  -e, --empty       Do not create a skeleton site.
+      --help        Print the init command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -159,6 +160,8 @@ def cli():
     serve_parser.add_int_option("port", 8080, "p")
 
     init_parser = parser.add_command("init", cmd_init, inithelp)
+    init_parser.add_flag("empty", "e")
+
     clear_parser = parser.add_command("clear", cmd_clear, clearhelp)
     edit_parser = parser.add_command("edit", cmd_edit, edithelp)
     watch_parser = parser.add_command("watch", cmd_watch, watchhelp)
@@ -196,7 +199,8 @@ def cmd_init(parser):
     os.chdir(sitedir)
     for name in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
         os.makedirs(name, exist_ok=True)
-    utils.copydir(initdir, '.', noclobber=True)
+    if not parser['empty']:
+        utils.copydir(initdir, '.', noclobber=True)
 
 
 # Callback for the clear command.
