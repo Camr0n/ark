@@ -4,19 +4,16 @@
 
 {% block content %}
 
-    <h2>Record Object</h2>
-    <pre>{{ record|pprint|pygmentize:'python' }}</pre>
-
     {% if record.tags %}
         <h2>Tags</h2>
         <ul>
-            {% for tag in record.tags %}<li>{{ tag  }}</li>{% endfor %}
+            {% for tag in record.tags %}
+                <li>{{ tag  }}</li>
+            {% endfor %}
         </ul>
     {% endif %}
 
     <h2>Page Context</h2>
-    {% for dict in context.stack %}
-        <pre>{{ dict|pprint|pygmentize:'python' }}</pre>
-    {% endfor %}
+    <pre>{{ context.stack|index:2|pprint|pygmentize:'python' }}</pre>
 
 {% endblock %}
