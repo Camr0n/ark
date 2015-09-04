@@ -219,7 +219,7 @@ def cmd_edit(parser):
     path = site.src('[%s]' % args[0], args[1])
     if not os.path.exists(path):
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        template = "---\ndate: %s\n---\n\n\n"
+        template = "---\ntitle: Record Title\ndate: %s\n---\n\n\n"
         utils.writefile(path, template % now)
     editor = os.getenv('ARK_EDITOR') or os.getenv('EDITOR') or 'vim'
     subprocess.call((editor, path))
