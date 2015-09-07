@@ -12,8 +12,8 @@ from . import site
 # Loads any Python modules found in the extensions directories.
 def load():
     dirs = [os.path.join(os.path.dirname(__file__), 'ext')]
-    if os.path.isdir(site.home('ext')):
-        dirs.append(site.home('ext'))
+    if os.path.isdir(site.ext()):
+        dirs.append(site.ext())
     for dirpath in dirs:
         sys.path.insert(0, dirpath)
         names = [

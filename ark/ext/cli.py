@@ -56,7 +56,11 @@ Flags:
   --help              Print the build command's help text and exit.
 
 Options:
-  -o, --out <path>    Redirect output to the specified directory.
+  -e, --ext <path>    Override the default 'ext' directory.
+  -i, --inc <path>    Override the default 'inc' directory.
+  -l, --lib <path>    Override the default 'lib' directory.
+  -o, --out <path>    Override the default 'out' directory.
+  -s, --src <path>    Override the default 'src' directory.
   -t, --theme <name>  Override the theme specififed in the config file.
 
 """ % os.path.basename(sys.argv[0])
@@ -153,6 +157,10 @@ def cli():
     build_parser = parser.add_command("build", cmd_build, buildhelp)
     build_parser.add_flag("clear")
     build_parser.add_str_option("out", None, "o")
+    build_parser.add_str_option("src", None, "s")
+    build_parser.add_str_option("lib", None, "l")
+    build_parser.add_str_option("ext", None, "e")
+    build_parser.add_str_option("inc", None, "i")
     build_parser.add_str_option("theme", None, "t")
 
     serve_parser = parser.add_command("serve", cmd_serve, servehelp)
@@ -176,11 +184,14 @@ def cli():
 
 # Callback for the build command.
 def cmd_build(parser):
-    if parser['out']:
-        site.setconfig('[outdir]', parser['out'])
+    if parser['out']: site.setconfig('[out]', parser['out'])
+    if parser['src']: site.setconfig('[src]', parser['src'])
+    if parser['lib']: site.setconfig('[lib]', parser['lib'])
+    if parser['ext']: site.setconfig('[ext]', parser['ext'])
+    if parser['inc']: site.setconfig('[inc]', parser['inc'])
 
     if parser['theme']:
-        site.setconfig('[themedir]', site.locate_theme(parser['theme']))
+        site.setconfig('[theme]', site.locate_theme(parser['theme']))
 
     if parser['clear']:
         utils.cleardir(site.out())

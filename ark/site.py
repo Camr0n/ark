@@ -17,19 +17,23 @@ _config = {}
 def init():
 
     # Record the start time.
-    setconfig('[starttime]', time.time())
+    setconfig('[start]', time.time())
 
     # Locate the site's home directory.
-    setconfig('[homedir]', locate_home())
+    setconfig('[home]', locate_home())
+
+    # Set the default input and output directories.
+    setconfig('[src]', home('src'))
+    setconfig('[out]', home('out'))
+    setconfig('[lib]', home('lib'))
+    setconfig('[ext]', home('ext'))
+    setconfig('[inc]', home('inc'))
 
     # Load the site's configuration data.
     load_site_config()
 
     # Locate the theme directory.
-    setconfig('[themedir]', locate_theme(config('theme')))
-
-    # Set the output directory.
-    setconfig('[outdir]', home('out'))
+    setconfig('[theme]', locate_theme(config('theme')))
 
     # Initialize a count of the number of pages rendered.
     setconfig('[rendered]', 0)
@@ -54,8 +58,8 @@ def locate_home():
 def locate_theme(name):
 
     # A directory in the site's theme library?
-    if os.path.isdir(home('lib', name)):
-        return home('lib', name)
+    if os.path.isdir(lib(name)):
+        return lib(name)
 
     # A directory in the global theme library?
     if os.getenv('ARK_THEMES'):
@@ -91,22 +95,37 @@ def setconfig(key, value):
 
 # Returns the path to the site's home directory.
 def home(*append):
-    return os.path.join(config('[homedir]'), *append)
+    return os.path.join(config('[home]'), *append)
 
 
-# Returns the path to the site's src directory.
+# Returns the path to the source directory.
 def src(*append):
-    return home('src', *append)
+    return os.path.join(config('[src]'), *append)
 
 
 # Returns the path to the output directory.
 def out(*append):
-    return os.path.join(config('[outdir]'), *append)
+    return os.path.join(config('[out]'), *append)
+
+
+# Returns the path to the theme library directory.
+def lib(*append):
+    return os.path.join(config('[lib]'), *append)
+
+
+# Returns the path to the extensions directory.
+def ext(*append):
+    return os.path.join(config('[ext]'), *append)
+
+
+# Returns the path to the includes directory.
+def inc(*append):
+    return os.path.join(config('[inc]'), *append)
 
 
 # Returns the path to the theme directory.
 def theme(*append):
-    return os.path.join(config('[themedir]'), *append)
+    return os.path.join(config('[theme]'), *append)
 
 
 # Returns a list of command line build flags.
@@ -177,7 +196,7 @@ def trail_from_src(srcdir):
 
 # Returns the run time in seconds.
 def runtime():
-    return time.time() - config('[starttime]')
+    return time.time() - config('[start]')
 
 
 # Returns the count of pages rendered.

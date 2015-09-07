@@ -18,8 +18,8 @@ def includes():
     global _includes
     if _includes is None:
         _includes = {}
-        if os.path.isdir(site.home('inc')):
-            for finfo in utils.srcfiles(site.home('inc')):
+        if os.path.isdir(site.inc()):
+            for finfo in utils.srcfiles(site.inc()):
                 text, _ = utils.load(finfo.path)
                 _includes[finfo.base] = renderers.render(text, finfo.ext)
     return _includes
