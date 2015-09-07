@@ -96,11 +96,12 @@ Flags:
 edithelp = """
 Usage: %s edit [FLAGS] ARGUMENTS
 
-  Edit a record file. Creates a new record if the file does not exist.
+  Edit a record file or files. Creates new records if the named files
+  do not exist.
 
 Arguments:
   <type>              Record type, e.g. 'posts'.
-  <name>              Record filename.
+  <name, ...>         Record filenames.
 
 Flags:
   --help              Print the edit command's help text and exit.
@@ -214,15 +215,16 @@ def cmd_clear(parser):
 # Callback for the edit command.
 def cmd_edit(parser):
     args = parser.get_args()
-    if len(args) != 2:
-        sys.exit("Error: the 'edit' command requires 2 arguments.")
-    path = site.src('[%s]' % args[0], args[1])
-    if not os.path.exists(path):
-        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        template = "---\ntitle: Record Title\ndate: %s\n---\n\n\n"
-        utils.writefile(path, template % now)
-    editor = os.getenv('ARK_EDITOR') or os.getenv('EDITOR') or 'vim'
-    subprocess.call((editor, path))
+    if len(args) < 2:
+        sys.exit("Error: the 'edit' command requires at least 2 arguments.")
+    paths = [site.src('[%s]' % args[0], path) for path in args[1:]]
+    for path in paths:
+        if not os.path.exists(path):
+            now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            template = "---\ntitle: Record Title\ndate: %s\n---\n\n\n"
+            utils.writefile(path, template % now)
+    paths.insert(0, os.getenv('ARK_EDITOR') or os.getenv('EDITOR') or 'vim')
+    subprocess.call(paths)
 
 
 # Callback for the serve command.
