@@ -32,7 +32,7 @@ def build_site():
     for path, name in utils.subdirs(site.src()):
         if name.startswith('['):
             build_record_pages(path)
-            if site.config('types')[name.strip('[]')]['indexed']:
+            if site.typeconfig(name.strip('[]'), 'indexed'):
                 build_directory_indexes(path)
 
     # Build the tag index pages.
@@ -61,7 +61,7 @@ def build_directory_indexes(dirpath, recursing=False):
     typeid = site.type_from_src(dirpath)
 
     # Fetch the type's configuration data.
-    typeconfig = site.config('types')[typeid]
+    typeconfig = site.typeconfig(typeid)
 
     # Assemble a list of records in this directory and any subdirectories.
     index = []
@@ -102,7 +102,7 @@ def build_tag_indexes():
     for typeid, recmap in tags.records().items():
 
         # Fetch the current type's configuration data.
-        typeconfig = site.config('types')[typeid]
+        typeconfig = site.typeconfig(typeid)
 
         # Iterate over the registered tags for the current record type.
         for slug, reclist in recmap.items():

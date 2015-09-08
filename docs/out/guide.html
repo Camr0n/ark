@@ -82,7 +82,7 @@ site/
     out/            # output directory for html files
     src/            # source directory for text files
 </pre>
-<p>Ark also creates a hidden <code>.ark</code> directory for its own use.</p>
+<p>Ark also creates a hidden <code>.ark</code> file for its own use. (Ark uses the presence of this file to identify the site directory.)</p>
 <h2 id="records">Records</h2>
 <p>A record is a text file stored in a site's <code>src</code> directory. Ark searches the <code>src</code> directory for record files and generates a HTML page in the <code>out</code> directory for each one it finds. It can also generate a set of index pages for each directory of records.</p>
 <p>Ark has builtin support for record files written in <a href="http://daringfireball.net/projects/markdown/">Markdown</a> and <a href="https://github.com/dmulholland/syntex">Syntex</a>. Files with a <code>.md</code> extension are rendered as Markdown, files with a <code>.stx</code> extension are rendered as Syntex. Ark can be extended via plugins to support other formats and extensions.</p>
@@ -117,21 +117,19 @@ src/
     [sonnets]/
         my-sonnet.md   # this record is a sonnet
 </pre>
-<p>New custom types behave, by default, like the builtin <em>post</em> type, but we can alter this behaviour by adding a <code>types</code> dictionary to our <code>config.py</code> file:</p>
+<p>New custom types behave, by default, like the builtin <em>post</em> type, but we can alter this behaviour by adding a dictionary of type settings to our <code>config.py</code> file:</p>
 <pre class="lang-python stx-pygments" data-lang="python">
-<span class="n">types</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&quot;sonnets&quot;</span><span class="p">:</span> <span class="p">{</span>               <span class="c"># id corresponding to the [type] directory</span>
-        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the titlecased id</span>
-        <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the slugified id</span>
-        <span class="s">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">,</span>    <span class="c"># defaults to &quot;tags&quot;</span>
-        <span class="s">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># build directory indexes for this type?</span>
-        <span class="s">&quot;order_by&quot;</span><span class="p">:</span> <span class="s">&quot;date&quot;</span><span class="p">,</span>    <span class="c"># order index entries by this attribute</span>
-        <span class="s">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># display index entries in reverse order?</span>
-        <span class="s">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>       <span class="c"># number of entries per index page</span>
-        <span class="s">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>   <span class="c"># number of entries per tag index page</span>
-        <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>     <span class="c"># use this type&#39;s index as the site homepage?</span>
-    <span class="p">},</span>
-<span class="p">}</span>
+<span class="n">sonnets</span> <span class="o">=</span> <span class="p">{</span>                <span class="c"># id corresponding to the [type] directory</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the titlecased id</span>
+    <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the slugified id</span>
+    <span class="s">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">,</span>    <span class="c"># defaults to &quot;tags&quot;</span>
+    <span class="s">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># build directory indexes for this type?</span>
+    <span class="s">&quot;order_by&quot;</span><span class="p">:</span> <span class="s">&quot;date&quot;</span><span class="p">,</span>    <span class="c"># order index entries by this attribute</span>
+    <span class="s">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># display index entries in reverse order?</span>
+    <span class="s">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>       <span class="c"># number of entries per index page</span>
+    <span class="s">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>   <span class="c"># number of entries per tag index page</span>
+    <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>     <span class="c"># use this type&#39;s index as the site homepage?</span>
+<span class="p">},</span>
 </pre>
 <p>All the settings above are in fact defaults, and in practice we would only need to include those we wished to change.</p>
 <p>Within a <code>[type]</code> directory, Ark will preserve any directory structure it finds, so you can use subdirectories to organise your record files by category or date. If the record type is indexed, Ark will generate an individual set of index pages for each subdirectory in the tree.</p>

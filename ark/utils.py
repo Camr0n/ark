@@ -88,6 +88,9 @@ def titlecase(s):
 # existing files are never overwritten.
 def copydir(srcdir, dstdir, skiptypes=True, noclobber=False):
 
+    if not os.path.exists(srcdir):
+        return
+
     if not os.path.exists(dstdir):
         os.makedirs(dstdir)
 
@@ -123,11 +126,13 @@ def cleardir(dirpath):
 
 
 # Writes a string to a file. Creates parent directories if required.
-def writefile(filepath, content):
-    if not os.path.isdir(os.path.dirname(filepath)):
-        os.makedirs(os.path.dirname(filepath))
+def writefile(path, content):
+    path = os.path.abspath(path)
 
-    with open(filepath, 'w', encoding='utf-8') as file:
+    if not os.path.isdir(os.path.dirname(path)):
+        os.makedirs(os.path.dirname(path))
+
+    with open(path, 'w', encoding='utf-8') as file:
         file.write(content)
 
 
@@ -162,3 +167,10 @@ def load(filepath):
                 meta[key.lower().replace(' ', '_').replace('-', '_')] = value
 
     return text, meta
+
+
+# Upgrade a site initialized by an older version of Ark
+# that used a .ark directory in place of a .ark file.
+def upgrade_dotark_dir(path):
+    shutil.rmtree(os.path.join(path, '.ark'))
+    writefile(os.path.join(path, '.ark'), '')

@@ -5,5 +5,5 @@ __pycache__/
 # Development scratch files
 dev/
 
-# Ark cache files
-.ark/
+# Ark output files
+ark/init/out/

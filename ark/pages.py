@@ -25,7 +25,7 @@ class Page(dict):
         self['flags'] = site.flags()
         self['site'] = site.config()
         self['includes'] = includes.includes()
-        self['type'] = site.config('types')[typeid]
+        self['type'] = site.typeconfig(typeid)
         self['slugs'] = []
         self['record'] = None
         self['records'] = []
@@ -43,6 +43,7 @@ class Page(dict):
         self['next_url'] = ''
         self['first_url'] = ''
         self['last_url'] = ''
+        self['index_url'] = site.index_url(typeid)
 
     # Renders the page into HTML and prints the output file.
     def render(self):

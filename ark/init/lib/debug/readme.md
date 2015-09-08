@@ -1,11 +1,16 @@
 
-Debug Theme
-===========
+# Debug
 
 A diagnostic tool for debugging Ark sites.
 
 
-License
--------
+## Includes
+
+This theme supports the following include files:
+
+* `menu`
+
+
+## License
 
 This work has been placed in the public domain.

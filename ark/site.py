@@ -29,11 +29,8 @@ def init():
     setconfig('[ext]', home('ext'))
     setconfig('[inc]', home('inc'))
 
-    # Load the site's configuration data.
+    # Load the site's configuration file.
     load_site_config()
-
-    # Locate the theme directory.
-    setconfig('[theme]', locate_theme(config('theme')))
 
     # Initialize a count of the number of pages rendered.
     setconfig('[rendered]', 0)
@@ -43,14 +40,18 @@ def init():
 
 
 # Attempts to determine the path to the site's home directory.
-# Exits with an error message on failure.
+# Sets the [homeless] flag if the directory cannot be located.
 def locate_home():
     path = os.getcwd()
     while os.path.isdir(path):
-        if os.path.exists(os.path.join(path, 'src')):
+        if os.path.isfile(os.path.join(path, '.ark')):
+            return os.path.abspath(path)
+        elif os.path.isdir(os.path.join(path, '.ark')):
+            utils.upgrade_dotark_dir(path)
             return os.path.abspath(path)
         path = os.path.join(path, '..')
-    sys.exit("Error: cannot locate the site's home directory.")
+    setconfig('[homeless]', True)
+    return os.getcwd()
 
 
 # Attempts to determine the path to the theme directory corresponding to
@@ -93,9 +94,41 @@ def setconfig(key, value):
     _config[key] = value
 
 
+# Provides access to the site's normalized type-configuration data.
+# Returns an entire dictionary of type data if no key is specified.
+def typeconfig(id, key=None):
+    types = _config.setdefault('[types]', {})
+
+    # Set default values for any missing type data.
+    if not id in types:
+        types[id] = {
+            'id': id,
+            'name': utils.titlecase(id),
+            'slug': '' if id == 'pages' else utils.slugify(id),
+            'tag_slug': 'tags',
+            'indexed': False if id == 'pages' else True,
+            'order_by': 'date',
+            'reverse': True,
+            'per_index': 10,
+            'per_tag_index': 10,
+            'homepage': False,
+        }
+        types[id].update(config(id, {}))
+
+    if key:
+        return types[id][key]
+    else:
+        return types[id]
+
+
 # Returns the path to the site's home directory.
 def home(*append):
     return os.path.join(config('[home]'), *append)
+
+
+# Returns true if Ark has been unable to locate the site's home directory.
+def homeless():
+    return config('[homeless]', False)
 
 
 # Returns the path to the source directory.
@@ -125,6 +158,9 @@ def inc(*append):
 
 # Returns the path to the theme directory.
 def theme(*append):
+    if config('[theme]') is None:
+       setconfig('[theme]', locate_theme(config('theme')))
+
     return os.path.join(config('[theme]'), *append)
 
 
@@ -135,8 +171,8 @@ def flags():
 
 # Returns the output slug list for the specified record type.
 def slugs(typeid, *append):
-    typeslug = config('types')[typeid]['slug']
-    sluglist = [slug for slug in typeslug.split('/') if slug]
+    typeslug = typeconfig(typeid, 'slug')
+    sluglist = [typeslug] if typeslug else []
     sluglist.extend(append)
     return sluglist
 
@@ -158,8 +194,8 @@ def paged_url(slugs, page_number, total_pages):
 
 # Returns the URL of the index page of the specified record type.
 def index_url(typeid):
-    if config('types')[typeid]['indexed']:
-        if config('types')[typeid]['homepage']:
+    if typeconfig(typeid, 'indexed'):
+        if typeconfig(typeid, 'homepage'):
             return url(['index'])
         else:
             return url(slugs(typeid, 'index'))
@@ -189,7 +225,7 @@ def slugs_from_src(srcdir, *append):
 def trail_from_src(srcdir):
     typeid = type_from_src(srcdir)
     dirnames = os.path.relpath(srcdir, src()).replace('\\', '/').split('/')
-    trail = [config('types')[typeid]['name']]
+    trail = [typeconfig(typeid, 'name')]
     trail.extend(name for name in dirnames if not name.startswith('['))
     return trail
 
@@ -219,7 +255,7 @@ def inc_written():
     setconfig('[written]', config('[written]') + 1)
 
 
-# Loads and normalize the site's configuration data.
+# Loads and normalizes the site's configuration data.
 def load_site_config():
 
     # Load the default site configuration file.
@@ -238,29 +274,3 @@ def load_site_config():
     # If 'root' isn't an empty string, make sure it ends in a slash.
     if _config['root'] and not _config['root'].endswith('/'):
         _config['root'] += '/'
-
-    # The 'types' dictionary stores configuration data for record types.
-    _config.setdefault('types', {})
-
-    # Assemble a list of the site's record types from its [type] directories.
-    types = [di.name.strip('[]')
-                for di in utils.subdirs(src())
-                    if di.name.startswith('[')]
-
-    # Supply default values for any missing data.
-    for id in types:
-        data = {
-            'id': id,
-            'name': utils.titlecase(id),
-            'slug': '' if id == 'pages' else utils.slugify(id),
-            'tag_slug': 'tags',
-            'indexed': False if id == 'pages' else True,
-            'order_by': 'date',
-            'reverse': True,
-            'per_index': 10,
-            'per_tag_index': 10,
-            'homepage': False,
-        }
-        data.update(_config['types'].get(id, {}))
-        _config['types'][id] = data
-        _config['types'][id]['index_url'] = index_url(id)

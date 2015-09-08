@@ -52,11 +52,10 @@ Usage: %s build [FLAGS] [OPTIONS]
   or any of its subdirectories.
 
 Flags:
-  --clear             Clear the output directory before building.
-  --help              Print the build command's help text and exit.
+  -c, --clear         Clear the output directory before building.
+      --help          Print the build command's help text and exit.
 
 Options:
-  -e, --ext <path>    Override the default 'ext' directory.
   -i, --inc <path>    Override the default 'inc' directory.
   -l, --lib <path>    Override the default 'lib' directory.
   -o, --out <path>    Override the default 'out' directory.
@@ -122,7 +121,7 @@ Usage: %s serve [FLAGS] [OPTIONS]
   Host IP defaults to localhost (127.0.0.1). Specify an IP address to serve
   only on that address or '0.0.0.0' to serve an all available IPs.
 
-  Port number defaults to 8080 as ports below 1024 require sudo on OSX.
+  Port number defaults to 8080 as ports below 1024 require sudo.
   Set to 0 to randomly select an available port.
 
 Options:
@@ -155,11 +154,10 @@ def cli():
     parser = clio.ArgParser(apphelp, meta.__version__)
 
     build_parser = parser.add_command("build", cmd_build, buildhelp)
-    build_parser.add_flag("clear")
+    build_parser.add_flag("clear", "c")
     build_parser.add_str_option("out", None, "o")
     build_parser.add_str_option("src", None, "s")
     build_parser.add_str_option("lib", None, "l")
-    build_parser.add_str_option("ext", None, "e")
     build_parser.add_str_option("inc", None, "i")
     build_parser.add_str_option("theme", None, "t")
 
@@ -175,7 +173,7 @@ def cli():
     edit_parser = parser.add_command("edit", cmd_edit, edithelp)
     watch_parser = parser.add_command("watch", cmd_watch, watchhelp)
 
-    hooks.event('init_clio', parser)
+    hooks.event('clio', parser)
 
     parser.parse()
     if not parser.has_cmd():
@@ -184,10 +182,12 @@ def cli():
 
 # Callback for the build command.
 def cmd_build(parser):
+    if site.homeless():
+        sys.exit("Error: cannot locate the site's home directory.")
+
     if parser['out']: site.setconfig('[out]', parser['out'])
     if parser['src']: site.setconfig('[src]', parser['src'])
     if parser['lib']: site.setconfig('[lib]', parser['lib'])
-    if parser['ext']: site.setconfig('[ext]', parser['ext'])
     if parser['inc']: site.setconfig('[inc]', parser['inc'])
 
     if parser['theme']:
@@ -200,7 +200,10 @@ def cmd_build(parser):
 
     @hooks.register('main')
     def build_callback():
-        build.build_site()
+        if os.path.isdir(site.src()):
+            build.build_site()
+        else:
+            sys.exit("Error: cannot locate the site's source directory.")
 
 
 # Callback for the init command.
@@ -209,37 +212,59 @@ def cmd_init(parser):
     sitedir = parser.get_args()[0] if parser.has_args() else '.'
     os.makedirs(sitedir, exist_ok=True)
     os.chdir(sitedir)
-    for name in ('.ark', 'ext', 'inc', 'lib', 'out', 'src'):
+
+    for name in ('ext', 'inc', 'lib', 'out', 'src'):
         os.makedirs(name, exist_ok=True)
+    utils.writefile('.ark', '')
+
+    if not os.path.exists('config.py'):
+        shutil.copy2(os.path.join(initdir, 'config.py'), 'config.py')
+
+    for name in ('ext', 'lib'):
+        utils.copydir(os.path.join(initdir, name), name, noclobber=True)
+
     if not parser['empty']:
-        utils.copydir(initdir, '.', noclobber=True)
+        for name in ('inc', 'src'):
+            utils.copydir(os.path.join(initdir, name), name, False, True)
 
 
 # Callback for the clear command.
 def cmd_clear(parser):
-    if os.path.exists(site.out()):
-        utils.cleardir(site.out())
-    else:
+    if site.homeless():
+        sys.exit("Error: cannot locate the site's home directory.")
+
+    if not os.path.exists(site.out()):
         sys.exit("Error: cannot locate the site's output directory.")
+
+    utils.cleardir(site.out())
 
 
 # Callback for the edit command.
 def cmd_edit(parser):
+    if site.homeless():
+        sys.exit("Error: cannot locate the site's home directory.")
+
     args = parser.get_args()
     if len(args) < 2:
         sys.exit("Error: the 'edit' command requires at least 2 arguments.")
+
     paths = [site.src('[%s]' % args[0], path) for path in args[1:]]
+
     for path in paths:
         if not os.path.exists(path):
             now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             template = "---\ntitle: Record Title\ndate: %s\n---\n\n\n"
             utils.writefile(path, template % now)
+
     paths.insert(0, os.getenv('ARK_EDITOR') or os.getenv('EDITOR') or 'vim')
     subprocess.call(paths)
 
 
 # Callback for the serve command.
 def cmd_serve(parser):
+    if site.homeless():
+        sys.exit("Error: cannot locate the site's home directory.")
+
     if not os.path.exists(site.out()):
         sys.exit("Error: cannot locate the site's output directory.")
 
@@ -308,7 +333,7 @@ def hashsite(sitedirpath):
             hash.update(finfo.name.encode())
 
         for dinfo in utils.subdirs(dirpath):
-            if is_home and dinfo.name in ('out', '.ark'):
+            if is_home and dinfo.name in ('out'):
                 continue
             hashdir(dinfo.path, False)
 

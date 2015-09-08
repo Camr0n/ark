@@ -17,26 +17,34 @@ _hashes = { 'old': {}, 'new': {} }
 # Loads cached page hashes from the last build run.
 @hooks.register('init')
 def load():
-    if os.path.exists(site.home('.ark', 'hashes.pickle')):
-        with open(site.home('.ark', 'hashes.pickle'), 'rb') as file:
-            _hashes['old'] = pickle.load(file)
+    if os.path.isfile(site.home('.ark')):
+        if os.path.getsize(site.home('.ark')) > 0:
+            with open(site.home('.ark'), 'rb') as file:
+                unpickled = pickle.load(file)
+                _hashes['old'] = unpickled['hashes']
 
 
 # Caches page hashes to disk for the next build run.
+# We fake the file mtime in case the .ark file has been checked into
+# a version control repository.
 @hooks.register('exit')
 def save():
     if _hashes['new']:
-        if not os.path.exists(site.home('.ark')):
-            os.makedirs(site.home('.ark'))
-        with open(site.home('.ark', 'hashes.pickle'), 'wb') as file:
-            pickle.dump(_hashes['new'], file)
+        atime = os.path.getatime(site.home('.ark'))
+        mtime = os.path.getmtime(site.home('.ark'))
+        with open(site.home('.ark'), 'wb') as file:
+            pickle.dump(dict(hashes=_hashes['new']), file)
+        os.utime(site.home('.ark'), (atime, mtime))
 
 
 # Returns true if filepath is an existing file whose hash matches that of
-# the content string.
+# the content string. We use the relative filepath as the key to avoid
+# leaking potentially sensitive information (e.g. usernames) if the hash
+# file is checked into a public version control repository.
 def match(filepath, content):
-    _hashes['new'][filepath] = hashlib.sha1(content.encode()).hexdigest()
+    key = os.path.relpath(filepath, site.out())
+    _hashes['new'][key] = hashlib.sha1(content.encode()).hexdigest()
     if os.path.exists(filepath):
-        return _hashes['old'].get(filepath) == _hashes['new'][filepath]
+        return _hashes['old'].get(key) == _hashes['new'][key]
     else:
         return False
