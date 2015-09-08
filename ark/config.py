@@ -12,7 +12,7 @@
 
 # Name of the default theme directory.
 
-theme = "vanilla"
+theme = "twentyfifteen"
 
 # --------------------------------------------------------------------------
 # Root URL
