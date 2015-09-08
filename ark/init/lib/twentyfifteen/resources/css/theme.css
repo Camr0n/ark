@@ -73,10 +73,6 @@ blockquote {
     line-height: 1.6667;
     margin: 0 0 1.6em;
     padding: 0 0 0 0.7778em;
-    -webkit-hyphens: none;
-    -moz-hyphens: none;
-    -ms-hyphens: none;
-    hyphens: none;
 }
 
 blockquote > p:last-child {
@@ -85,7 +81,14 @@ blockquote > p:last-child {
 
 code, pre {
     font-family: Inconsolata, monospace;
-    hyphens: none;
+}
+
+code {
+    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.01);
+    border: 1px solid #eaeaea;
+    border: 1px solid rgba(51, 51, 51, 0.1);
+    padding: 1px 3px;
 }
 
 pre {
@@ -98,9 +101,6 @@ pre {
     max-width: 100%;
     overflow: auto;
     padding: 0.8em;
-    white-space: pre;
-    white-space: pre-wrap;
-    word-wrap: break-word;
 }
 
 abbr[title] {
@@ -486,11 +486,6 @@ a:focus {
 }
 
 .record-content {
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-    word-wrap: break-word;
     padding: 0 7.5% 7.5%;
 }
 
