@@ -31,7 +31,6 @@ button, input, select, textarea, label {
     font-size: inherit;
 }
 
-
 /*
     Typography
 */
@@ -588,7 +587,7 @@ a:focus {
 .stx-alert {
     margin: 3em 0;
     border: 1px solid;
-    padding: 5%;
+    padding: 4%;
 }
 
 .stx-alert > :last-child {
