@@ -1,5 +1,16 @@
 # --------------------------------------------------------------------------
 # Handles the file hashing mechanism.
+#
+# Before writing a page file to disk we check if there is an existing
+# file of the same name left over from a previous build. If there is,
+# we compare the hash of the new page's content with the cached hash
+# of the old page's content. If they are identical, we skip writing the
+# new page to disk.
+#
+# This has two effects:
+#
+#   * We save on disk IO, which is more expensive than comparing hashes.
+#   * We avoid unnecessarily bumping the file modification time.
 # --------------------------------------------------------------------------
 
 import os
@@ -17,24 +28,19 @@ _hashes = { 'old': {}, 'new': {} }
 # Loads cached page hashes from the last build run.
 @hooks.register('init')
 def load():
-    if os.path.isfile(site.home('.ark')):
-        if os.path.getsize(site.home('.ark')) > 0:
-            with open(site.home('.ark'), 'rb') as file:
-                unpickled = pickle.load(file)
-                _hashes['old'] = unpickled['hashes']
+    if os.path.isfile(site.home('.arkcache', 'hashes.pickle')):
+        with open(site.home('.arkcache', 'hashes.pickle'), 'rb') as file:
+            _hashes['old'] = pickle.load(file)
 
 
 # Caches page hashes to disk for the next build run.
-# We fake the file mtime in case the .ark file has been checked into
-# a version control repository.
 @hooks.register('exit')
 def save():
     if _hashes['new']:
-        atime = os.path.getatime(site.home('.ark'))
-        mtime = os.path.getmtime(site.home('.ark'))
-        with open(site.home('.ark'), 'wb') as file:
-            pickle.dump(dict(hashes=_hashes['new']), file)
-        os.utime(site.home('.ark'), (atime, mtime))
+        if not os.path.isdir(site.home('.arkcache')):
+            os.makedirs(site.home('.arkcache'))
+        with open(site.home('.arkcache', 'hashes.pickle'), 'wb') as file:
+            pickle.dump(_hashes['new'], file)
 
 
 # Returns true if filepath is an existing file whose hash matches that of
