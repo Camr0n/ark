@@ -6,11 +6,13 @@ import sys
 
 
 # Maps file extensions to their registered rendering engine callbacks.
-# We include null renderers for files with a .txt or .html extension.
+# We include  a set of null renderers for various common file extensions.
 # These can be overridden by registered callbacks if desired.
 _renderers = {
-    'txt': lambda s: s,
+    'css': lambda s: s,
     'html': lambda s: s,
+    'js': lambda s: s,
+    'txt': lambda s: s,
 }
 
 
