@@ -7,3 +7,6 @@ dev/
 
 # Ark output files
 ark/init/out/
+
+# Ark cache files
+.arkcache/

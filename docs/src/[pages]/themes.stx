@@ -1,14 +1,14 @@
-
-Themes
-======
+---
+title: Themes
+---
 
 A theme is a collection of templates, styles, and scripts that together provide the look and feel for a site. Themes should be placed in the site's `lib` folder, and the name of the active theme directory specified in the `config.py` file.
 
 ::: python
 
-    theme = "vanilla"
+    theme = "twentyfifteen"
 
-Ark ships with two builtin themes: `vanilla`, a simple default theme, and `debug`, a diagnostic tool useful when designing themes or debugging sites.
+Ark ships with two bundled themes: `twentyfifteen`, a responsive, blog-focused theme based on the default WordPress theme of the same name, and `debug`, a diagnostic tool useful when designing themes or debugging sites.
 
 Note that you can override the currently active theme with the `build` command's `--theme` flag:
 
@@ -44,6 +44,6 @@ A record can specify a custom template file to use in its header:
 
     ---
     template: my-custom-template
-    ...
+    ---
 
 Note that the file extension should be omitted from the template name.

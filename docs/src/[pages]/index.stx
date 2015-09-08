@@ -1,6 +1,6 @@
-
-Ark
-===
+---
+title: Ark
+---
 
 Ark is a static website generator in Python. It transforms a directory of text files into a self-contained website that can be viewed locally or served remotely.
 
@@ -10,8 +10,8 @@ Ark is highly extensible. It has builtin support for text files written in [Mark
 [Syntex]: https://github.com/dmulholland/syntex
 
 
-Installation
-------------
+
+## Installation
 
 Install Ark from the Python Package Index using `pip`:
 
@@ -20,8 +20,8 @@ Install Ark from the Python Package Index using `pip`:
 Ark requires Python 3.2 or later.
 
 
-Dependencies
-------------
+
+## Dependencies
 
 Installing Ark automatically installs the following dependencies:
 
@@ -35,15 +35,17 @@ Installing Ark automatically installs the following dependencies:
 * [Syntex](https://github.com/dmulholland/syntex)
 
 
-Links
------
+
+## Links
 
 * [Github Homepage](https://github.com/dmulholland/ark)
 * [Python Package Index](https://pypi.python.org/pypi/ark/)
 * [Online Documentation](http://mulholland.xyz/docs/ark/)
 
 
-License
--------
 
-This work has been placed in the public domain.
+## License
+
+All Ark code and documentation has been placed in the public domain.
+
+The bundled *Twenty Fifteen* theme is a port of the default WordPress theme of the same name and is released under the GPL.

@@ -1,12 +1,11 @@
-
-Guide
-=====
+---
+title: Guide
+---
 
 :insert toc
 
 
-Command Line Interface
-----------------------
+## Command Line Interface
 
 To initialize a new site, create a site directory, `cd` into it, and run the `init` command:
 
@@ -16,7 +15,7 @@ To build an existing site, run the `build` command from the site directory or an
 
     $ ark build
 
-See the built in help text for further details of Ark's command line interface:
+See the builtin help text for further details of Ark's command line interface:
 
     $ ark --help
 
@@ -41,8 +40,7 @@ See the built in help text for further details of Ark's command line interface:
 
 
 
-Site Structure
---------------
+## Site Structure
 
 Initializing a new site creates the following directory structure:
 
@@ -54,12 +52,13 @@ Initializing a new site creates the following directory structure:
         out/            # output directory for html files
         src/            # source directory for text files
 
-Ark also creates a hidden `.ark` file for its own use. (Ark uses the presence of this file to identify the site directory.)
+Ark also creates an empty `.ark` file which it uses to identify the site directory. You can safely commit this file to a version control repository.
+
+In use Ark will generate a `.arkcache` directory for its own use. You can add this directory to your `.gitignore` file or equivalent if your site is stored in a version control repository.
 
 
 
-Records
--------
+## Records
 
 A record is a text file stored in a site's `src` directory. Ark searches the `src` directory for record files and generates a HTML page in the `out` directory for each one it finds. It can also generate a set of index pages for each directory of records.
 
@@ -126,8 +125,7 @@ Note that you can store other files and directories in your site's `src` directo
 
 
 
-Record Attributes
------------------
+## Record Attributes
 
 A record file's metadata keys are converted to lowercase and spaces are replaced by underscores so the YAML attribute:
 
@@ -177,8 +175,7 @@ All records have the following default attributes:
 
 
 
-Tags
-----
+## Tags
 
 Every record can be tagged and every record type supports its own individual set of tag index pages. To tag a record, simply add a `tags` attribute to its header followed by a comma-separated list of tags:
 
@@ -188,8 +185,7 @@ Every record can be tagged and every record type supports its own individual set
 
 
 
-Links
------
+## Links
 
 Ark generates page-relative urls and files with a `.html` extension by default, but you can customize this behaviour to suit your needs.
 
@@ -223,8 +219,7 @@ Linking to the homepage is a special case: a simple `@root/` will always suffice
 
 
 
-Includes
---------
+## Includes
 
 The includes directory, `inc`, is intended for snippets of HTML that can be reused on multiple pages throughout your site, e.g. menus or footer links. Source files placed in this folder will be parsed as Markdown or Syntex depending on their extension and the resulting HTML made available for inclusion in theme files via the `includes.<filename>` attribute.
 
@@ -240,8 +235,7 @@ If the menu above was contained in a file named `menu.stx` then the rendered HTM
 
 
 
-Extensions
-----------
+## Extensions
 
 The extensions directory, `ext`, is intended for plugins that extend or enhance Ark's functionality. Python modules or packages placed in this directory will be loaded automatically and can make use of Ark's system of event and filter hooks to inject their own code into the build process.
 
@@ -249,8 +243,7 @@ Ark is highly extensible and much of its default functionality is in fact implem
 
 
 
-Markdown Options
-----------------
+## Markdown Options
 
 Ark uses the [Python Markdown][mddocs] package to render Markdown files. You can make use of its optional features and extensions by including a dictionary of keyword arguments for the renderer in your site configuration file.
 

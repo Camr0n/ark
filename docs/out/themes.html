@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <title>Themes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/pygments.css">
+
     <!--[if lt IE 9]><script src="js/html5shiv.min.js"></script><![endif]-->
     <script src="js/jquery-1.11.2.min.js"></script>
     <script src="js/theme.js"></script>
@@ -26,13 +28,14 @@
 
     <article id="content" class="content">
       
+        <h1>Themes</h1>
+      
 
-      <h1 id="themes">Themes</h1>
-<p>A theme is a collection of templates, styles, and scripts that together provide the look and feel for a site. Themes should be placed in the site's <code>lib</code> folder, and the name of the active theme directory specified in the <code>config.py</code> file.</p>
+      <p>A theme is a collection of templates, styles, and scripts that together provide the look and feel for a site. Themes should be placed in the site's <code>lib</code> folder, and the name of the active theme directory specified in the <code>config.py</code> file.</p>
 <pre class="lang-python stx-pygments" data-lang="python">
-<span class="n">theme</span> <span class="o">=</span> <span class="s">&quot;vanilla&quot;</span>
+<span class="n">theme</span> <span class="o">=</span> <span class="s">&quot;twentyfifteen&quot;</span>
 </pre>
-<p>Ark ships with two builtin themes: <code>vanilla</code>, a simple default theme, and <code>debug</code>, a diagnostic tool useful when designing themes or debugging sites.</p>
+<p>Ark ships with two bundled themes: <code>twentyfifteen</code>, a responsive, blog-focused theme based on the default WordPress theme of the same name, and <code>debug</code>, a diagnostic tool useful when designing themes or debugging sites.</p>
 <p>Note that you can override the currently active theme with the <code>build</code> command's <code>--theme</code> flag:</p>
 <pre>
 $ ark build --theme debug
@@ -61,7 +64,7 @@ $ ark build --theme debug
 <pre>
 ---
 template: my-custom-template
-...
+---
 </pre>
 <p>Note that the file extension should be omitted from the template name.</p>
 

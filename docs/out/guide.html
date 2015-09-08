@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <title>Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/pygments.css">
+
     <!--[if lt IE 9]><script src="js/html5shiv.min.js"></script><![endif]-->
     <script src="js/jquery-1.11.2.min.js"></script>
     <script src="js/theme.js"></script>
@@ -26,9 +28,10 @@
 
     <article id="content" class="content">
       
+        <h1>Guide</h1>
+      
 
-      <h1 id="guide">Guide</h1>
-<ul class="stx-toc">
+      <ul class="stx-toc">
 <li><a href="#command-line-interface">Command Line Interface</a></li>
 <li><a href="#site-structure">Site Structure</a></li>
 <li><a href="#records">Records</a></li>
@@ -48,7 +51,7 @@ $ ark init
 <pre>
 $ ark build
 </pre>
-<p>See the built in help text for further details of Ark's command line interface:</p>
+<p>See the builtin help text for further details of Ark's command line interface:</p>
 <pre>
 $ ark --help
 
@@ -82,7 +85,8 @@ site/
     out/            # output directory for html files
     src/            # source directory for text files
 </pre>
-<p>Ark also creates a hidden <code>.ark</code> file for its own use. (Ark uses the presence of this file to identify the site directory.)</p>
+<p>Ark also creates an empty <code>.ark</code> file which it uses to identify the site directory. You can safely commit this file to a version control repository.</p>
+<p>In use Ark will generate a <code>.arkcache</code> directory for its own use. You can add this directory to your <code>.gitignore</code> file or equivalent if your site is stored in a version control repository.</p>
 <h2 id="records">Records</h2>
 <p>A record is a text file stored in a site's <code>src</code> directory. Ark searches the <code>src</code> directory for record files and generates a HTML page in the <code>out</code> directory for each one it finds. It can also generate a set of index pages for each directory of records.</p>
 <p>Ark has builtin support for record files written in <a href="http://daringfireball.net/projects/markdown/">Markdown</a> and <a href="https://github.com/dmulholland/syntex">Syntex</a>. Files with a <code>.md</code> extension are rendered as Markdown, files with a <code>.stx</code> extension are rendered as Syntex. Ark can be extended via plugins to support other formats and extensions.</p>
