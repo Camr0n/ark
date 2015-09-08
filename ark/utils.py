@@ -82,11 +82,12 @@ def titlecase(s):
 
 
 # Copies the contents of srcdir to dstdir.
-# The destination directory is created if necessary. If a file with the same
-# name exists in the destination directory, the source file is only copied
-# if it has a newer modification timestamp. If noclobber is set to true,
-# existing files are never overwritten.
-def copydir(srcdir, dstdir, skiptypes=True, noclobber=False):
+#
+#   * Creates the destination directory if necessary.
+#   * If noclobber is true, will never overwrite existing files.
+#   * If onlyolder is true, will only overwrite older files.
+#
+def copydir(srcdir, dstdir, skiptypes=True, noclobber=False, onlyolder=True):
 
     if not os.path.exists(srcdir):
         return
@@ -106,12 +107,14 @@ def copydir(srcdir, dstdir, skiptypes=True, noclobber=False):
 
         if os.path.isfile(src):
             if os.path.isfile(dst):
-                if noclobber or os.path.getmtime(src) <= os.path.getmtime(dst):
+                if noclobber:
+                    continue
+                if onlyolder and os.path.getmtime(src) <= os.path.getmtime(dst):
                     continue
             shutil.copy2(src, dst)
 
         elif os.path.isdir(src):
-            copydir(src, dst, False)
+            copydir(src, dst, False, noclobber, onlyolder)
 
 
 # Clears the contents of a directory.
