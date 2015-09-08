@@ -19,6 +19,12 @@ def init():
     # Record the start time.
     setconfig('[start]', time.time())
 
+    # Initialize a count of the number of pages rendered.
+    setconfig('[rendered]', 0)
+
+    # Initialize a count of the number of pages written to disk.
+    setconfig('[written]', 0)
+
     # Locate the site's home directory.
     setconfig('[home]', locate_home())
 
@@ -31,12 +37,6 @@ def init():
 
     # Load the site's configuration file.
     load_site_config()
-
-    # Initialize a count of the number of pages rendered.
-    setconfig('[rendered]', 0)
-
-    # Initialize a count of the number of pages written to disk.
-    setconfig('[written]', 0)
 
 
 # Attempts to determine the path to the site's home directory.
