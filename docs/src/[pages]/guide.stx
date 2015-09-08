@@ -115,7 +115,7 @@ New custom types behave, by default, like the builtin *post* type, but we can al
         "per_index": 10,       # number of entries per index page
         "per_tag_index": 10,   # number of entries per tag index page
         "homepage": False,     # use this type's index as the site homepage?
-    },
+    }
 
 All the settings above are in fact defaults, and in practice we would only need to include those we wished to change.
 
