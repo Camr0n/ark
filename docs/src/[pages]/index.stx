@@ -2,9 +2,18 @@
 title: Ark
 ---
 
-Ark is a static website generator in Python. It transforms a directory of text files into a self-contained website that can be viewed locally or served remotely.
+Ark is a static website generator written in Python. It transforms a
+directory of text files into a self-contained website that can be viewed
+locally or served remotely.
 
-Ark is highly extensible. It has builtin support for text files written in [Markdown][] and [Syntex][], but can be extended via plugins to support any similar text-to-html format.
+* Ark is extensible. It has builtin support for source files written
+  in [Markdown][] and [Syntex][], but can be extended via plugins to support
+  any similar text-to-html format.
+
+* Ark is flexible. By default it produces sites with page-relative links
+  that can be viewed locally without any need for a web server (ideal for
+  distributing project documentation in html format), but it can easily
+  produce sites with resource or directory-style urls.
 
 [Markdown]: http://daringfireball.net/projects/markdown/
 [Syntex]: https://github.com/dmulholland/syntex
@@ -38,6 +47,7 @@ Installing Ark automatically installs the following dependencies:
 
 ## Links
 
+* [Sample Ark Site](http://ark.mulholland.xyz)
 * [Github Homepage](https://github.com/dmulholland/ark)
 * [Python Package Index](https://pypi.python.org/pypi/ark/)
 * [Online Documentation](http://mulholland.xyz/docs/ark/)
@@ -46,6 +56,9 @@ Installing Ark automatically installs the following dependencies:
 
 ## License
 
-All Ark code and documentation has been placed in the public domain.
+Ark is free and open source:
 
-The bundled *Twenty Fifteen* theme is a port of the default WordPress theme of the same name and is released under the GPL.
+* All of Ark's code and documentation has been placed in the public domain.
+
+* The bundled *Twenty Fifteen* theme is a port of the default WordPress
+  theme of the same name and is released under the GPL.
