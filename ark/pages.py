@@ -33,7 +33,6 @@ class Page(dict):
         self['is_single'] = False
         self['is_index'] = False
         self['is_dir_index'] = False
-        self['is_tag_index'] = False
         self['is_homepage'] = False
         self['is_paged'] = False
         self['page'] = 1
@@ -51,7 +50,7 @@ class Page(dict):
         hooks.event('rendering_page', self)
 
         # Generate a string of CSS classes for the page.
-        self['classes'] = ' '.join(self._get_css_classes())
+        self['classes'] = ' '.join(self._get_class_list())
 
         # Generate a list of possible template names.
         self['templates'] = self._get_template_list()
@@ -148,19 +147,17 @@ class Page(dict):
         return self.re_url.sub(rewrite_callback, html)
 
     # Generates a list of CSS classes for the page.
-    def _get_css_classes(self):
+    def _get_class_list(self):
         classes = [self['type']['id']]
 
         if self['is_single']:
             classes.append('single')
 
-        elif self['is_index']:
+        if self['is_index']:
             classes.append('index')
 
-            if self['is_dir_index']:
-                classes.append('dir-index')
-            elif self['is_tag_index']:
-                classes.append('tag-index')
+        if self['is_dir_index']:
+            classes.append('dir-index')
 
         if self['is_homepage']:
             classes.append('homepage')
@@ -169,26 +166,23 @@ class Page(dict):
 
     # Returns a list of possible template names for the current page.
     def _get_template_list(self):
-        templates = []
-        typeid = self['type']['id']
+        templates, typeid = [], self['type']['id']
 
         # Single record page.
         if self['is_single']:
             if 'template' in self['record']:
                 templates.append(self['record']['template'])
-            templates.append(typeid + '-single')
+            templates.append('%s-single' % typeid)
             templates.append('single')
 
-        # Tag index page.
-        elif self['is_tag_index']:
-            templates.append(typeid + '-tag-index')
-            templates.append('tag-index')
+        # Directory index page.
+        elif self['is_dir_index']:
+            templates.append('%s-dir-index' % typeid)
+            templates.append('dir-index')
             templates.append('index')
 
-        # Directory index page.
+        # Fallback on the index template.
         else:
-            templates.append(typeid + '-dir-index')
-            templates.append('dir-index')
             templates.append('index')
 
         return hooks.filter('page_templates', templates, self)

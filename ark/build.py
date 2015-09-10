@@ -8,7 +8,6 @@ from . import site
 from . import utils
 from . import pages
 from . import records
-from . import tags
 from . import hooks
 
 
@@ -17,7 +16,6 @@ from . import hooks
 #   1. Copies the site and theme resource files to the output directory.
 #   2. Builds the individual record pages.
 #   3. Builds the directory index pages.
-#   4. Builds the tag index pages.
 #
 def build_site():
 
@@ -38,9 +36,6 @@ def build_site():
             build_record_pages(path)
             if site.typeconfig(name.strip('[]'), 'indexed'):
                 build_directory_indexes(path)
-
-    # Build the tag index pages.
-    build_tag_indexes()
 
     # Fire the 'build_exit' event.
     hooks.event('build_exit')
@@ -93,33 +88,3 @@ def build_directory_indexes(dirpath, recursing=False):
     index.render()
 
     return reclist
-
-
-# Creates a paged index for each registered tag.
-def build_tag_indexes():
-
-    # Iterate over the site's record types.
-    for typeid, recmap in tags.records().items():
-
-        # Fetch the current type's configuration data.
-        typeconfig = site.typeconfig(typeid)
-
-        # Iterate over the registered tags for the current record type.
-        for slug, filelist in recmap.items():
-
-            reclist = []
-            for filepath in filelist:
-                record = records.record(filepath)
-                if typeconfig['order_by'] in record:
-                    reclist.append(record)
-
-            index = pages.Index(
-                typeid,
-                tags.slugs(typeid, slug),
-                reclist,
-                typeconfig['per_tag_index']
-            )
-            index['tag'] = tags.names()[typeid][slug]
-            index['is_tag_index'] = True
-            index['trail'] = [typeconfig['name'], tags.names()[typeid][slug]]
-            index.render()

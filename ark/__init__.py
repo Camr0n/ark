@@ -79,7 +79,6 @@ from . import hooks
 from . import pages
 from . import records
 from . import site
-from . import tags
 from . import utils
 from . import meta
 from . import templates

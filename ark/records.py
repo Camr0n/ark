@@ -8,7 +8,6 @@ import datetime
 
 from . import utils
 from . import site
-from . import tags
 from . import hooks
 from . import renderers
 
@@ -62,16 +61,7 @@ class Record(dict):
         else:
             self['date'] = utils.get_creation_time(filepath)
 
-        # Process the record's tag list, if present.
-        taglist, self['tags'] = self.get('tags', ''), []
-        for tag in (t.strip() for t in taglist.split(',')):
-            if tag:
-                tags.register(self['type'], tag, filepath)
-                url = tags.url(self['type'], tag)
-                self['tags'].append(tags.Tag(tag, url))
-
-        # Filter the record's text content.
-        # (Shortcodes are processed on this hook.)
+        # Filter the record's text content. (Shortcodes are processed here.)
         self['text'] = hooks.filter('record_text', text, self)
 
         # Render the record's content into html.
@@ -79,3 +69,6 @@ class Record(dict):
 
         # Filter the record's html content.
         self['html'] = hooks.filter('record_html', html, self)
+
+        # Fire the 'record_inst' event. (Tags are processed here.)
+        hooks.event('record_inst', self)
