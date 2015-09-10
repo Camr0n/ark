@@ -42,6 +42,7 @@
 <li><a href="#includes">Includes</a></li>
 <li><a href="#extensions">Extensions</a></li>
 <li><a href="#markdown-options">Markdown Options</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
 </ul>
 <h2 id="command-line-interface">Command Line Interface</h2>
 <p>To initialize a new site, create a site directory, <code>cd</code> into it, and run the <code>init</code> command:</p>
@@ -123,7 +124,7 @@ src/
         my-sonnet.md   # this record is a sonnet
 </pre>
 <p>New custom types behave, by default, like the builtin <em>post</em> type, but we can alter this behaviour by adding a dictionary of type settings to our <code>config.py</code> file:</p>
-<pre class="lang-python stx-pygments" data-lang="python">
+<pre class="lang-python pygments" data-lang="python">
 <span class="n">sonnets</span> <span class="o">=</span> <span class="p">{</span>                <span class="c"># id corresponding to the [type] directory</span>
     <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the titlecased id</span>
     <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the slugified id</span>
@@ -196,11 +197,11 @@ tags: foo, bar, baz
 <h2 id="links">Links</h2>
 <p>Ark generates page-relative urls and files with a <code>.html</code> extension by default, but you can customize this behaviour to suit your needs.</p>
 <p>First, you can specify a root url in your <code>config.py</code> file. Use an explicit domain, e.g. <code>"http://example.com/"</code>, for absolute urls, or a single forward slash, <code>"/"</code>, for site-relative urls.</p>
-<pre class="lang-python stx-pygments" data-lang="python">
+<pre class="lang-python pygments" data-lang="python">
 <span class="n">root</span> <span class="o">=</span> <span class="s">&quot;http://example.com/&quot;</span>
 </pre>
 <p>Second, you can specify a file extension in your <code>config.py</code> file. You can choose an arbitrary file extension, e.g. <code>".html"</code>, or pass an empty string, <code>""</code>, to use no file extension at all. If you specify a single forward slash, <code>"/"</code>, Ark will generate directory-style urls ending in a slash.</p>
-<pre class="lang-python stx-pygments" data-lang="python">
+<pre class="lang-python pygments" data-lang="python">
 <span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;.html&quot;</span>
 </pre>
 <p>To link to files within your site from records or templates use site-relative urls prefixed by <code>@root/</code>, e.g.</p>
@@ -234,12 +235,24 @@ tags: foo, bar, baz
 <h2 id="markdown-options">Markdown Options</h2>
 <p>Ark uses the <a href="https://pythonhosted.org/Markdown/">Python Markdown</a> package to render Markdown files. You can make use of its optional features and extensions by including a dictionary of keyword arguments for the renderer in your site configuration file.</p>
 <p>For example, to turn on the 'Markdown Extra' extension, add the following dictionary to your <code>config.py</code> file:</p>
-<pre class="lang-python stx-pygments" data-lang="python">
+<pre class="lang-python pygments" data-lang="python">
 <span class="n">markdown</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&#39;extensions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;markdown.extensions.extra&#39;</span><span class="p">],</span>
 <span class="p">}</span>
 </pre>
 <p>See the Markdown package's <a href="https://pythonhosted.org/Markdown/">documentation</a> for details of its available options.</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>Installing Ark via <code>pip</code> automatically installs the following libraries:</p>
+<ul>
+<li><a href="https://github.com/dmulholland/clio">Clio</a></li>
+<li><a href="https://github.com/dmulholland/ibis">Ibis</a></li>
+<li><a href="http://jinja.pocoo.org">Jinja</a></li>
+<li><a href="https://pythonhosted.org/Markdown/">Markdown</a></li>
+<li><a href="http://pygments.org/">Pygments</a></li>
+<li><a href="http://pyyaml.org/">PyYAML</a></li>
+<li><a href="https://github.com/dmulholland/shortcodes">Shortcodes</a></li>
+<li><a href="https://github.com/dmulholland/syntex">Syntex</a></li>
+</ul>
 
 		
 	</article>

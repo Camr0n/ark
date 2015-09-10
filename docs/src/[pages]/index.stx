@@ -30,21 +30,6 @@ Ark requires Python 3.2 or later.
 
 
 
-## Dependencies
-
-Installing Ark automatically installs the following dependencies:
-
-* [Clio](https://github.com/dmulholland/clio)
-* [Ibis](https://github.com/dmulholland/ibis)
-* [Jinja](http://jinja.pocoo.org)
-* [Markdown](https://pythonhosted.org/Markdown/)
-* [Pygments](http://pygments.org/)
-* [PyYAML](http://pyyaml.org/)
-* [Shortcodes](https://github.com/dmulholland/shortcodes)
-* [Syntex](https://github.com/dmulholland/syntex)
-
-
-
 ## Links
 
 * [Sample Ark Site](http://ark.mulholland.xyz)

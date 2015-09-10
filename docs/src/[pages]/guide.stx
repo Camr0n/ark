@@ -258,3 +258,18 @@ For example, to turn on the 'Markdown Extra' extension, add the following dictio
 See the Markdown package's [documentation][mddocs] for details of its available options.
 
 [mddocs]: https://pythonhosted.org/Markdown/
+
+
+
+## Dependencies
+
+Installing Ark via `pip` automatically installs the following libraries:
+
+* [Clio](https://github.com/dmulholland/clio)
+* [Ibis](https://github.com/dmulholland/ibis)
+* [Jinja](http://jinja.pocoo.org)
+* [Markdown](https://pythonhosted.org/Markdown/)
+* [Pygments](http://pygments.org/)
+* [PyYAML](http://pyyaml.org/)
+* [Shortcodes](https://github.com/dmulholland/shortcodes)
+* [Syntex](https://github.com/dmulholland/syntex)

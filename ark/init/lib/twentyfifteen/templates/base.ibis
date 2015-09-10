@@ -42,20 +42,20 @@
 		</div>
 	</header>
 
-	<main id="main" class="main">
-		{% block content %}{% endblock %}
-	</main>
+	<div class="wrapper">
+		<main id="main" class="main">
+			{% block content %}{% endblock %}
+		</main>
 
-	<footer id="site-footer" class="site-footer">
-		<div class="outer-wrapper">
-			<div class="inner-wrapper">
+		<footer id="site-footer" class="site-footer">
+			<div class="footer-wrapper">
 				{% if includes.footer %}
 					{{ includes.footer }}
 				{% else %}
 					<a href="http://mulholland.xyz/docs/ark/">Powered by Ark</a>
 				{% endif %}
 			</div>
-		</div>
-	</footer>
+		</footer>
+	</div>
 </body>
 </html>

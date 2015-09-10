@@ -927,7 +927,7 @@ a:focus {
         top: 0;
         left: 0;
         width: 30%;
-        z-index: 0;
+        z-index: -10;
     }
 
     body,
@@ -948,12 +948,9 @@ a:focus {
     }
 
     .site-header {
-        position: fixed;
-        top: 0;
-        left: 0;
         width: 30%;
-        overflow-y: scroll;
-        height: 100%;
+        float: left;
+        min-height: 100%;
     }
 
     .masthead {
@@ -1007,12 +1004,17 @@ a:focus {
         padding: .6em 0;
     }
 
-    .main {
-        display: block;
-        margin-left: 30%;
+    .wrapper {
         width: 70%;
         background: transparent;
         padding: 0;
+        margin: 0;
+        float: left;
+    }
+
+    .main {
+        padding: 0;
+        margin: 0;
     }
 
     .main-header {
@@ -1084,21 +1086,13 @@ a:focus {
     }
 
     .site-footer {
-        margin: 0 0 0 30%;
-        padding: 0;
-        width: 70%;
-        background-color: transparent;
         box-shadow: none;
-        font-size: 14px;
-        font-size: 1.4rem;
-    }
-
-    .site-footer .outer-wrapper {
+        padding: 0;
         margin: 8% 8% 0;
         background-color: #fff;
     }
 
-    .site-footer .inner-wrapper {
+    .footer-wrapper {
         padding: 5% 10%;
     }
 }
