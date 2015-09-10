@@ -30,7 +30,6 @@ class Page(dict):
         self['record'] = None
         self['records'] = []
         self['trail'] = []
-        self['tag'] = ''
         self['is_single'] = False
         self['is_index'] = False
         self['is_dir_index'] = False
