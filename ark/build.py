@@ -12,13 +12,17 @@ from . import tags
 from . import hooks
 
 
-# Builds the site. Copies the site and theme resource files to the output
-# directory, then builds the individual record pages, directory index pages,
-# and tag index pages.
+# Builds the site.
+#
+#   1. Copies the site and theme resource files to the output directory.
+#   2. Builds the individual record pages.
+#   3. Builds the directory index pages.
+#   4. Builds the tag index pages.
+#
 def build_site():
 
-    # Fire the 'init_build' event.
-    hooks.event('init_build')
+    # Fire the 'build_init' event.
+    hooks.event('build_init')
 
     # Copy the site's resource files to the output directory, i.e. any files
     # in the site's src directory not inside a [type] directory.
@@ -38,8 +42,8 @@ def build_site():
     # Build the tag index pages.
     build_tag_indexes()
 
-    # Fire the 'exit_build' event.
-    hooks.event('exit_build')
+    # Fire the 'build_exit' event.
+    hooks.event('build_exit')
 
 
 # Creates a HTML page for each record file in the source directory.

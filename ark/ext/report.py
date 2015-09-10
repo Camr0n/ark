@@ -8,8 +8,8 @@
 from ark import hooks, site
 
 
-# Register a callback on the 'exit_build' event hook.
-@hooks.register('exit_build')
+# Register a callback on the 'build_exit' event hook.
+@hooks.register('build_exit')
 def print_status_report():
     num_rendered, num_written = site.rendered(), site.written()
     rendered = "1 page" if num_rendered == 1 else "%s pages" % num_rendered
