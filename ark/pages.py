@@ -15,7 +15,7 @@ from . import includes
 from . import hashes
 
 
-# A Page instance represents a HTML page in the site's output.
+# A Page instance represents a single HTML page in the site's output.
 class Page(dict):
 
     # Regex for locating @root/ urls enclosed in quotes or pipes.
@@ -194,7 +194,7 @@ class Page(dict):
         return hooks.filter('page_templates', templates, self)
 
 
-# A RecordPage instance represents a single record.
+# A RecordPage represents a single-record page.
 class RecordPage(Page):
 
     def __init__(self, record):
@@ -205,47 +205,53 @@ class RecordPage(Page):
         self['is_homepage'] = (record['slugs'] == ['index'])
 
 
-# An IndexPage instance represents an index of records, possibly split into
-# a paged set of HTML pages in the output.
-class IndexPage(Page):
+# An Index represents a collection of index pages.
+class Index:
 
-    def __init__(self, type, slugs, index, per_page):
-        Page.__init__(self, type)
-        self['slugs'] = slugs
-        self['is_index'] = True
+    def __init__(self, typeid, slugs, records, recs_per_page):
 
-        index.sort(
-            key = lambda record: record[self['type']['order_by']],
-            reverse = self['type']['reverse']
+        # Sort the records.
+        records.sort(
+            key = lambda rec: rec[site.typeconfig(typeid, 'order_by')],
+            reverse = site.typeconfig(typeid, 'reverse')
         )
-        self.index = index
 
-        self.per_page = per_page or len(index)
-        self.total_pages = math.ceil(float(len(index)) / self.per_page)
+        # How many pages do we need?
+        recs_per_page = recs_per_page or len(records) or 1
+        total_pages = math.ceil(float(len(records)) / recs_per_page)
+
+        # Create the individual pages.
+        self.pages = []
+        for i in range(1, total_pages + 1):
+            page = Page(typeid)
+
+            page['records'] = records[recs_per_page * (i - 1):recs_per_page * i]
+            page['is_index'] = True
+            page['is_paged'] = (total_pages > 1)
+            page['page'] = i
+            page['total'] = total_pages
+
+            page['first_url'] = site.paged_url(slugs, 1, total_pages)
+            page['prev_url'] = site.paged_url(slugs, i - 1, total_pages)
+            page['url'] = site.paged_url(slugs, i, total_pages)
+            page['next_url'] = site.paged_url(slugs, i + 1, total_pages)
+            page['last_url'] = site.paged_url(slugs, total_pages, total_pages)
+
+            page['slugs'] = slugs[:]
+            if i == 1:
+                page['slugs'].append('index')
+            else:
+                page['slugs'].append('page-%s' % i)
+
+            page['is_homepage_index'] = (len(page['slugs']) == 1)
+            page['is_homepage'] = (page['slugs'] == ['index'])
+
+            self.pages.append(page)
+
+    def __setitem__(self, key, value):
+        for page in self.pages:
+            page[key] = value
 
     def render(self):
-        for page in range(1, self.total_pages + 1):
-            self['records'] = self.index[
-                self.per_page * (page - 1)
-                :
-                self.per_page * page
-            ]
-
-            if page == 1:
-                self['slugs'].append('index')
-            else:
-                self['slugs'][-1] = 'page-%s' % page
-
-            self['is_homepage'] = (self['slugs'] == ['index'])
-            self._set_paging(self['slugs'][:-1], page, self.total_pages)
-
-            Page.render(self)
-
-    def _set_paging(self, slugs, page, total):
-        self['is_paged'] = (total > 1)
-        self['page'] = page
-        self['total'] = total
-        self['prev_url'] = site.paged_url(slugs, page - 1, total)
-        self['next_url'] = site.paged_url(slugs, page + 1, total)
-        self['first_url'] = site.paged_url(slugs, 1, total)
-        self['last_url'] = site.paged_url(slugs, total, total)
+        for page in self.pages:
+            page.render()

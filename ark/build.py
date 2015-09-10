@@ -68,17 +68,17 @@ def build_directory_indexes(dirpath, recursing=False):
     typeconfig = site.typeconfig(typeid)
 
     # Assemble a list of records in this directory and any subdirectories.
-    index = []
+    reclist = []
 
     # Process subdirectories first.
     for dirinfo in utils.subdirs(dirpath):
-        index.extend(build_directory_indexes(dirinfo.path, True))
+        reclist.extend(build_directory_indexes(dirinfo.path, True))
 
     # Add any records in this directory to the index.
     for fileinfo in utils.srcfiles(dirpath):
         record = records.record(fileinfo.path)
         if typeconfig['order_by'] in record:
-            index.append(record)
+            reclist.append(record)
 
     # Are we displaying this index on the homepage?
     if typeconfig['homepage'] and not recursing:
@@ -86,17 +86,13 @@ def build_directory_indexes(dirpath, recursing=False):
     else:
         slugs = site.slugs_from_src(dirpath)
 
-    page = pages.IndexPage(
-        typeid,
-        slugs,
-        index,
-        typeconfig['per_index']
-    )
-    page['is_dir_index'] = True
-    page['trail'] = site.trail_from_src(dirpath)
-    page.render()
+    # Create and render the set of index pages.
+    index = pages.Index(typeid, slugs, reclist, typeconfig['per_index'])
+    index['is_dir_index'] = True
+    index['trail'] = site.trail_from_src(dirpath)
+    index.render()
 
-    return index
+    return reclist
 
 
 # Creates a paged index for each registered tag.
@@ -109,21 +105,21 @@ def build_tag_indexes():
         typeconfig = site.typeconfig(typeid)
 
         # Iterate over the registered tags for the current record type.
-        for slug, reclist in recmap.items():
+        for slug, filelist in recmap.items():
 
-            index = []
-            for filepath in reclist:
+            reclist = []
+            for filepath in filelist:
                 record = records.record(filepath)
                 if typeconfig['order_by'] in record:
-                    index.append(record)
+                    reclist.append(record)
 
-            page = pages.IndexPage(
+            index = pages.Index(
                 typeid,
                 tags.slugs(typeid, slug),
-                index,
+                reclist,
                 typeconfig['per_tag_index']
             )
-            page['tag'] = tags.names()[typeid][slug]
-            page['is_tag_index'] = True
-            page['trail'] = [typeconfig['name'], page['tag']]
-            page.render()
+            index['tag'] = tags.names()[typeid][slug]
+            index['is_tag_index'] = True
+            index['trail'] = [typeconfig['name'], tags.names()[typeid][slug]]
+            index.render()
