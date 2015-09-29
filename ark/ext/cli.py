@@ -301,7 +301,7 @@ def cmd_serve(parser):
 # watcher so we hack together one of our own.
 def cmd_watch(parser):
     home = site.home()
-    args = [sys.argv[0], 'build'] + parser.get_args()
+    args = [sys.argv[0], 'build', 'watching'] + parser.get_args()
 
     print("-" * 80)
     print("Site: %s" % home)
@@ -320,6 +320,8 @@ def cmd_watch(parser):
             time.sleep(0.5)
     except KeyboardInterrupt:
         print("\n" + "-" * 80 + "Ending watch.\n" + "-" * 80)
+
+    subprocess.call(arg for arg in args if arg != 'watching')
 
 
 # Returns a hash digest of the site directory.
