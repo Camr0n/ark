@@ -62,11 +62,11 @@ class Page(dict):
         html = templates.render(self)
         site.inc_rendered()
 
-        # Rewrite all '@root/' urls into their final form.
-        html = self._rewrite_urls(html, depth)
-
         # Filter the page's html before writing it to disk.
         html = hooks.filter('page_html', html, self)
+
+        # Rewrite all '@root/' urls into their final form.
+        html = self._rewrite_urls(html, depth)
 
         # Write the page to disk. Avoid overwriting identical existing files.
         if not hashes.match(self['path'], html):
