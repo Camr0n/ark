@@ -321,6 +321,7 @@ def cmd_watch(parser):
     except KeyboardInterrupt:
         print("\n" + "-" * 80 + "Ending watch.\n" + "-" * 80)
 
+    # Build the site one last time without the 'watching' flag.
     subprocess.call(arg for arg in args if arg != 'watching')
 
 
