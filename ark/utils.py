@@ -106,15 +106,26 @@ def copydir(srcdir, dstdir, skiptypes=True, noclobber=False, onlyolder=True):
             continue
 
         if os.path.isfile(src):
-            if os.path.isfile(dst):
-                if noclobber:
-                    continue
-                if onlyolder and os.path.getmtime(src) <= os.path.getmtime(dst):
-                    continue
-            shutil.copy2(src, dst)
+            copyfile(src, dst, noclobber, onlyolder)
 
         elif os.path.isdir(src):
             copydir(src, dst, False, noclobber, onlyolder)
+
+
+# Copies the file src as dst.
+#
+#   * If noclobber is true, will never overwrite an existing dst.
+#   * If onlyolder is true, will only overwrite dst if dst is older.
+#
+def copyfile(src, dst, noclobber=False, onlyolder=True):
+
+    if os.path.isfile(dst):
+        if noclobber:
+            return
+        if onlyolder and os.path.getmtime(src) <= os.path.getmtime(dst):
+            return
+
+    shutil.copy2(src, dst)
 
 
 # Clears the contents of a directory.
