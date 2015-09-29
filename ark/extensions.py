@@ -9,6 +9,10 @@ import importlib
 from . import site
 
 
+# Stores a dictionary of loaded extension modules.
+_loaded = {}
+
+
 # Loads any Python modules found in the extensions directories.
 def load():
     dirs = [os.path.join(os.path.dirname(__file__), 'ext')]
@@ -22,5 +26,10 @@ def load():
                     if not name[0] in '_.'
         ]
         for name in names:
-            extension = importlib.import_module(name)
+            _loaded[name] = importlib.import_module(name)
         sys.path.pop(0)
+
+
+# Returns the dictionary of loaded extension modules.
+def loaded():
+    return _loaded
