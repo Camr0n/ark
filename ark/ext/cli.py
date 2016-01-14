@@ -153,25 +153,25 @@ Flags:
 def cli():
     parser = clio.ArgParser(apphelp, meta.__version__)
 
-    build_parser = parser.add_command("build", cmd_build, buildhelp)
+    build_parser = parser.add_cmd("build", cmd_build, buildhelp)
     build_parser.add_flag("clear", "c")
-    build_parser.add_str_option("out", None, "o")
-    build_parser.add_str_option("src", None, "s")
-    build_parser.add_str_option("lib", None, "l")
-    build_parser.add_str_option("inc", None, "i")
-    build_parser.add_str_option("theme", None, "t")
+    build_parser.add_str_opt("out", None, "o")
+    build_parser.add_str_opt("src", None, "s")
+    build_parser.add_str_opt("lib", None, "l")
+    build_parser.add_str_opt("inc", None, "i")
+    build_parser.add_str_opt("theme", None, "t")
 
-    serve_parser = parser.add_command("serve", cmd_serve, servehelp)
+    serve_parser = parser.add_cmd("serve", cmd_serve, servehelp)
     serve_parser.add_flag("browser", "b")
-    serve_parser.add_str_option("host", "localhost", "h")
-    serve_parser.add_int_option("port", 8080, "p")
+    serve_parser.add_str_opt("host", "localhost", "h")
+    serve_parser.add_int_opt("port", 8080, "p")
 
-    init_parser = parser.add_command("init", cmd_init, inithelp)
+    init_parser = parser.add_cmd("init", cmd_init, inithelp)
     init_parser.add_flag("empty", "e")
 
-    clear_parser = parser.add_command("clear", cmd_clear, clearhelp)
-    edit_parser = parser.add_command("edit", cmd_edit, edithelp)
-    watch_parser = parser.add_command("watch", cmd_watch, watchhelp)
+    clear_parser = parser.add_cmd("clear", cmd_clear, clearhelp)
+    edit_parser = parser.add_cmd("edit", cmd_edit, edithelp)
+    watch_parser = parser.add_cmd("watch", cmd_watch, watchhelp)
 
     hooks.event('clio', parser)
 
