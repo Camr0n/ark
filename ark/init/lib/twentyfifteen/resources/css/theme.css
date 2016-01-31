@@ -729,10 +729,10 @@ a:focus {
 }
 
 /*
-    Mobile Large 620px
+    Mobile Landscape
 */
 
-@media screen and (min-width: 620px) {
+@media screen and (min-width: 480px) {
 
     .site-description {
         display: block;
@@ -787,10 +787,10 @@ a:focus {
 }
 
 /*
-    Tablet 790px
+    Tablet
 */
 
-@media screen and (min-width: 790px) {
+@media screen and (min-width: 720px) {
 
     body,
     button,
@@ -888,7 +888,7 @@ a:focus {
 }
 
 /*
-    Desktop Small 960px
+    Desktop
 */
 
 @media screen and (min-width: 960px) {
