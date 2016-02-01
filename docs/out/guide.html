@@ -123,16 +123,16 @@ src/
 </pre>
 <p>New custom types behave, by default, like the builtin <em>post</em> type, but we can alter this behaviour by adding a dictionary of type settings to our <code>config.py</code> file:</p>
 <pre class="lang-python pygments" data-lang="python">
-<span class="n">sonnets</span> <span class="o">=</span> <span class="p">{</span>                <span class="c"># id corresponding to the [type] directory</span>
-    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the titlecased id</span>
-    <span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="s">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c"># defaults to the slugified id</span>
-    <span class="s">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s">&quot;tags&quot;</span><span class="p">,</span>    <span class="c"># defaults to &quot;tags&quot;</span>
-    <span class="s">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># build directory indexes for this type?</span>
-    <span class="s">&quot;order_by&quot;</span><span class="p">:</span> <span class="s">&quot;date&quot;</span><span class="p">,</span>    <span class="c"># order index entries by this attribute</span>
-    <span class="s">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c"># display index entries in reverse order?</span>
-    <span class="s">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>       <span class="c"># number of entries per index page</span>
-    <span class="s">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>   <span class="c"># number of entries per tag index page</span>
-    <span class="s">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>     <span class="c"># use this type&#39;s index as the site homepage?</span>
+<span class="n">sonnets</span> <span class="o">=</span> <span class="p">{</span>                <span class="c1"># id corresponding to the [type] directory</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sonnets&quot;</span><span class="p">,</span>     <span class="c1"># defaults to the titlecased id</span>
+    <span class="s2">&quot;slug&quot;</span><span class="p">:</span> <span class="s2">&quot;sonnets&quot;</span><span class="p">,</span>     <span class="c1"># defaults to the slugified id</span>
+    <span class="s2">&quot;tag_slug&quot;</span><span class="p">:</span> <span class="s2">&quot;tags&quot;</span><span class="p">,</span>    <span class="c1"># defaults to &quot;tags&quot;</span>
+    <span class="s2">&quot;indexed&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c1"># build directory indexes for this type?</span>
+    <span class="s2">&quot;order_by&quot;</span><span class="p">:</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span>    <span class="c1"># order index entries by this attribute</span>
+    <span class="s2">&quot;reverse&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>       <span class="c1"># display index entries in reverse order?</span>
+    <span class="s2">&quot;per_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>       <span class="c1"># number of entries per index page</span>
+    <span class="s2">&quot;per_tag_index&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>   <span class="c1"># number of entries per tag index page</span>
+    <span class="s2">&quot;homepage&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>     <span class="c1"># use this type&#39;s index as the site homepage?</span>
 <span class="p">}</span>
 </pre>
 <p>All the settings above are in fact defaults, and in practice we would only need to include those we wished to change.</p>
@@ -196,11 +196,11 @@ tags: foo, bar, baz
 <p>Ark generates page-relative urls and files with a <code>.html</code> extension by default, but you can customize this behaviour to suit your needs.</p>
 <p>First, you can specify a root url in your <code>config.py</code> file. Use an explicit domain, e.g. <code>"http://example.com/"</code>, for absolute urls, or a single forward slash, <code>"/"</code>, for site-relative urls.</p>
 <pre class="lang-python pygments" data-lang="python">
-<span class="n">root</span> <span class="o">=</span> <span class="s">&quot;http://example.com/&quot;</span>
+<span class="n">root</span> <span class="o">=</span> <span class="s2">&quot;http://example.com/&quot;</span>
 </pre>
 <p>Second, you can specify a file extension in your <code>config.py</code> file. You can choose an arbitrary file extension, e.g. <code>".html"</code>, or pass an empty string, <code>""</code>, to use no file extension at all. If you specify a single forward slash, <code>"/"</code>, Ark will generate directory-style urls ending in a slash.</p>
 <pre class="lang-python pygments" data-lang="python">
-<span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;.html&quot;</span>
+<span class="n">extension</span> <span class="o">=</span> <span class="s2">&quot;.html&quot;</span>
 </pre>
 <p>To link to files within your site from records or templates use site-relative urls prefixed by <code>@root/</code>, e.g.</p>
 <pre>
@@ -217,7 +217,7 @@ tags: foo, bar, baz
 </pre>
 <p>Linking to the homepage is a special case: a simple <code>@root/</code> will always suffice.</p>
 <h2 id="includes">Includes</h2>
-<p>The includes directory, <code>inc</code>, is intended for snippets of HTML that can be reused on multiple pages throughout your site, e.g. menus or footer links. Source files placed in this folder will be parsed as Markdown or Syntex depending on their extension and the resulting HTML made available for inclusion in theme files via the <code>includes.&lt;filename&gt;</code> attribute.</p>
+<p>The includes directory, <code>inc</code>, is intended for snippets of HTML that can be reused on multiple pages throughout your site, e.g. menus or footer links. Source files placed in this folder will be parsed as Markdown or Syntex depending on their extension and the resulting HTML made available for inclusion in theme files via the <code>inc.&lt;name&gt;</code> attribute.</p>
 <p>For example, a simple menu can be constructed in either Markdown or Syntex using nested lists:</p>
 <pre>
 * [Home](@root/)
@@ -226,7 +226,7 @@ tags: foo, bar, baz
     * [Cats](@root/posts/cats/index//)
     * [Dogs](@root/posts/dogs/index//)
 </pre>
-<p>If the menu above was contained in a file named <code>menu.stx</code> then the rendered HTML would be available to themes via the <code>includes.menu</code> attribute.</p>
+<p>If the menu above was contained in a file named <code>menu.stx</code> then the rendered HTML would be available to themes via the <code>inc.menu</code> attribute.</p>
 <h2 id="extensions">Extensions</h2>
 <p>The extensions directory, <code>ext</code>, is intended for plugins that extend or enhance Ark's functionality. Python modules or packages placed in this directory will be loaded automatically and can make use of Ark's system of event and filter hooks to inject their own code into the build process.</p>
 <p>Ark is highly extensible and much of its default functionality is in fact implemented as pluggable extensions. See the sample plugins bundled with the skeleton site or the default plugins in the <code>ark/ext</code> folder for examples of extensions in action.</p>
@@ -235,7 +235,7 @@ tags: foo, bar, baz
 <p>For example, to turn on the 'Markdown Extra' extension, add the following dictionary to your <code>config.py</code> file:</p>
 <pre class="lang-python pygments" data-lang="python">
 <span class="n">markdown</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;extensions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;markdown.extensions.extra&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;extensions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;markdown.extensions.extra&#39;</span><span class="p">],</span>
 <span class="p">}</span>
 </pre>
 <p>See the Markdown package's <a href="https://pythonhosted.org/Markdown/">documentation</a> for details of its available options.</p>
