@@ -24,6 +24,7 @@ class Page(dict):
     def __init__(self, typeid):
         self['flags'] = site.flags()
         self['site'] = site.config()
+        self['inc'] = includes.includes()
         self['includes'] = includes.includes()
         self['type'] = site.typeconfig(typeid)
         self['slugs'] = []
