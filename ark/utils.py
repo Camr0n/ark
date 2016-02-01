@@ -46,8 +46,7 @@ def fileinfo(path):
 
 # Returns a list of source files in the specified directory.
 def srcfiles(directory):
-    extensions = ('txt', 'stx', 'md', 'html')
-    return [fi for fi in files(directory) if fi.ext in extensions]
+    return [fi for fi in files(directory) if fi.name[0] not in ('.', '_')]
 
 
 # Returns the creation time of the specified file.
