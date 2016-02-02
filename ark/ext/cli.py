@@ -208,7 +208,7 @@ def cmd_build(parser):
 
 # Callback for the init command.
 def cmd_init(parser):
-    initdir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'init')
+    initdir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ini')
     sitedir = parser.get_args()[0] if parser.has_args() else '.'
     os.makedirs(sitedir, exist_ok=True)
     os.chdir(sitedir)
