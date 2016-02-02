@@ -6,7 +6,7 @@ __pycache__/
 dev/
 
 # Ark output files
-ark/init/out/
+#ark/init/out/
 
 # Ark cache files
 .arkcache/
