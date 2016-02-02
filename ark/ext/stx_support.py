@@ -3,7 +3,7 @@
 #
 # Files with a .stx extension will be rendered as syntex.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

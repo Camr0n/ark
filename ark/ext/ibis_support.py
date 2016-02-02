@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
 # This extension adds support for Ibis templates to Ark.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

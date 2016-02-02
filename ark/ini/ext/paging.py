@@ -19,7 +19,7 @@
 #         'multiple': 10,    # link to page numbers in multiples of...
 #     }
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

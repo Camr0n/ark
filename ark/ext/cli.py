@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
 # This extension implements a pluggable command line interface for Ark.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

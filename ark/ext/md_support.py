@@ -3,7 +3,7 @@
 #
 # Files with a .md extension will be rendered as markdown.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

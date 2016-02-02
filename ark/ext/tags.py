@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
 # This extension implements Ark's record-tagging functionality.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

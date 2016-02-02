@@ -4,7 +4,7 @@
 # Ark transforms a directory of text files written in Syntex or Markdown
 # into a static website that can be viewed locally or served remotely.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

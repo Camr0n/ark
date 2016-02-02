@@ -9,7 +9,7 @@
 # development as installing Ark via pip automatically generates a new entry
 # point on the user's PATH.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 

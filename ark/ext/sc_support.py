@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
 # This extension adds support for shortcodes to Ark.
 #
-# Author: Darren Mulholland <dmulholland@outlook.ie>
+# Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
 
