@@ -301,14 +301,14 @@ def cmd_serve(parser):
 # watcher so we hack together one of our own.
 def cmd_watch(parser):
     home = site.home()
-    args = [sys.argv[0], 'build', 'watch'] + parser.get_args()
+    args = [sys.argv[0], 'build', 'watching'] + parser.get_args()
 
     print("-" * 80)
     print("Site: %s" % home)
     print("Stop: Ctrl-C")
     print("-" * 80)
 
-    # Build the site at least once with the 'watch' flag.
+    # Build the site at least once with the 'watching' flag.
     print("Running intial build.")
     subprocess.call(args)
     print("-" * 80)
@@ -328,9 +328,9 @@ def cmd_watch(parser):
     except KeyboardInterrupt:
         pass
 
-    # Build the site one last time without the 'watch' flag.
+    # Build the site one last time without the 'watching' flag.
     print("\n" + "-" * 80 + "Running final build.\n" + "-" * 80)
-    subprocess.call(arg for arg in args if arg != 'watch')
+    subprocess.call(arg for arg in args if arg != 'watching')
 
 
 # Returns a hash digest of the site directory.
