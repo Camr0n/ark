@@ -83,6 +83,7 @@ def titlecase(s):
 # Copies the contents of srcdir to dstdir.
 #
 #   * Creates the destination directory if necessary.
+#   * If skiptypes is true, will skip [type] directories.
 #   * If noclobber is true, will never overwrite existing files.
 #   * If onlyolder is true, will only overwrite older files.
 #
