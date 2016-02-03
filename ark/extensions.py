@@ -21,8 +21,8 @@ def load():
     dirs.append(os.path.join(os.path.dirname(__file__), 'ext'))
 
     # Global extensions directory.
-    if os.getenv('ARK_EXTENSIONS') and os.path.isdir(os.getenv('ARK_EXTENSIONS')):
-        dirs.append(os.getenv('ARK_EXTENSIONS'))
+    if os.getenv('ARK_EXT') and os.path.isdir(os.getenv('ARK_EXT')):
+        dirs.append(os.getenv('ARK_EXT'))
 
     # Site-specific extensions.
     if os.path.isdir(site.ext()):
