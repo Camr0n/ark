@@ -142,6 +142,10 @@ Usage: %s watch [FLAGS]
   Monitor the site directory and automatically rebuild the site when any
   file changes are detected.
 
+  Arguments passed to this command will be passed along to the 'build' command.
+  You can pass options or flags to the 'build' command by preceding them with
+  a '--'.
+
 Flags:
   --help              Print the watch command's help text and exit.
 
@@ -316,6 +320,7 @@ def cmd_watch(parser):
     # Create a hash digest of the site directory.
     oldhash = hashsite(home)
 
+    # Loop until the user hits Ctrl-C.
     try:
         while True:
             newhash = hashsite(home)

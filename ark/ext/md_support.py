@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
-# This extension adds markdown support to Ark.
+# This extension adds Markdown support to Ark.
 #
-# Files with a .md extension will be rendered as markdown.
+# Files with a .md extension will be rendered as Markdown.
 #
 # Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain

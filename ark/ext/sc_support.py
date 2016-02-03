@@ -31,7 +31,6 @@ def init():
 # any shortcodes contained in it.
 @ark.hooks.register('record_text')
 def render(text, record):
-
     try:
         return scparser.parse(text, record)
     except shortcodes.ShortcodeError as e:

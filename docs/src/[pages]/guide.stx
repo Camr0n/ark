@@ -231,7 +231,7 @@ For example, a simple menu can be constructed in either Markdown or Syntex using
         * [Cats](@root/posts/cats/index//)
         * [Dogs](@root/posts/dogs/index//)
 
-If the menu above was contained in a file named `menu.stx` then the rendered HTML would be available to themes via the `inc.menu` attribute.
+If the menu above was contained in a file named `menu.md` then the rendered HTML would be available to themes via the `inc.menu` attribute.
 
 Files with a `.html`/`.js`/`.css` extension will have their contents preserved as-is.
 

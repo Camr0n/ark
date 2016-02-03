@@ -20,8 +20,8 @@ def register(ext):
 
     """ Decorator function for registering rendering-engine callbacks.
 
-    A rendering-engine callback should accept a string of text and return
-    a string containing the rendered result.
+    A rendering-engine callback should accept an input string and return
+    a string containing the rendered html.
 
     Callbacks are registered per file extension, e.g.
 

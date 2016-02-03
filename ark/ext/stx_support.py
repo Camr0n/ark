@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
-# This extension adds syntex support to Ark.
+# This extension adds Syntex support to Ark.
 #
-# Files with a .stx extension will be rendered as syntex.
+# Files with a .stx extension will be rendered as Syntex.
 #
 # Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain

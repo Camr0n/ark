@@ -5,6 +5,10 @@
 #
 #     {{ string|pygmentize:lang }}
 #
+# If the Pygments package is not available or if an appropriate lexer can
+# not be found the filter will return the input text with any HTML special
+# characters escaped.
+#
 # Author: Darren Mulholland <darren@mulholland.xyz>
 # License: Public Domain
 # --------------------------------------------------------------------------
