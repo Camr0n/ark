@@ -87,7 +87,7 @@ def titlecase(s):
 #   * If noclobber is true, will never overwrite existing files.
 #   * If onlyolder is true, will only overwrite older files.
 #
-def copydir(srcdir, dstdir, skiptypes=True, noclobber=False, onlyolder=True):
+def copydir(srcdir, dstdir, skiptypes=False, noclobber=False, onlyolder=True):
 
     if not os.path.exists(srcdir):
         return
@@ -109,7 +109,7 @@ def copydir(srcdir, dstdir, skiptypes=True, noclobber=False, onlyolder=True):
             copyfile(src, dst, noclobber, onlyolder)
 
         elif os.path.isdir(src):
-            copydir(src, dst, False, noclobber, onlyolder)
+            copydir(src, dst, skiptypes, noclobber, onlyolder)
 
 
 # Copies the file src as dst.

@@ -229,7 +229,7 @@ def cmd_init(parser):
 
     if not parser['empty']:
         for name in ('inc', 'src'):
-            utils.copydir(os.path.join(initdir, name), name, False, True)
+            utils.copydir(os.path.join(initdir, name), name, noclobber=True)
 
 
 # Callback for the clear command.
