@@ -17,11 +17,11 @@ def print_status_report():
     if num_rendered == 0:
         return
 
-    rendered = "1 page" if num_rendered == 1 else "%s pages" % num_rendered
-    written = "1 page" if num_written == 1 else "%s pages" % num_written
+    txt_rendered = "1 page" if num_rendered == 1 else "%s pages" % num_rendered
+    txt_written = "1 page" if num_written == 1 else "%s pages" % num_written
 
     time = site.runtime()
-    average = time / (num_rendered or 1)
+    average = time / num_rendered
 
     status = "%s rendered, %s written in %.2f seconds. %.4f seconds per page."
-    print(status % (rendered, written, time, average))
+    print(status % (txt_rendered, txt_written, time, average))
