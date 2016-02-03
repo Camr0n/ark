@@ -1,7 +1,7 @@
 
-# Debug
+# Debug Theme
 
-A diagnostic tool for debugging Ark sites.
+A diagnostic tool for developing and debugging Ark sites.
 
 
 ## Includes
