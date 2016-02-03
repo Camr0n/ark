@@ -92,6 +92,7 @@ def config(key=None, fallback=None):
 # Sets a value in the site's configuration dictionary.
 def setconfig(key, value):
     _config[key] = value
+    return value
 
 
 # Provides access to the site's normalized type-configuration data.
@@ -230,29 +231,19 @@ def trail_from_src(srcdir):
     return trail
 
 
-# Returns the run time in seconds.
+# Returns the application runtime in seconds.
 def runtime():
     return time.time() - config('[start]')
 
 
-# Returns the count of pages rendered.
-def rendered():
-    return config('[rendered]')
+# Increments the count of pages rendered by n and returns the new value.
+def rendered(n=0):
+    return setconfig('[rendered]', config('[rendered]') + n)
 
 
-# Increments the count of pages rendered.
-def inc_rendered():
-    setconfig('[rendered]', config('[rendered]') + 1)
-
-
-# Returns the count of pages written.
-def written():
-    return config('[written]')
-
-
-# Increments the count of pages written.
-def inc_written():
-    setconfig('[written]', config('[written]') + 1)
+# Increments the count of pages written by n and returns the new value.
+def written(n=0):
+    return setconfig('[written]', config('[written]') + n)
 
 
 # Loads and normalizes the site's configuration data.

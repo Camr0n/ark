@@ -61,7 +61,7 @@ class Page(dict):
 
         # Render the page into html.
         html = templates.render(self)
-        site.inc_rendered()
+        site.rendered(1)
 
         # Filter the page's html before writing it to disk.
         html = hooks.filter('page_html', html, self)
@@ -72,7 +72,7 @@ class Page(dict):
         # Write the page to disk. Avoid overwriting identical existing files.
         if not hashes.match(self['path'], html):
             utils.writefile(self['path'], html)
-            site.inc_written()
+            site.written(1)
 
     # Determines the output filepath for the page.
     def _get_output_filepath(self):
