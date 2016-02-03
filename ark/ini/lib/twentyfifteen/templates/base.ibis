@@ -28,15 +28,15 @@
 		</div>
 
 		<div id="includes" class="includes">
-			{% if includes.menu %}
+			{% if inc.menu %}
 				<nav id="menu" class="menu">
-					{{ includes.menu }}
+					{{ inc.menu }}
 				</nav>
 			{% endif %}
 
-			{% if includes.sidebar %}
+			{% if inc.sidebar %}
 				<div id="sidebar" class="sidebar">
-					{{ includes.sidebar }}
+					{{ inc.sidebar }}
 				</div>
 			{% endif %}
 		</div>
@@ -49,8 +49,8 @@
 
 		<footer id="site-footer" class="site-footer">
 			<div class="footer-wrapper">
-				{% if includes.footer %}
-					{{ includes.footer }}
+				{% if inc.footer %}
+					{{ inc.footer }}
 				{% else %}
 					<a href="http://mulholland.xyz/docs/ark/">Powered by Ark</a>
 				{% endif %}

@@ -9,8 +9,8 @@
     <body>
         <h1>{% block title %}{% endblock %}</h1>
 
-        {% if includes.menu %}
-            {{ includes.menu }}
+        {% if inc.menu %}
+            {{ inc.menu }}
             <hr>
         {% endif %}
 
