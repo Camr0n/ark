@@ -227,6 +227,7 @@ tags: foo, bar, baz
     * [Dogs](@root/posts/dogs/index//)
 </pre>
 <p>If the menu above was contained in a file named <code>menu.stx</code> then the rendered HTML would be available to themes via the <code>inc.menu</code> attribute.</p>
+<p>Files with a <code>.html</code>/<code>.js</code>/<code>.css</code> extension will have their contents preserved as-is.</p>
 <h2 id="extensions">Extensions</h2>
 <p>The extensions directory, <code>ext</code>, is intended for plugins that extend or enhance Ark's functionality. Python modules or packages placed in this directory will be loaded automatically and can make use of Ark's system of event and filter hooks to inject their own code into the build process.</p>
 <p>Ark is highly extensible and much of its default functionality is in fact implemented as pluggable extensions. See the sample plugins bundled with the skeleton site or the default plugins in the <code>ark/ext</code> folder for examples of extensions in action.</p>
