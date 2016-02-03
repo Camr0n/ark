@@ -70,5 +70,5 @@ class Record(dict):
         # Filter the record's html content.
         self['html'] = hooks.filter('record_html', html, self)
 
-        # Fire the 'record_inst' event. (Tags are processed here.)
-        hooks.event('record_inst', self)
+        # Fire the 'init_record' event. (Tags are processed here.)
+        hooks.event('init_record', self)

@@ -19,8 +19,8 @@ from . import hooks
 #
 def build_site():
 
-    # Fire the 'build_init' event.
-    hooks.event('build_init')
+    # Fire the 'init_build' event.
+    hooks.event('init_build')
 
     # Copy the site's resource files to the output directory, i.e. any files
     # in the site's src directory not inside a [type] directory.
@@ -37,8 +37,8 @@ def build_site():
             if site.typeconfig(name.strip('[]'), 'indexed'):
                 build_directory_indexes(path)
 
-    # Fire the 'build_exit' event.
-    hooks.event('build_exit')
+    # Fire the 'exit_build' event.
+    hooks.event('exit_build')
 
 
 # Creates a HTML page for each record file in the source directory.

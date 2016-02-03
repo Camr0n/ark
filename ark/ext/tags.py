@@ -31,9 +31,9 @@ class Tag:
         return '<a href="%s">%s</a>' % (self.url, self.name)
 
 
-# Register a callback on the 'record_inst' event hook to process and register
+# Register a callback on the 'init_record' event hook to process and register
 # the record's tags.
-@ark.hooks.register('record_inst')
+@ark.hooks.register('init_record')
 def register_tags(record):
     tags, record['tags'] = record.get('tags', ''), []
     for tag in (t.strip() for t in tags.split(',')):
@@ -42,9 +42,9 @@ def register_tags(record):
             record['tags'].append(Tag(tag, url(record['type'], tag)))
 
 
-# Register a callback on the 'build_exit' event hook to build the tag index
+# Register a callback on the 'exit_build' event hook to build the tag index
 # pages.
-@ark.hooks.register('build_exit')
+@ark.hooks.register('exit_build')
 def build_tag_indexes():
 
     # Iterate over the site's record types.
