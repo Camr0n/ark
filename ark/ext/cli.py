@@ -177,7 +177,7 @@ def cli():
     edit_parser = parser.add_cmd("edit", cmd_edit, edithelp)
     watch_parser = parser.add_cmd("watch", cmd_watch, watchhelp)
 
-    hooks.event('clio', parser)
+    hooks.event('init_cli', parser)
 
     parser.parse()
     if not parser.has_cmd():
