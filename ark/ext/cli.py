@@ -186,7 +186,7 @@ def cli():
 
 # Callback for the build command.
 def cmd_build(parser):
-    if site.homeless():
+    if not site.home():
         sys.exit("Error: cannot locate the site's home directory.")
 
     if parser['out']: site.setconfig('[out]', parser['out'])
@@ -234,7 +234,7 @@ def cmd_init(parser):
 
 # Callback for the clear command.
 def cmd_clear(parser):
-    if site.homeless():
+    if not site.home():
         sys.exit("Error: cannot locate the site's home directory.")
 
     if not os.path.exists(site.out()):
@@ -245,7 +245,7 @@ def cmd_clear(parser):
 
 # Callback for the edit command.
 def cmd_edit(parser):
-    if site.homeless():
+    if not site.home():
         sys.exit("Error: cannot locate the site's home directory.")
 
     args = parser.get_args()
@@ -266,7 +266,7 @@ def cmd_edit(parser):
 
 # Callback for the serve command.
 def cmd_serve(parser):
-    if site.homeless():
+    if not site.home():
         sys.exit("Error: cannot locate the site's home directory.")
 
     if not os.path.exists(site.out()):
