@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # --------------------------------------------------------------------------
-# Ark: a static website generator in Python 3.
+# Ark: a static website generator in Python.
 #
 # Ark transforms a directory of text files written in Syntex or Markdown
 # into a static website that can be viewed locally or served remotely.

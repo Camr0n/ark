@@ -115,49 +115,49 @@ def typeconfig(id, key=None):
 
 
 # Returns the path to the site's home directory or an empty string if the
-# home directory cannot be located.
+# home directory cannot be located. Appends arguments.
 def home(*append):
     path = config('[home]') or setconfig('[home]', find_home())
     return os.path.join(path, *append)
 
 
-# Returns the path to the source directory.
+# Returns the path to the source directory. Appends arguments.
 def src(*append):
     path = config('[src]') or setconfig('[src]', home('src'))
     return os.path.join(path, *append)
 
 
-# Returns the path to the output directory.
+# Returns the path to the output directory. Appends arguments.
 def out(*append):
     path = config('[out]') or setconfig('[out]', home('out'))
     return os.path.join(path, *append)
 
 
-# Returns the path to the theme library directory.
+# Returns the path to the theme-library directory. Appends arguments.
 def lib(*append):
     path = config('[lib]') or setconfig('[lib]', home('lib'))
     return os.path.join(path, *append)
 
 
-# Returns the path to the extensions directory.
+# Returns the path to the extensions directory. Appends arguments.
 def ext(*append):
     path = config('[ext]') or setconfig('[ext]', home('ext'))
     return os.path.join(path, *append)
 
 
-# Returns the path to the includes directory.
+# Returns the path to the includes directory. Appends arguments.
 def inc(*append):
     path = config('[inc]') or setconfig('[inc]', home('inc'))
     return os.path.join(path, *append)
 
 
-# Returns the path to the theme directory.
+# Returns the path to the theme directory. Appends arguments.
 def theme(*append):
     path = config('[theme]') or setconfig('[theme]', find_theme(config('theme')))
     return os.path.join(path, *append)
 
 
-# Returns a list of command line build-flags.
+# Returns a list of command-line build-flags.
 def flags():
     return config('[flags]', [])
 
