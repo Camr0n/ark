@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------
-# Loads and processes strings from the site's inc directory.
+# Loads and processes strings from the site's includes directory.
 # --------------------------------------------------------------------------
 
 import os
