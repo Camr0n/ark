@@ -48,10 +48,10 @@ def register_tags(record):
 def build_tag_indexes():
 
     # Iterate over the site's record types.
-    for typeid, recmap in rmap.items():
+    for rectype, recmap in rmap.items():
 
         # Fetch the type's configuration data.
-        typeconfig = ark.site.typeconfig(typeid)
+        typeconfig = ark.site.typeconfig(rectype)
 
         # Iterate over the registered tags for the type.
         for slug, filelist in recmap.items():
@@ -63,15 +63,15 @@ def build_tag_indexes():
                     reclist.append(record)
 
             index = ark.pages.Index(
-                typeid,
-                slugs(typeid, slug),
+                rectype,
+                slugs(rectype, slug),
                 reclist,
                 typeconfig['per_tag_index']
             )
 
-            index['tag'] = nmap[typeid][slug]
+            index['tag'] = nmap[rectype][slug]
             index['is_tag_index'] = True
-            index['trail'] = [typeconfig['name'], nmap[typeid][slug]]
+            index['trail'] = [typeconfig['name'], nmap[rectype][slug]]
 
             index.render()
 
@@ -94,20 +94,20 @@ def add_tag_templates(templates, page):
 
 
 # Register a new tag mapping.
-def register(typeid, tag, filepath):
-    rmap.setdefault(typeid, {}).setdefault(slugify(tag), []).append(filepath)
-    nmap.setdefault(typeid, {}).setdefault(slugify(tag), tag)
+def register(rectype, tag, filepath):
+    rmap.setdefault(rectype, {}).setdefault(slugify(tag), []).append(filepath)
+    nmap.setdefault(rectype, {}).setdefault(slugify(tag), tag)
 
 
 # Returns the tag-index url for the specified tag.
-def url(typeid, tag):
-    return ark.site.url(slugs(typeid, tag, 'index'))
+def url(rectype, tag):
+    return ark.site.url(slugs(rectype, tag, 'index'))
 
 
 # Returns the output-slug list for the specified tag.
-def slugs(typeid, tag, *append):
-    slugs = ark.site.slugs(typeid)
-    slugs.append(ark.site.typeconfig(typeid, 'tag_slug'))
+def slugs(rectype, tag, *append):
+    slugs = ark.site.slugs(rectype)
+    slugs.append(ark.site.typeconfig(rectype, 'tag_slug'))
     slugs.append(slugify(tag))
     slugs.extend(append)
     return slugs

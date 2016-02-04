@@ -163,8 +163,8 @@ def flags():
 
 
 # Returns the output slug list for the specified record type.
-def slugs(typeid, *append):
-    typeslug = typeconfig(typeid, 'slug')
+def slugs(rectype, *append):
+    typeslug = typeconfig(rectype, 'slug')
     sluglist = [typeslug] if typeslug else []
     sluglist.extend(append)
     return sluglist
@@ -186,12 +186,12 @@ def paged_url(slugs, page_number, total_pages):
 
 
 # Returns the URL of the index page of the specified record type.
-def index_url(typeid):
-    if typeconfig(typeid, 'indexed'):
-        if typeconfig(typeid, 'homepage'):
+def index_url(rectype):
+    if typeconfig(rectype, 'indexed'):
+        if typeconfig(rectype, 'homepage'):
             return url(['index'])
         else:
-            return url(slugs(typeid, 'index'))
+            return url(slugs(rectype, 'index'))
     else:
         return ''
 
@@ -206,9 +206,9 @@ def type_from_src(srcpath):
 
 # Returns the output slug list for the specified source directory.
 def slugs_from_src(srcdir, *append):
-    typeid = type_from_src(srcdir)
+    rectype = type_from_src(srcdir)
     dirnames = os.path.relpath(srcdir, src()).replace('\\', '/').split('/')
-    sluglist = slugs(typeid)
+    sluglist = slugs(rectype)
     sluglist.extend(utils.slugify(d) for d in dirnames if not d.startswith('['))
     sluglist.extend(append)
     return sluglist
@@ -216,9 +216,9 @@ def slugs_from_src(srcdir, *append):
 
 # Returns the name trail for the specified source directory.
 def trail_from_src(srcdir):
-    typeid = type_from_src(srcdir)
+    rectype = type_from_src(srcdir)
     dirnames = os.path.relpath(srcdir, src()).replace('\\', '/').split('/')
-    trail = [typeconfig(typeid, 'name')]
+    trail = [typeconfig(rectype, 'name')]
     trail.extend(name for name in dirnames if not name.startswith('['))
     return trail
 

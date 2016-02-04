@@ -21,12 +21,12 @@ class Page(dict):
     # Regex for locating @root/ urls enclosed in quotes or pipes.
     re_url = re.compile(r'''(["'|])@root(/.*?)(#.*?)?\1''')
 
-    def __init__(self, typeid):
+    def __init__(self, rectype):
         self['flags'] = site.flags()
         self['site'] = site.config()
         self['inc'] = includes.includes()
         self['includes'] = includes.includes()
-        self['type'] = site.typeconfig(typeid)
+        self['type'] = site.typeconfig(rectype)
         self['slugs'] = []
         self['record'] = None
         self['records'] = []
@@ -42,7 +42,7 @@ class Page(dict):
         self['next_url'] = ''
         self['first_url'] = ''
         self['last_url'] = ''
-        self['index_url'] = site.index_url(typeid)
+        self['index_url'] = site.index_url(rectype)
 
     # Renders the page into HTML and prints the output file.
     def render(self):
@@ -167,18 +167,18 @@ class Page(dict):
 
     # Returns a list of possible template names for the current page.
     def _get_template_list(self):
-        templates, typeid = [], self['type']['id']
+        templates, rectype = [], self['type']['id']
 
         # Single record page.
         if self['is_single']:
             if 'template' in self['record']:
                 templates.append(self['record']['template'])
-            templates.append('%s-single' % typeid)
+            templates.append('%s-single' % rectype)
             templates.append('single')
 
         # Directory index page.
         elif self['is_dir_index']:
-            templates.append('%s-dir-index' % typeid)
+            templates.append('%s-dir-index' % rectype)
             templates.append('dir-index')
             templates.append('index')
 
@@ -203,12 +203,12 @@ class RecordPage(Page):
 # An Index represents a collection of index pages.
 class Index:
 
-    def __init__(self, typeid, slugs, records, recs_per_page):
+    def __init__(self, rectype, slugs, records, recs_per_page):
 
         # Sort the records.
         records.sort(
-            key = lambda rec: rec[site.typeconfig(typeid, 'order_by')],
-            reverse = site.typeconfig(typeid, 'reverse')
+            key = lambda rec: rec[site.typeconfig(rectype, 'order_by')],
+            reverse = site.typeconfig(rectype, 'reverse')
         )
 
         # How many pages do we need?
@@ -218,7 +218,7 @@ class Index:
         # Create the individual pages.
         self.pages = []
         for i in range(1, total_pages + 1):
-            page = Page(typeid)
+            page = Page(rectype)
 
             page['records'] = records[recs_per_page * (i - 1):recs_per_page * i]
             page['is_index'] = True

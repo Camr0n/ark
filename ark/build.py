@@ -57,10 +57,10 @@ def build_record_pages(dirpath):
 def build_directory_indexes(dirpath, recursing=False):
 
     # Determine the record type from the directory path.
-    typeid = site.type_from_src(dirpath)
+    rectype = site.type_from_src(dirpath)
 
     # Fetch the type's configuration data.
-    typeconfig = site.typeconfig(typeid)
+    typeconfig = site.typeconfig(rectype)
 
     # Assemble a list of records in this directory and any subdirectories.
     reclist = []
@@ -82,7 +82,7 @@ def build_directory_indexes(dirpath, recursing=False):
         slugs = site.slugs_from_src(dirpath)
 
     # Create and render the set of index pages.
-    index = pages.Index(typeid, slugs, reclist, typeconfig['per_index'])
+    index = pages.Index(rectype, slugs, reclist, typeconfig['per_index'])
     index['is_dir_index'] = True
     index['trail'] = site.trail_from_src(dirpath)
     index.render()
