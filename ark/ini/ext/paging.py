@@ -26,9 +26,9 @@
 from ark import hooks, site
 
 
-# Register a callback on the 'rendering_page' event hook to generate our
+# Register a callback on the 'render_page' event hook to generate our
 # string of page navigation links and add it to the page object.
-@hooks.register('rendering_page')
+@hooks.register('render_page')
 def add_paging_links(page):
     if page['is_paged']:
         page['paging'] = generate_paging_links(

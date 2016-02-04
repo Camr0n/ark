@@ -47,8 +47,8 @@ class Page(dict):
     # Renders the page into HTML and prints the output file.
     def render(self):
 
-        # Fire the 'rendering_page' event.
-        hooks.event('rendering_page', self)
+        # Fire the 'render_page' event.
+        hooks.event('render_page', self)
 
         # Generate a string of CSS classes for the page.
         self['classes'] = ' '.join(self._get_class_list())
