@@ -72,7 +72,7 @@ def locate_theme(name):
         return name
 
     # A bundled theme directory in the application folder?
-    bundled = os.path.join(os.path.dirname(__file__), 'init', 'lib', name)
+    bundled = os.path.join(os.path.dirname(__file__), 'ini', 'lib', name)
     if os.path.isdir(bundled):
         return bundled
 
