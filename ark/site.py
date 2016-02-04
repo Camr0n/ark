@@ -46,9 +46,6 @@ def locate_home():
     while os.path.isdir(path):
         if os.path.isfile(os.path.join(path, '.ark')):
             return os.path.abspath(path)
-        elif os.path.isdir(os.path.join(path, '.ark')):
-            utils.upgrade_dotark_dir(path)
-            return os.path.abspath(path)
         path = os.path.join(path, '..')
     setconfig('[homeless]', True)
     return os.getcwd()

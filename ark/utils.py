@@ -181,11 +181,3 @@ def load(filepath):
                 meta[key.lower().replace(' ', '_').replace('-', '_')] = value
 
     return text, meta
-
-
-# Upgrade a site initialized by an older version of Ark
-# that used a .ark directory in place of a .ark file.
-# This function is temporary and will be removed.
-def upgrade_dotark_dir(path):
-    shutil.rmtree(os.path.join(path, '.ark'))
-    writefile(os.path.join(path, '.ark'), '')
