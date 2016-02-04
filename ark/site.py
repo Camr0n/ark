@@ -25,35 +25,24 @@ def init():
     # Initialize a count of the number of pages written to disk.
     setconfig('[written]', 0)
 
-    # Locate the site's home directory.
-    setconfig('[home]', locate_home())
-
-    # Set the default input and output directories.
-    setconfig('[src]', home('src'))
-    setconfig('[out]', home('out'))
-    setconfig('[lib]', home('lib'))
-    setconfig('[ext]', home('ext'))
-    setconfig('[inc]', home('inc'))
-
     # Load the site's configuration file.
     load_site_config()
 
 
 # Attempts to determine the path to the site's home directory.
-# Sets the [homeless] flag if the directory cannot be located.
-def locate_home():
+# Returns an empty string if the directory cannot be located.
+def find_home():
     path = os.getcwd()
     while os.path.isdir(path):
         if os.path.isfile(os.path.join(path, '.ark')):
             return os.path.abspath(path)
         path = os.path.join(path, '..')
-    setconfig('[homeless]', True)
-    return os.getcwd()
+    return ''
 
 
 # Attempts to determine the path to the theme directory corresponding to
 # the specified theme name. Exits with an error message on failure.
-def locate_theme(name):
+def find_theme(name):
 
     # A directory in the site's theme library?
     if os.path.isdir(lib(name)):
@@ -77,11 +66,11 @@ def locate_theme(name):
 
 
 # Returns a value from the site's configuration dictionary.
-# Returns the entire dictionary if no key is specified.
-def config(key=None, fallback=None):
-    """ Returns the dictionary of site configuration data. """
+# If no key is specified, returns the entire dictionary.
+# If the key is not found, returns `default`.
+def config(key=None, default=None):
     if key:
-        return _config.get(key, fallback)
+        return _config.get(key, default)
     else:
         return _config
 
@@ -90,6 +79,12 @@ def config(key=None, fallback=None):
 def setconfig(key, value):
     _config[key] = value
     return value
+
+
+# Returns a value from the site's configuration dictionary.
+# If the key is not found, sets the key to `default` and returns `default`.
+def defconfig(key, default):
+    return config(key) or setconfig(key, default)
 
 
 # Provides access to the site's normalized type-configuration data.
@@ -119,50 +114,50 @@ def typeconfig(id, key=None):
         return types[id]
 
 
-# Returns the path to the site's home directory.
+# Returns the path to the site's home directory or an empty string if the
+# home directory cannot be located.
 def home(*append):
-    return os.path.join(config('[home]'), *append)
-
-
-# Returns true if Ark has been unable to locate the site's home directory.
-def homeless():
-    return config('[homeless]', False)
+    path = config('[home]') or setconfig('[home]', find_home())
+    return os.path.join(path, *append)
 
 
 # Returns the path to the source directory.
 def src(*append):
-    return os.path.join(config('[src]'), *append)
+    path = config('[src]') or setconfig('[src]', home('src'))
+    return os.path.join(path, *append)
 
 
 # Returns the path to the output directory.
 def out(*append):
-    return os.path.join(config('[out]'), *append)
+    path = config('[out]') or setconfig('[out]', home('out'))
+    return os.path.join(path, *append)
 
 
 # Returns the path to the theme library directory.
 def lib(*append):
-    return os.path.join(config('[lib]'), *append)
+    path = config('[lib]') or setconfig('[lib]', home('lib'))
+    return os.path.join(path, *append)
 
 
 # Returns the path to the extensions directory.
 def ext(*append):
-    return os.path.join(config('[ext]'), *append)
+    path = config('[ext]') or setconfig('[ext]', home('ext'))
+    return os.path.join(path, *append)
 
 
 # Returns the path to the includes directory.
 def inc(*append):
-    return os.path.join(config('[inc]'), *append)
+    path = config('[inc]') or setconfig('[inc]', home('inc'))
+    return os.path.join(path, *append)
 
 
 # Returns the path to the theme directory.
 def theme(*append):
-    if config('[theme]') is None:
-       setconfig('[theme]', locate_theme(config('theme')))
-
-    return os.path.join(config('[theme]'), *append)
+    path = config('[theme]') or setconfig('[theme]', find_theme(config('theme')))
+    return os.path.join(path, *append)
 
 
-# Returns a list of command line build flags.
+# Returns a list of command line build-flags.
 def flags():
     return config('[flags]', [])
 
@@ -252,7 +247,7 @@ def load_site_config():
         exec(file.read(), _config)
 
     # Load the custom site configuration file.
-    if os.path.isfile(home('config.py')):
+    if home() and os.path.isfile(home('config.py')):
         with open(home('config.py'), encoding='utf-8') as file:
             exec(file.read(), _config)
 

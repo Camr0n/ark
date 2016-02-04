@@ -195,7 +195,7 @@ def cmd_build(parser):
     if parser['inc']: site.setconfig('[inc]', parser['inc'])
 
     if parser['theme']:
-        site.setconfig('[theme]', site.locate_theme(parser['theme']))
+        site.setconfig('[theme]', site.find_theme(parser['theme']))
 
     if parser['clear']:
         utils.cleardir(site.out())
