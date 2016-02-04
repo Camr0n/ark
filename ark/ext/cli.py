@@ -153,7 +153,7 @@ Flags:
 
 
 # Initialize the command line interface on the 'init' hook.
-@hooks.register('init')
+@hooks.register('init', -100)
 def cli():
     parser = clio.ArgParser(apphelp, meta.__version__)
 
