@@ -233,7 +233,7 @@ For example, a simple menu can be constructed in either Markdown or Syntex using
 
 If the menu above was contained in a file named `menu.md` then the rendered HTML would be available to themes via the `inc.menu` attribute.
 
-Files with a `.html`/`.js`/`.css` extension will have their contents preserved as-is.
+Files with a `.html`/`.js`/`.css`/`.txt` extension will have their contents preserved as-is.
 
 
 
