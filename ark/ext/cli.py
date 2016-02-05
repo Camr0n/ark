@@ -51,6 +51,12 @@ Usage: %s build [FLAGS] [OPTIONS]
   Build the current site. This command can be run from the site directory
   or any of its subdirectories.
 
+  The --theme option can be used to override the theme specified in the
+  site's config file. Its argument can be either i) a path to a theme
+  folder or ii) the name of a theme folder in the site's theme library or
+  the global theme library specififed by the $ARK_THEMES environment
+  variable.
+
 Options:
   -i, --inc <path>    Override the default 'inc' directory.
   -l, --lib <path>    Override the default 'lib' directory.
