@@ -33,7 +33,7 @@ Flags:
 Commands:
   build               Build the site.
   clear               Clear the output directory.
-  edit                Edit an existing record or create a new file.
+  edit                Edit an existing record or create a new record file.
   init                Initialize a new site directory.
   serve               Run a web server on the site's output directory.
   watch               Monitor the site directory and rebuild on changes.
@@ -51,16 +51,16 @@ Usage: %s build [FLAGS] [OPTIONS]
   Build the current site. This command can be run from the site directory
   or any of its subdirectories.
 
-Flags:
-  -c, --clear         Clear the output directory before building.
-      --help          Print the build command's help text and exit.
-
 Options:
   -i, --inc <path>    Override the default 'inc' directory.
   -l, --lib <path>    Override the default 'lib' directory.
   -o, --out <path>    Override the default 'out' directory.
   -s, --src <path>    Override the default 'src' directory.
   -t, --theme <name>  Override the theme specififed in the config file.
+
+Flags:
+  -c, --clear         Clear the output directory before building.
+      --help          Print the build command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
 
@@ -74,7 +74,7 @@ Usage: %s init [FLAGS] [ARGUMENTS]
   directory will be used. Existing files will not be overwritten.
 
 Arguments:
-  [dirname]           Directory name. Defaults to the current directory.
+  [directory]         Directory name. Defaults to the current directory.
 
 Flags:
   -e, --empty         Do not create a skeleton site.
@@ -104,7 +104,7 @@ Usage: %s edit [FLAGS] ARGUMENTS
 
 Arguments:
   <type>              Record type, e.g. 'posts'.
-  <name, ...>         Record filenames.
+  <file...>           Record filename(s).
 
 Flags:
   --help              Print the edit command's help text and exit.
@@ -129,7 +129,7 @@ Options:
   -p, --port <int>    Port number. Defaults to 8080.
 
 Flags:
-  -b, --browser       Launch the default web browser.
+  -b, --browser       Launch the default web browser to view the site.
       --help          Print the serve command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
@@ -142,9 +142,9 @@ Usage: %s watch [FLAGS]
   Monitor the site directory and automatically rebuild the site when any
   file changes are detected.
 
-  Arguments passed to this command will be passed along to the 'build' command.
-  You can pass options or flags to the 'build' command by preceding them with
-  a '--'.
+  Arguments passed to this command will be passed along to the 'build'
+  command. You can pass options or flags to the 'build' command by preceding
+  them with '--'.
 
 Flags:
   --help              Print the watch command's help text and exit.
